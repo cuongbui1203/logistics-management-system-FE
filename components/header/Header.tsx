@@ -1,0 +1,97 @@
+'use client';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+
+import { FaUser } from 'react-icons/fa';
+
+export default function Header() {
+
+  const router = useRouter();
+
+
+  let [loading, setLoading] = useState<boolean>(false);
+
+
+  const pathname = usePathname();
+
+  return (
+    <div className='h-fit w-full px-3 sm:px-5 py-3 sm:py-5 flex justify-between items-center bg-transparent'>
+      <div className=''>
+        <Link href={'/'}>
+          <Image src={'/mgpostwhite.png'} alt='logo' width={1000} height={1000} 
+            className={`w-[100px] h-8 ${pathname === '/account' ? 'hidden' : 'block'}`} 
+          />
+        </Link>
+      </div>
+
+      <div className=''>
+        {!false ? (
+          <div className='space-x-4 h-fit'>
+            <Link href={'/login'}>
+              <button className='bg-gray-200 px-6 py-1.5 font-semibold rounded-full hover:scale-110'>
+                Log in
+              </button>
+            </Link>
+
+            <Link href={'/signup'}>
+              <button className='text-gray-300 px-6 py-1.5 font-semibold rounded-full hover:scale-110'>
+                Sign up
+              </button>
+            </Link>
+          </div>
+        ) : (
+          <div className='flex gap-x-4 items-center'>
+            <button onClick={() => {}}
+              className='bg-gray-200 px-6 py-1.5 flex text-center items-center rounded-full'
+            >
+              {loading ? (
+                <div className='h-[24px] w-[60px] items-center flex justify-center'>
+                  <svg viewBox="0 0 100 100" className='loading h-full stroke-[#363636]'>
+                    <circle cx="50" cy="50" r="40"  />
+                  </svg>
+                </div>
+              ) : (
+                <div className='h-[24px] w-[60px] font-semibold text-center'>
+                  Log out
+                </div>
+              )}
+            </button>
+
+            <button onClick={() => router.push('/account')} className='bg-gray-200 rounded-full relative group'>
+              <FaUser size={16} className='m-2.5' />
+              <div className='absolute -right-1 top-12 font-semibold bg-[#363636] px-4 py-2 rounded text-gray-200/60 
+                shadow-lg invisible opacity-0 group-hover:opacity-100 group-hover:visible transition-all duration-500'
+              >
+                userInfo?.email
+              </div>
+            </button>
+
+            {/* <button onClick={() => router.push('/account')} 
+              className='bg-gray-200 rounded-full flex items-center justify-center px-2 space-x-2'
+            >
+              <div className='font-semibold rounded h-[36px] w-[100px] truncate flex items-center justify-center'>
+                {userInfo?.email} 
+              </div>
+
+              <div className='rounded-full bg-[#242424] text-gray-200'>
+                <FaUser size={10} className='m-1.5' />
+              </div>
+            </button> */}
+          </div>
+        )}
+      </div>
+
+      {/* <div className='lg:hidden overflow-x-hidden flex items-center justify-center'>
+        <button className='bg-gray-200 rounded-full' onClick={toggleMenu}>
+          <TiPlus size={24} className={`m-1.5 transition duration-500 ${showMenu ? 'rotate-[135deg]' : 'rotate-0'}`} />
+        </button>
+      </div> */}
+
+      {/* <Menu userDetail={userInfo} /> */}
+    </div>
+  )
+}
