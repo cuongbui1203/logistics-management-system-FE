@@ -1,58 +1,85 @@
-import Image from 'next/image';
-import React from 'react';
-
-import { TiLocation } from 'react-icons/ti';
-import { FaBusinessTime, FaRegCopyright } from 'react-icons/fa6';
-import { FaStore } from 'react-icons/fa';
+import { Container, Row, Col } from 'react-bootstrap';
+import style from '@/css/customer/footer.module.css';
+import { FaAngleRight } from 'react-icons/fa6';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <div className='w-full px-5 pt-5 flex items-center justify-center bg-[#363636]/20'>
-      <div className='w-[1100px] flex flex-col'>
-        <div className='w-full grid grid-cols-1 md:grid-cols-2 text-gray-300 font-semibold'>
-          <div className='space-y-3 flex flex-col items-center'>
-            <Image src={'/mgpostwhite.png'} alt='logo' width={1000} height={1000} className='w-[100px]' />
+    <footer className={style.footer}>
+      <Container className={style.container}>
+        <Row>
+          <Col xs={12} lg={5}>
+            <h3>TỔNG CÔNG TY CHUYỂN PHÁT Company Name</h3>
+            <p>Địa chỉ: Số 28 Đỗ Đức Dục - Mễ Trì - Nam Từ Liêm - Hà Nội</p>
+            <p>Hotline: 0858 562 678</p>
+          </Col>
 
-            <p>Company Name Co.Ltd</p>
+          <Col xs={12} lg={2}>
+            <h3>Về Company Name</h3>
+            <ul className={style.footerMenu}>
+              <li>
+                <Link href="/customer/History">
+                  <FaAngleRight />
+                  Lịch sử hình thành
+                </Link>
+              </li>
+              <li>
+                <Link href="/customer/Recruit">
+                  <FaAngleRight />
+                  Tuyển dụng
+                </Link>
+              </li>
+            </ul>
+          </Col>
+          <Col xs={12} lg={2}>
+            <h3>Tra cứu</h3>
+            <ul className={style.footerMenu}>
+              <li>
+                <Link href="/customer/LockupOrders">
+                  <FaAngleRight />
+                  Tra cứu bưu gửi
+                </Link>
+              </li>
+              <li>
+                <Link href="/customer/LockupTransaction">
+                  <FaAngleRight />
+                  Tra cứu bưu cục
+                </Link>
+              </li>
+              <li>
+                <Link href="/customer/EstimateCost">
+                  <FaAngleRight />
+                  Ước tính chi phí
+                </Link>
+              </li>
+            </ul>
+          </Col>
 
-            <div className='flex font-medium items-center justify-center space-x-1 text-sm sm:text-lg'>
-              <div className='flex space-x-2 items-center'>
-                <TiLocation size={24} className='mb-1' />
-                <p className='font-bold'>Address:</p>
-              </div>
-              <p>Xuan Thuy - Cau Giay - Ha Noi</p>
-            </div>
-          </div>
-
-          <div className='lg:flex flex-col items-center justify-center space-y-3 hidden'>
-            <p className='font-bold text-2xl'>Services</p>
-
-            <div className='flex items-center space-x-2 font-medium'>
-              <FaBusinessTime />
-              <p>Business Services</p>
-            </div>
-
-            <div className='flex items-center space-x-2 font-medium'>
-              <FaStore />
-              <p>Personal Services</p>
-            </div>
-          </div>
-        </div>
-
-        <div className='w-full grid grid-cols-1 lg:grid-cols-2 font-semibold text-gray-300 
-          pt-3 my-3 border-t border-t-neutral-500 text-[10px] sm:text-sm'
-        >
-          <div className='flex items-center justify-center lg:justify-start space-x-2'>
-            <FaRegCopyright />
-            <p className=''>2023 - 2024 All rights reserved</p>
-          </div>
-
-          <div className='lg:flex justify-end space-x-5 hidden'>
-            <p className=' cursor-pointer hover:text-[#5c9ead]'>Privacy Policy</p>
-            <p className=' cursor-pointer hover:text-[#5c9ead]'>Terms of Use</p>
-          </div>
-        </div>
-      </div>  
-    </div>
-  )
+          <Col xs={12} lg={2}>
+            <h3>Dịch vụ</h3>
+            <ul className={style.footerMenu}>
+              <li>
+                <Link href="/customer/service/doc">
+                  <FaAngleRight />
+                  Vận chuyển tài liệu
+                </Link>
+              </li>
+              <li>
+                <Link href="/customer/service/goods">
+                  <FaAngleRight />
+                  Tra cứu hàng hóa
+                </Link>
+              </li>
+              <li>
+                <Link href="/customer/service/care">
+                  <FaAngleRight />
+                  Vận chuyển đảm bảo
+                </Link>
+              </li>
+            </ul>
+          </Col>
+        </Row>
+      </Container>
+    </footer>
+  );
 }
