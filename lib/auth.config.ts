@@ -9,53 +9,43 @@ export const authOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        // console.log(req);
         const { username, password }: any = credentials;
-        console.log(credentials);
-        const data = {
-          employeeID: username,
-          password: password,
-        };
-        const url = 'https://magicpost-uet.onrender.com/api/auth/login';
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
+        const url = 'http://127.0.0.1:8000/api/users/login';
         const res = await fetch(url, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
+          body: formData,
         });
-        if (res.ok) {
-          console.log('thanh cong');
-        } else console.log('sai');
+
         const user = await res.json();
-        // return false;
+
         if (res.ok && user) {
+          console.log('Login success', user);
           return user;
         } else {
+          console.log('Login failed');
           return null;
         }
       },
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }: any) {
-      // console.log(user);
+    async signIn(data: any) {
+      console.log(data, 'callback sign in');
       return true;
     },
-    async jwt({ token, user }) {
-      // if (user) {
-      //   token.accessToken = user.accessToken;
-      // }
-      // console.log(user);
+    async jwt({ token, user }: any) {
+      console.log(token, 'callback jwt');
       return { ...token, ...user };
     },
-    async session({ session, token, user }) {
-      // console.log("check user", user);
-      // console.log("check token", token);
-      session.accessToken = token.accessToken;
-      session.user = token.user;
-      // console.log(session);
-      // console.log(session.accessToken);
+    async session({ session, token, user }: any) {
+      console.log(session, token, user, 'callback session');
+      // console.log('check user', user);
+      // console.log('check token', token);
+      session.accessToken = token.data.token;
+
       return session;
     },
   },
