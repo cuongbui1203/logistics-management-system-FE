@@ -26,7 +26,7 @@ export default function LoginPage() {
         <Col md={12} lg={6} xl={5} className={style.image}>
           <Image src="/login.png" fluid alt="Sample image" className="w-100 h-100" />
         </Col>
-        <Col md={12} lg={6} xl={4} offset-xl-1>
+        <Col md={12} lg={6} xl={4} offset-xl-1="true">
           <Form>
             <Row className="text-center text-light">
               <h3>ĐĂNG NHẬP</h3>
