@@ -1,0 +1,94 @@
+.wrapper {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+}
+
+.wrapper .center-line {
+    position: absolute;
+    height: 85%;
+    width: 4px;
+    background: var(--highlight-color);
+    left: 40px;
+    top: 20px;
+}
+
+.wrapper .row {
+    display: flex;
+    margin: 30px 0 3px 60px;
+}
+
+.wrapper .row section {
+    background: #fff;
+    border-radius: 5px;
+    width: 100%;
+    padding: 10px 20px;
+    position: relative;
+}
+
+
+.row section .icon,
+.center-line .scroll-icon {
+    position: absolute;
+    background: #f2f2f2;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    color: var(--highlight-color);
+    box-shadow: 0 0 0 4px var(--highlight-color), inset 0 2px 0 rgba(0, 0, 0, 0.08), 0 3px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.center-line .scroll-icon {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.row section .icon {
+    top: 15px;
+    left: -60px;
+}
+
+.row section .details,
+.row section .bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.row section .details .title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.row section p {
+    margin: 10px 0 17px 0;
+}
+
+.row section .bottom a:hover {
+    transform: scale(0.97);
+}
+
+@media (max-width: 440px) {
+    .wrapper .row {
+        display: flex;
+        margin: 0;
+    }
+
+    .wrapper .center-line {
+        left: 0px;
+        top: 20px;
+    }
+
+    .row section .details svg {
+        display: none;
+    }
+
+    .row section .icon {
+        top: 15px;
+        left: -40px;
+    }
+}
