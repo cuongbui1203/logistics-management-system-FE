@@ -1,7 +1,6 @@
 import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 
-import { employeeRole, listUrl } from './api/utils';
 export default withAuth();
 // function middleware(req) {
 //   const leftURL = employeeRole[req.nextauth.token?.user.role].left;
