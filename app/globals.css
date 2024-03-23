@@ -1,32 +1,21 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; */
 
-::-ms-reveal {
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --background-color: #3db2ff;
+  --highlight-color: #ffb830;
+  --title-color: #ff2442;
+  --sub-title-color: #0072bc;
+  --container-background-color: #f7f7f7;
+  --sidebar-bgr: #f0f3ff;
+  --employee-bgr: #c7e9ff;
+}
+
+nextjs-portal {
   display: none;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.loading {
-  fill: none;
-  /* stroke: #f2f2f2; */
-  stroke-width: 10;
-  stroke-linecap: round;
-  stroke-dasharray: 200 200;
-  animation: loader 1.5s infinite cubic-bezier(.4,0,.3,1), loading 1.5s infinite linear;
-}
-
-@keyframes loader {
-  from { stroke-dashoffset: 200; }
-  to { stroke-dashoffset: -200; }
-}
-
-@keyframes loading {
-  from { transform: none; }
-  to { transform: rotate(360deg); }
 }
