@@ -1,113 +1,199 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import style from '@/css/customer/homePage.module.css';
+import Image from 'react-bootstrap/Image';
+import { Header } from '@/components/header';
+import { Footer } from '@/components/footer';
+import Link from 'next/link';
+import { Container, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
+import { MdMyLocation } from 'react-icons/md';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FaRegFile, FaRegBuilding } from 'react-icons/fa6';
+import { LiaMapMarkedAltSolid } from 'react-icons/lia';
+import { GoRocket } from 'react-icons/go';
+import { IoGiftOutline } from 'react-icons/io5';
+import { CiMedicalCase } from 'react-icons/ci';
+import { RiUserHeartLine, RiTruckLine } from 'react-icons/ri';
+import { BsPeople } from 'react-icons/bs';
+import { PiMoneyDuotone } from 'react-icons/pi';
+
+export default function HomePage() {
+  const router = useRouter();
+  const [orderID, setOrderID] = useState('');
+
+  const handleSearch = () => {
+    if (orderID.trim() !== '') {
+      router.push(`/customer/LockupOrders?query=${orderID}`);
+    }
+  };
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div className={style.homePageContainer}>
+      <div className={style.banner}>
+        <Header />
+        <Container>
+          <Row className={style.bannerItemContainer}>
+            <Col md={5} xl={6} xxl={5} className="text-md-start text-center py-8">
+              <h3 className="fw-normal">Nhà cung cấp tin cậy cho </h3>
+              <h3 className="fw-bolder">Dịch vụ chuyển phát nhanh</h3>
+              <h1 className="fw-bolder">Company Name</h1>
+              <p>Cùng bạn đến mọi miền tổ quốc</p>
+            </Col>
+            <Col md={7} xl={6} xxl={7} className="text-center">
+              <Image src="/hero.png" className="pt-6 pt-md-0 w-100"></Image>
+            </Col>
+          </Row>
+        </Container>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      <Container className={style.lookup}>
+        <Container>
+          <Row className={style.lookupContainer}>
+            <Col xs={12} md={6}>
+              <Form>
+                <Form.Label className="px-2">
+                  <MdMyLocation size={'1em'} />
+                  Tra cứu bưu gửi
+                </Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    type="text"
+                    id="inputCode"
+                    name="code"
+                    formMethod="get"
+                    placeholder="Nhập mã bưu gửi"
+                    className="rounded-pill"
+                    onChange={(e) => setOrderID(e.target.value)}
+                  />
+                  <Button className="rounded-pill mx-2" onClick={handleSearch}>
+                    🔍
+                  </Button>
+                </InputGroup>
+              </Form>
+            </Col>
+            <Col xs={6} md={2} className={`${style.lookupItem} text-center mt-3 mt-md-0`}>
+              <Link href={'/customer/LockupTransaction'}>
+                <LiaMapMarkedAltSolid size={'4em'} />
+                <p>Tìm kiếm bưu cục</p>
+              </Link>
+            </Col>
+            <Col xs={6} md={2} className={`${style.lookupItem} text-center mt-3 mt-md-0`}>
+              <Link href={'/customer/EstimateCost'}>
+                <PiMoneyDuotone size={'4em'} />
+                <p>Ước tính phí</p>
+              </Link>
+            </Col>
+          </Row>
+        </Container>
+      </Container>
+      {/* === Section 3: Service === */}
+      <Container className={style.service}>
+        <Row className={style.serviceTitle}>
+          <h5>DỊCH VỤ</h5>
+          <h2>Dịch vụ nổi bật</h2>
+        </Row>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+        <Row className={style.serviceContainer}>
+          <Col xs={6} lg={3} className="mb-3">
+            <div className={style.serviceItem}>
+              <h4>Company DOC</h4>
+              <FaRegFile size={'5em'} />
+              <p>
+                Company Tài Liệu là dịch vụ nhận gửi, vận chuyển và phát các loại thư, tài liệu trong nước theo chỉ tiêu
+                thời gian tiêu chuẩn được công bố bởi Magic Post.
+              </p>
+            </div>
+          </Col>
+          <Col xs={6} lg={3} className="mb-3">
+            <div className={style.serviceItem}>
+              <h4>Company FAST</h4>
+              <GoRocket size={'5em'} />
+              <p>
+                Company Hỏa Tốc là dịch vụ chất lượng cao với chỉ tiêu thời gian toàn trình rút ngắn so với dịch vụ
+                Magic Post Chuyển Phát Nhanh, trong đó bưu gửi được ưu tiên chuyển phát đến người nhận trong khung thời
+                gian cam kết theo tuyến hành trình cụ thể.
+              </p>
+            </div>
+          </Col>
+          <Col xs={6} lg={3} className="mb-3">
+            <div className={style.serviceItem}>
+              <h4>Company GIFT</h4>
+              <IoGiftOutline size={'5em'} />
+              <p>
+                Company Gift - dịch vụ đặc biệt của Magic Post, chuyên gửi quà tặng nhanh chóng và an toàn. Gửi quà cho
+                người thân, bạn bè hay đối tác kinh doanh trở nên dễ dàng và ý nghĩa với dịch vụ này.
+              </p>
+            </div>
+          </Col>
+          <Col xs={6} lg={3} className="mb-3">
+            <div className={style.serviceItem}>
+              <h4>Company CARE</h4>
+              <CiMedicalCase size={'5em'} />
+              <p>
+                Company Care là dịch vụ hàng hóa chăm sóc cao cấp của Magic Post, mang đến sự an toàn và chăm sóc tối đa
+                cho các bưu phẩm. Với chất lượng vận chuyển hàng đầu, Company Care cam kết đảm bảo mọi gói hàng được gửi
+                đi và đến nơi một cách an toàn và đúng hẹn.
+              </p>
+            </div>
+          </Col>
+        </Row>
+      </Container>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+      {/* === Section 4: About us === */}
+      <Container className={style.aboutUs}>
+        <Row className={style.aboutUsTitle}>
+          <h5>VỀ CHÚNG TÔI</h5>
+          <h2>Dịch vụ chuyển phát nhanh chuyên nghiệp</h2>
+        </Row>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
+        <Row>
+          <Col xs={12} md={6}>
+            <Image src="/22.png" className="pt-6 pt-md-0 w-100"></Image>
+          </Col>
+          <Col className={style.aboutUsWrapperItem} xs={12} md={6}>
+            <Row className={style.aboutUsItem}>
+              <Col xs={2}>
+                <FaRegBuilding size={'5em'} />
+              </Col>
+              <Col xs={10}>
+                <h5>BƯU CỤC RỘNG KHẮP</h5>
+                <p>Mạng lưới bưu cục rộng khắp hoạt động trên toàn quốc</p>
+              </Col>
+            </Row>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+            <Row className={style.aboutUsItem}>
+              <Col xs={2}>
+                <RiUserHeartLine size={'5em'} />
+              </Col>
+              <Col xs={10}>
+                <h5>KHÁCH HÀNG TIN DÙNG</h5>
+                <p>Số lượng khách hàng đông đảo trải dài khắp 63 tỉnh thành</p>
+              </Col>
+            </Row>
+
+            <Row className={style.aboutUsItem}>
+              <Col xs={2}>
+                <BsPeople size={'5em'} />
+              </Col>
+              <Col xs={10}>
+                <h5>NHÂN SỰ CHUYÊN NGHIỆP</h5>
+                <p>Nhân sự được đào tạo bài bản & chuyên nghiệp</p>
+              </Col>
+            </Row>
+
+            <Row className={style.aboutUsItem}>
+              <Col xs={2}>
+                <RiTruckLine size={'5em'} />
+              </Col>
+              <Col xs={10}>
+                <h5>ĐA DẠNG PHƯƠNG TIỆN</h5>
+                <p>Đa dạng phương tiện vận chuyển hàng hóa</p>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Container>
+      <Footer />
+    </div>
   );
 }
