@@ -8,6 +8,10 @@ export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
+  // req.auth
+  console.log('ROUTE: ', req.nextUrl.pathname);
+  console.log('IS LOGGEDIN: ', isLoggedIn);
+
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
@@ -28,10 +32,6 @@ export default auth((req) => {
   }
 
   return;
-
-  // req.auth
-  console.log('ROUTE: ', req.nextUrl.pathname);
-  console.log('IS LOGGEDIN: ', isLoggedIn);
 });
 
 // Optionally, don't invoke Middleware on some paths

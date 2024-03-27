@@ -17,7 +17,7 @@ import { motion, spring } from 'framer-motion';
  * @param {Function} props.onChange - A callback function triggered when the interval is changed.
  * @returns {JSX.Element} - The rendered React element for the Card component.
  */
-export default function Card({ title, children, extend, onChange }) {
+export default function Card({ title, children, onChange }) {
   const handleIntervalClick = (intervalType) => {
     if (onChange) {
       onChange(intervalType);
