@@ -27,6 +27,7 @@ export default function HomePage() {
       router.push(`/customer/LockupOrders?query=${orderID}`);
     }
   };
+
   return (
     <div className={style.homePageContainer}>
       <div className={style.banner}>

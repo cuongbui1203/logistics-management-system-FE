@@ -1,13 +1,14 @@
 'use client';
-import 'bootstrap/js/src/dropdown.js';
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import BreadCrumb from './breadcrumd';
-import { signOut, useSession } from 'next-auth/react';
+import BreadCrumb from './breadcrumb';
+import { signOut } from 'next-auth/react';
 import { FaUserCircle } from 'react-icons/fa';
-import { Container, Row, Col, Button, Image } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
 import '@/css/employee/topbar.css';
+import 'bootstrap/js/src/dropdown.js';
+import { useCurrentUser } from '@/hooks/use-current-user';
 
 const itemVariants = {
   open: {
@@ -38,8 +39,9 @@ function useOutsideAlerter(ref: any) {
 export default function TopBar() {
   const route = useRouter();
   const [profile, setProfile] = useState(true);
-  const profileRef = useRef();
-  const userName = useSession().data?.user?.name;
+  const profileRef = useRef(null);
+  const userName = useCurrentUser()?.name;
+
   useEffect(() => {
     const closeProfile = (e: any) => {
       setProfile(false);
@@ -50,6 +52,7 @@ export default function TopBar() {
     } else document.body.removeEventListener('click', closeProfile);
     return () => document.body.removeEventListener('click', closeProfile);
   }, [profile]);
+
   return (
     <motion.nav layout className="nav topbar">
       <Container className="navBar">
@@ -61,6 +64,7 @@ export default function TopBar() {
           <Col xs="auto" className="avatarContainer">
             <motion.nav layout initial={false} animate={profile ? 'open' : 'closed'}>
               <Container
+                ref={profileRef}
                 onClick={() => {
                   console.log(profile);
                   setProfile(!profile);
@@ -107,7 +111,7 @@ export default function TopBar() {
                   variants={itemVariants}
                   onClick={() => {
                     setProfile(!profile);
-                    route.push('/employees/information');
+                    route.push('/dashboard/information');
                   }}
                 >
                   Thông tin cá nhân

@@ -3,8 +3,6 @@ import Overview from '@/components/dashboard/overview';
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { motion } from 'framer-motion';
-import { useCurrentUser } from '@/hooks/use-current-user';
-import { Role } from '@/types/Enum';
 import Statistic from '@/components/dashboard/statistic';
 
 export default function Dashboard() {
