@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 
 import authConfig from '@/auth.config';
 import { getUserInfo } from './api/data';
+import { log } from 'console';
 
 declare module '@auth/core/types' {
   interface User {
@@ -92,6 +93,15 @@ export const {
 
       // console.log({ token, user });
       return token;
+    },
+    async redirect({ url, baseUrl }) {
+      console.log('Call back redirect');
+
+      // Allows relative callback URLs
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
   session: { strategy: 'jwt' },
