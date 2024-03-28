@@ -1,6 +1,7 @@
 import authConfig from './auth.config';
 import NextAuth from 'next-auth';
 import { DEFAULT_LOGIN_REDIRECT, publicRoutes, authRoutes, apiAuthPrefix } from '@/routes';
+import { getSession } from 'next-auth/react';
 
 const { auth } = NextAuth(authConfig);
 
@@ -9,8 +10,9 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
 
   // req.auth
-  console.log('ROUTE: ', req.nextUrl.pathname);
+  console.log('ROUTE: ', nextUrl.pathname);
   console.log('IS LOGGEDIN: ', isLoggedIn);
+  console.log('Cookie: ', req.auth?.user);
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
