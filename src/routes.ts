@@ -7,4 +7,7 @@ export const authRoutes = ['/login', '/auth/register', '/auth/forgot-password'];
 
 export const apiAuthPrefix = '/api/auth';
 
-export const DEFAULT_LOGIN_REDIRECT = '/dashboard';
+export const USER_LOGIN_REDIRECT = '/';
+export const ADMIN_LOGIN_REDIRECT = '/dashboard';
+
+export const employeeRoute = ['/dashboard', '/dashboard/manage-orders'];

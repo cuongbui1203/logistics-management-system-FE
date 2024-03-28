@@ -6,7 +6,6 @@ import { useState } from 'react';
 import style from '@/css/login.module.css';
 import Link from 'next/link';
 import { Container, Row, Col, Image, Form, Button, InputGroup } from 'react-bootstrap';
-import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
 
 export function LoginForm() {
   const [username, setUsername] = useState('');
@@ -16,8 +15,6 @@ export function LoginForm() {
     const result = await signIn('credentials', {
       username: username,
       password: pass,
-      redirect: true,
-      callbackUrl: DEFAULT_LOGIN_REDIRECT,
     });
   };
   return (
