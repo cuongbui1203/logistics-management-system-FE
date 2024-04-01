@@ -21,6 +21,7 @@ import { PiMoneyDuotone } from 'react-icons/pi';
 export default function HomePage() {
   const router = useRouter();
   const [orderID, setOrderID] = useState('');
+  const company = process.env.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
 
   const handleSearch = () => {
     if (orderID.trim() !== '') {
@@ -30,6 +31,7 @@ export default function HomePage() {
 
   return (
     <div className={style.homePageContainer}>
+      {/* === Section 1: Banner === */}
       <div className={style.banner}>
         <Header />
         <Container>
@@ -37,7 +39,7 @@ export default function HomePage() {
             <Col md={5} xl={6} xxl={5} className="text-md-start text-center py-8">
               <h3 className="fw-normal">Nhà cung cấp tin cậy cho </h3>
               <h3 className="fw-bolder">Dịch vụ chuyển phát nhanh</h3>
-              <h1 className="fw-bolder">Company Name</h1>
+              <h1 className="fw-bolder">{company}</h1>
               <p>Cùng bạn đến mọi miền tổ quốc</p>
             </Col>
             <Col md={7} xl={6} xxl={7} className="text-center">
@@ -97,20 +99,20 @@ export default function HomePage() {
         <Row className={style.serviceContainer}>
           <Col xs={6} lg={3} className="mb-3">
             <div className={style.serviceItem}>
-              <h4>Company DOC</h4>
+              <h4>{company} DOC</h4>
               <FaRegFile size={'5em'} />
               <p>
-                Company Tài Liệu là dịch vụ nhận gửi, vận chuyển và phát các loại thư, tài liệu trong nước theo chỉ tiêu
-                thời gian tiêu chuẩn được công bố bởi Magic Post.
+                {company} Tài Liệu là dịch vụ nhận gửi, vận chuyển và phát các loại thư, tài liệu trong nước theo chỉ
+                tiêu thời gian tiêu chuẩn được công bố bởi {company}.
               </p>
             </div>
           </Col>
           <Col xs={6} lg={3} className="mb-3">
             <div className={style.serviceItem}>
-              <h4>Company FAST</h4>
+              <h4>{company} FAST</h4>
               <GoRocket size={'5em'} />
               <p>
-                Company Hỏa Tốc là dịch vụ chất lượng cao với chỉ tiêu thời gian toàn trình rút ngắn so với dịch vụ
+                {company} Hỏa Tốc là dịch vụ chất lượng cao với chỉ tiêu thời gian toàn trình rút ngắn so với dịch vụ
                 Magic Post Chuyển Phát Nhanh, trong đó bưu gửi được ưu tiên chuyển phát đến người nhận trong khung thời
                 gian cam kết theo tuyến hành trình cụ thể.
               </p>
@@ -118,22 +120,22 @@ export default function HomePage() {
           </Col>
           <Col xs={6} lg={3} className="mb-3">
             <div className={style.serviceItem}>
-              <h4>Company GIFT</h4>
+              <h4>{company} GIFT</h4>
               <IoGiftOutline size={'5em'} />
               <p>
-                Company Gift - dịch vụ đặc biệt của Magic Post, chuyên gửi quà tặng nhanh chóng và an toàn. Gửi quà cho
+                {company} Gift - dịch vụ đặc biệt của {company}, chuyên gửi quà tặng nhanh chóng và an toàn. Gửi quà cho
                 người thân, bạn bè hay đối tác kinh doanh trở nên dễ dàng và ý nghĩa với dịch vụ này.
               </p>
             </div>
           </Col>
           <Col xs={6} lg={3} className="mb-3">
             <div className={style.serviceItem}>
-              <h4>Company CARE</h4>
+              <h4>{company} CARE</h4>
               <CiMedicalCase size={'5em'} />
               <p>
-                Company Care là dịch vụ hàng hóa chăm sóc cao cấp của Magic Post, mang đến sự an toàn và chăm sóc tối đa
-                cho các bưu phẩm. Với chất lượng vận chuyển hàng đầu, Company Care cam kết đảm bảo mọi gói hàng được gửi
-                đi và đến nơi một cách an toàn và đúng hẹn.
+                {company} Care là dịch vụ hàng hóa chăm sóc cao cấp của {company}, mang đến sự an toàn và chăm sóc tối
+                đa cho các bưu phẩm. Với chất lượng vận chuyển hàng đầu, Company Care cam kết đảm bảo mọi gói hàng được
+                gửi đi và đến nơi một cách an toàn và đúng hẹn.
               </p>
             </div>
           </Col>

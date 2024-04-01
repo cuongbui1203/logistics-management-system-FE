@@ -1,21 +1,24 @@
+'use client';
 import { Container, Row, Col } from 'react-bootstrap';
 import style from '@/css/customer/footer.module.css';
 import { FaAngleRight } from 'react-icons/fa6';
 import Link from 'next/link';
 
 export function Footer() {
+  const company = process.env.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
+
   return (
     <footer className={style.footer}>
       <Container className={style.container}>
         <Row>
           <Col xs={12} lg={5}>
-            <h3>TỔNG CÔNG TY CHUYỂN PHÁT Company Name</h3>
-            <p>Địa chỉ: Số 28 Đỗ Đức Dục - Mễ Trì - Nam Từ Liêm - Hà Nội</p>
-            <p>Hotline: 0858 562 678</p>
+            <h3>TỔNG CÔNG TY CHUYỂN PHÁT {company}</h3>
+            <p>Địa chỉ: Hà Nội</p>
+            <p>Hotline: 0123 456 789</p>
           </Col>
 
           <Col xs={12} lg={2}>
-            <h3>Về Company Name</h3>
+            <h3>Về {company}</h3>
             <ul className={style.footerMenu}>
               <li>
                 <Link href="/customer/History">
