@@ -1,21 +1,32 @@
 'use client';
 import { LuLock } from 'react-icons/lu';
 import { FaRegUser } from 'react-icons/fa';
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
 import style from '@/css/login.module.css';
 import Link from 'next/link';
 import { Container, Row, Col, Image, Form, Button, InputGroup } from 'react-bootstrap';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { LoginBody, LoginBodyType } from '@/schema/auth.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export function LoginForm() {
-  const [username, setUsername] = useState('');
-  const [pass, setPass] = useState('');
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginBodyType>({
+    resolver: zodResolver(LoginBody),
+  });
 
-  const onSubMit = async () => {
-    const result = await signIn('credentials', {
-      username: username,
-      password: pass,
-    });
+  const onSubmit: SubmitHandler<LoginBodyType> = async (data) => {
+    try {
+      console.log(data);
+      // Call API here
+    } catch (error) {
+      setError('root', {
+        message: 'Đã có lỗi xảy ra',
+      });
+    }
   };
   return (
     <Container fluid className={style.container}>
@@ -24,7 +35,7 @@ export function LoginForm() {
           <Image src="/login.png" fluid alt="Sample image" className="w-100 h-100" />
         </Col>
         <Col md={12} lg={6} xl={4} offset-xl-1="true">
-          <Form>
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <Row className="text-center text-light">
               <h3>ĐĂNG NHẬP</h3>
             </Row>
@@ -41,10 +52,11 @@ export function LoginForm() {
                     placeholder="Tài khoản"
                     aria-label="Username"
                     aria-describedby="basic-addon1"
-                    onChange={(e) => setUsername(e.target.value)}
+                    {...register('username')}
                   />
                 </InputGroup>
               </Form.Group>
+              {errors.username && <Form.Text className="text-danger">{errors.username.message}</Form.Text>}
             </Row>
 
             <Row>
@@ -62,10 +74,11 @@ export function LoginForm() {
                     type="password"
                     aria-describedby="basic-addon1"
                     required
-                    onChange={(e) => setPass(e.target.value)}
+                    {...register('password')}
                   />
                 </InputGroup>
               </Form.Group>
+              {errors.password && <Form.Text className="text-danger">{errors.password.message}</Form.Text>}
             </Row>
 
             <Row>
@@ -81,9 +94,10 @@ export function LoginForm() {
             </Row>
 
             <Row className="m-1">
-              <Button variant="primary" size="lg" className="login-btn" onClick={onSubMit}>
-                Đăng nhập
+              <Button variant="primary" size="lg" className="login-btn" type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Đang xử lý...' : 'Đăng nhập'}
               </Button>
+              {errors.root && <Form.Text className="text-danger">{errors.root.message}</Form.Text>}
             </Row>
           </Form>
         </Col>

@@ -1,13 +1,17 @@
+'use client';
+
 import { Button, Container, Nav, NavDropdown, Navbar } from 'react-bootstrap';
 import { FaTruckFast } from 'react-icons/fa6';
 import style from '@/css/customer/header.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export function Header() {
   const route = useRouter();
   const [navBar, setNavBar] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const company = process.env.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
 
   const changeBackground = () => {
     if (window.scrollY >= 100) {
@@ -34,7 +38,7 @@ export function Header() {
             }}
           >
             <FaTruckFast size={'3rem'} />
-            COMPANY NAME
+            {company}
           </Navbar.Brand>
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -43,13 +47,9 @@ export function Header() {
             className={`${style.navbarToggle} ${isOpen && isOpen ? style.active : ''}`}
           >
             <Nav className="me-auto">
-              <Nav.Link
-                onClick={() => {
-                  route.push('/');
-                }}
-              >
+              <Link href="/" className="nav-link">
                 Trang chủ
-              </Nav.Link>
+              </Link>
               <NavDropdown title="Tra cứu" id="basic-nav-dropdown">
                 <NavDropdown.Item
                   onClick={() => {
