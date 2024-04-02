@@ -1,4 +1,3 @@
-import { useCurrentRole } from '@/hooks/use-current-role';
 import { Role, listUrl } from '@/types/Enum';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -13,7 +12,7 @@ export default function SideBar() {
   const route = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState('true');
-  const role = useCurrentRole();
+  const role = 'Admin';
   const keyRole = role as keyof typeof Role;
   const rightRole = Role[keyRole]?.right;
   const rightURL = [];

@@ -1,8 +1,7 @@
 'use client';
-import { useCurrentRole } from '@/hooks/use-current-role';
 
 export default function WorkPlate() {
-  const role = useCurrentRole();
+  const role = 'Admin';
 
   return (
     <div className="tableContainer">

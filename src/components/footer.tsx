@@ -3,9 +3,10 @@ import { Container, Row, Col } from 'react-bootstrap';
 import style from '@/css/customer/footer.module.css';
 import { FaAngleRight } from 'react-icons/fa6';
 import Link from 'next/link';
+import envConfig from '@/envConfig';
 
 export function Footer() {
-  const company = process.env.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
+  const company = envConfig.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
 
   return (
     <footer className={style.footer}>
