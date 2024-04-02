@@ -4,11 +4,14 @@ import { FaRegUser } from 'react-icons/fa';
 import style from '@/css/login.module.css';
 import Link from 'next/link';
 import { Container, Row, Col, Image, Form, Button, InputGroup } from 'react-bootstrap';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { LoginBody, LoginBodyType } from '@/schema/auth.schema';
+import { useForm } from 'react-hook-form';
+import { AuthBody, LoginBody, LoginBodyType } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import authApiRequest from '@/api/auth';
+import { useRouter } from 'next/navigation';
 
 export function LoginForm() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -18,16 +21,27 @@ export function LoginForm() {
     resolver: zodResolver(LoginBody),
   });
 
-  const onSubmit: SubmitHandler<LoginBodyType> = async (data) => {
+  async function onSubmit(values: LoginBodyType) {
     try {
+      const result = await authApiRequest.login(values);
+
+      const data = result.payload.data;
+      const authBody = AuthBody.parse({
+        token: data.token,
+        csrf_token: data.csrf_token,
+        role: data.user.role.name,
+      });
+      await authApiRequest.auth(authBody);
+
       console.log(data);
-      // Call API here
+      console.log(result.payload.message);
+      router.push('/login');
     } catch (error) {
       setError('root', {
-        message: 'Đã có lỗi xảy ra',
+        message: errors.root?.message,
       });
     }
-  };
+  }
   return (
     <Container fluid className={style.container}>
       <Row className="d-flex justify-content-center align-items-center h-100">

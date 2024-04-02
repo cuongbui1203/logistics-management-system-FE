@@ -2,13 +2,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import BreadCrumb from './breadcrumb';
-import { signOut } from 'next-auth/react';
 import { FaUserCircle } from 'react-icons/fa';
 import { Container, Row, Col } from 'react-bootstrap';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import '@/css/employee/topbar.css';
 import 'bootstrap/js/src/dropdown.js';
-import { useCurrentUser } from '@/hooks/use-current-user';
+import authApiRequest from '@/api/auth';
 
 const itemVariants = {
   open: {
@@ -37,10 +36,11 @@ function useOutsideAlerter(ref: any) {
   }, [ref]);
 }
 export default function TopBar() {
-  const route = useRouter();
   const [profile, setProfile] = useState(true);
   const profileRef = useRef(null);
-  const userName = useCurrentUser()?.name;
+  const userName = 'User';
+  const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const closeProfile = (e: any) => {
@@ -52,6 +52,18 @@ export default function TopBar() {
     } else document.body.removeEventListener('click', closeProfile);
     return () => document.body.removeEventListener('click', closeProfile);
   }, [profile]);
+
+  const handleLogout = async () => {
+    try {
+      await authApiRequest.logoutFromNextClientToNextServer();
+      router.push('/login');
+    } catch (error) {
+      console.log(error);
+      authApiRequest.logoutFromNextClientToNextServer(true).then((res) => {
+        router.push(`/login?redirectFrom=${pathname}`);
+      });
+    }
+  };
 
   return (
     <motion.nav layout className="nav topbar">
@@ -111,12 +123,12 @@ export default function TopBar() {
                   variants={itemVariants}
                   onClick={() => {
                     setProfile(!profile);
-                    route.push('/dashboard/information');
+                    router.push('/dashboard/information');
                   }}
                 >
                   Thông tin cá nhân
                 </motion.li>
-                <motion.li className="acc-list" variants={itemVariants} onClick={() => signOut()}>
+                <motion.li className="acc-list" variants={itemVariants} onClick={handleLogout}>
                   Đăng xuất
                 </motion.li>
               </motion.ul>

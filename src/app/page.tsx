@@ -17,11 +17,12 @@ import { CiMedicalCase } from 'react-icons/ci';
 import { RiUserHeartLine, RiTruckLine } from 'react-icons/ri';
 import { BsPeople } from 'react-icons/bs';
 import { PiMoneyDuotone } from 'react-icons/pi';
+import envConfig from '@/envConfig';
 
 export default function HomePage() {
   const router = useRouter();
   const [orderID, setOrderID] = useState('');
-  const company = process.env.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
+  const company = envConfig.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
 
   const handleSearch = () => {
     if (orderID.trim() !== '') {

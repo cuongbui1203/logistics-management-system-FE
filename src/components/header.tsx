@@ -6,12 +6,13 @@ import style from '@/css/customer/header.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import envConfig from '@/envConfig';
 
 export function Header() {
   const route = useRouter();
   const [navBar, setNavBar] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const company = process.env.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
+  const company = envConfig.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
 
   const changeBackground = () => {
     if (window.scrollY >= 100) {

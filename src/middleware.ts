@@ -1,39 +1,38 @@
 import { USER_LOGIN_REDIRECT, publicRoutes, authRoutes, apiAuthPrefix, ADMIN_LOGIN_REDIRECT } from '@/routes';
-import { RoleEnum } from './types/Enum';
-import { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
 export default function middleware(req: NextRequest) {
-  // const { nextUrl } = req;
-  // const isLoggedIn = !!req.auth;
-  // // req.auth
-  // console.log('ROUTE: ', nextUrl.pathname);
-  // console.log('IS LOGGEDIN: ', isLoggedIn);
-  // const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  // const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
-  // const isAuthRoute = authRoutes.includes(nextUrl.pathname);
-  // if (isApiAuthRoute || isPublicRoute) {
-  //   return;
-  // }
-  // if (isAuthRoute) {
-  //   if (isLoggedIn) {
-  //     console.log('USER: ', req.auth?.user);
-  //     // when login
-  //     if (req.auth?.user.role.name === 'User') {
-  //       return Response.redirect(new URL(USER_LOGIN_REDIRECT, nextUrl));
-  //     } else {
-  //       return Response.redirect(new URL(ADMIN_LOGIN_REDIRECT, nextUrl));
-  //     }
-  //   }
-  //   return;
-  // }
-  // if (!isLoggedIn) {
-  //   return Response.redirect(new URL('/login', nextUrl));
-  // }
-  // if (req.auth?.user.role.name) {
-  //   const role = req.auth.user.role.name as RoleEnum;
-  //   switch (role) {
-  //   }
-  // }
+  const { nextUrl } = req;
+  const token = req.cookies.get('token')?.value;
+  const role = req.cookies.get('role')?.value;
+
+  console.log('ROUTE: ', nextUrl.pathname);
+
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+
+  if (isPublicRoute || isApiAuthRoute) {
+    return NextResponse.next();
+  }
+
+  // Đăng nhập rồi thì không cho vào login/register nữa
+  if (isAuthRoute) {
+    if (token) {
+      if (role === 'User') {
+        return NextResponse.redirect(new URL(USER_LOGIN_REDIRECT, req.url));
+      }
+      return NextResponse.redirect(new URL(ADMIN_LOGIN_REDIRECT, req.url));
+    }
+
+    return NextResponse.next();
+  }
+
+  if (!token) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  return NextResponse.next();
 }
 
 // Optionally, don't invoke Middleware on some paths

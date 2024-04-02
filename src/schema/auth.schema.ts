@@ -28,3 +28,49 @@ export const LoginBody = z
   .strict();
 
 export type LoginBodyType = z.TypeOf<typeof LoginBody>;
+
+export const RoleSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  desc: z.string(),
+  created_at: z.date(),
+  updated_at: z.date(),
+});
+
+export const UserSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  email_verified_at: z.string().nullable(),
+  created_at: z.date(),
+  updated_at: z.date(),
+  phone: z.number().nullable(),
+  dob: z.date().nullable(),
+  username: z.string(),
+  address: z.string().nullable(),
+  role_id: z.number(),
+  wp_id: z.string().nullable(),
+  img_id: z.string().nullable(),
+  role: RoleSchema,
+  work_plate: z.string().nullable(),
+  img: z.string().nullable(),
+});
+
+export const LoginRes = z.object({
+  success: z.boolean(),
+  data: z.object({
+    user: UserSchema,
+    token: z.string(),
+    csrf_token: z.string(),
+  }),
+  message: z.string(),
+});
+
+export type LoginResType = z.TypeOf<typeof LoginRes>;
+
+export const AuthBody = z.object({
+  token: z.string(),
+  csrf_token: z.string(),
+  role: z.string(),
+});
+
+export type AuthBodyType = z.TypeOf<typeof AuthBody>;

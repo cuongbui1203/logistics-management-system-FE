@@ -3,12 +3,15 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BootstrapClient from '@/components/bootstrap-client';
+import envConfig from '@/envConfig';
+import { cookies } from 'next/headers';
+import AppProvider from '@/components/app-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App',
-  description: process.env.COMPANY_DESCRIPTION,
+  title: envConfig.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App',
+  description: envConfig.NEXT_PUBLIC_COMPANY_DESCRIPTION,
 };
 
 export default async function RootLayout({
@@ -16,11 +19,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies();
+  const sessionToken = cookieStore.get('sessionToken');
   return (
     <html lang="en" suppressHydrationWarning>
       {/* antialiased is tailwind class for font smoothing */}
       <body className={`${inter.className} antialiased`}>
-        {children}
+        <AppProvider inititalSessionToken={sessionToken?.value}> {children}</AppProvider>
         <BootstrapClient />
       </body>
     </html>
