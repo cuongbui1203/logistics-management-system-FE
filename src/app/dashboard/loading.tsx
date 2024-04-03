@@ -3,10 +3,12 @@ import { motion, useAnimate } from 'framer-motion';
 import { useEffect } from 'react';
 import '@/css/loading.css';
 import { FaShippingFast } from 'react-icons/fa';
+import envConfig from '@/envConfig';
 export default function LoadLoad() {
   const [scope, animate] = useAnimate();
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const containerWidth = document.querySelector('.container')?.clientWidth || window.innerWidth;
     const animateLoader = async () => {
       await animate(
@@ -23,13 +25,15 @@ export default function LoadLoad() {
     };
     animateLoader();
   }, []);
-  const isSmallScreen = window.innerWidth <= 768; // Set your breakpoint as needed
+  // const isSmallScreen = window ? window.innerWidth <= 768 : false; // Set your breakpoint as needed
+  const isSmallScreen = false;
   const endX = isSmallScreen ? 100 : 300;
+  const company = envConfig.NEXT_PUBLIC_COMPANY_NAME;
   return (
     <div id="loading">
       <div className="containerer">
         <h1 className="text">
-          <i>MAGIC POST</i>
+          <i>{company}</i>
         </h1>
         <motion.div animate={{ x: endX }} transition={{ ease: 'easeOut', duration: 2 }} className="icon">
           <FaShippingFast size={'4em'} />

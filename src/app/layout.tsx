@@ -6,6 +6,8 @@ import BootstrapClient from '@/components/bootstrap-client';
 import envConfig from '@/envConfig';
 import { cookies } from 'next/headers';
 import AppProvider from '@/components/app-provider';
+import { AccountResType } from '@/schema/account.schema';
+import accountApiRequest from '@/api/account';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,12 +22,19 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = cookies();
-  const sessionToken = cookieStore.get('sessionToken');
+  const sessionToken = cookieStore.get('token');
+  let user: AccountResType['data'] | null = null;
+  if (sessionToken) {
+    const data = await accountApiRequest.me(sessionToken.value);
+    user = data.payload.data;
+  }
   return (
     <html lang="en" suppressHydrationWarning>
       {/* antialiased is tailwind class for font smoothing */}
       <body className={`${inter.className} antialiased`}>
-        <AppProvider inititalSessionToken={sessionToken?.value}> {children}</AppProvider>
+        <AppProvider initialSessionToken={sessionToken?.value} user={user}>
+          {children}
+        </AppProvider>
         <BootstrapClient />
       </body>
     </html>

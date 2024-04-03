@@ -1,18 +1,21 @@
+'use client';
 import { Role, listUrl } from '@/types/Enum';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { Col } from 'react-bootstrap';
 import { FaTruckFast } from 'react-icons/fa6';
 import '@/css/employee/sidebar.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import envConfig from '@/envConfig';
+import { useAppContext } from '@/components/app-provider';
 
 export default function SideBar() {
   const route = useRouter();
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState('true');
-  const role = 'Admin';
+  const { user } = useAppContext();
+  const role = user?.role.name;
+  console.log('role', role);
+
   const keyRole = role as keyof typeof Role;
   const rightRole = Role[keyRole]?.right;
   const rightURL = [];
@@ -20,25 +23,14 @@ export default function SideBar() {
     let key = rightRole[i] as keyof typeof listUrl;
     rightURL.push({ url: listUrl[key] });
   }
-
-  const show = {
-    opacity: 1,
-    display: 'block',
-  };
-
-  const hide = {
-    opacity: 0,
-    transitionEnd: {
-      display: 'none',
-    },
-  };
+  const company = envConfig.NEXT_PUBLIC_COMPANY_NAME;
 
   return (
-    <motion.div animate={isOpen ? show : hide} className="sidebar" id="mySidebar" exit={{ opacity: 0 }}>
+    <motion.div className="sidebar" id="mySidebar">
       <Link href="/dashboard" className="appName">
         <Col>
           <FaTruckFast size={'2em'} />
-          Company Name
+          {company}
         </Col>
       </Link>
       {rightURL?.map((link) => {

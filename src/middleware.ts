@@ -4,7 +4,6 @@ import { NextResponse, type NextRequest } from 'next/server';
 export default function middleware(req: NextRequest) {
   const { nextUrl } = req;
   const token = req.cookies.get('token')?.value;
-  const role = req.cookies.get('role')?.value;
 
   console.log('ROUTE: ', nextUrl.pathname);
 
@@ -19,10 +18,7 @@ export default function middleware(req: NextRequest) {
   // Đăng nhập rồi thì không cho vào login/register nữa
   if (isAuthRoute) {
     if (token) {
-      if (role === 'User') {
-        return NextResponse.redirect(new URL(USER_LOGIN_REDIRECT, req.url));
-      }
-      return NextResponse.redirect(new URL(ADMIN_LOGIN_REDIRECT, req.url));
+      return NextResponse.redirect(new URL(USER_LOGIN_REDIRECT, req.url));
     }
 
     return NextResponse.next();

@@ -1,16 +1,17 @@
+'use client';
 import { Form, Row, Col, InputGroup } from 'react-bootstrap';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { FaRegCalendar } from 'react-icons/fa';
 import { MdAlternateEmail } from 'react-icons/md';
-import { IoMdPhonePortrait } from 'react-icons/io';
-import { CiCreditCard2 } from 'react-icons/ci';
-import { BsGenderAmbiguous } from 'react-icons/bs';
 import { TiLocationArrowOutline } from 'react-icons/ti';
 import { GrMapLocation } from 'react-icons/gr';
 import { IoLocationOutline } from 'react-icons/io5';
 import { TbCurrentLocation } from 'react-icons/tb';
+import { useAppContext } from '@/components/app-provider';
+import { IoMdPhonePortrait } from 'react-icons/io';
 
-export default function MainInformation(data: any) {
+export default function MainInformation() {
+  const { user } = useAppContext();
   const convertGender = (gender: string) => {
     if (gender) {
       switch (gender.toLowerCase()) {
@@ -39,7 +40,7 @@ export default function MainInformation(data: any) {
               <InputGroup.Text className="bg-light">
                 <FaRegUserCircle />
               </InputGroup.Text>
-              <Form.Control type="text" value={data?.data?.fullName} disabled />
+              <Form.Control type="text" value={user?.name || ''} disabled />
             </InputGroup>
           </Form.Group>
         </Col>
@@ -51,7 +52,7 @@ export default function MainInformation(data: any) {
               <InputGroup.Text className="bg-light">
                 <FaRegCalendar />
               </InputGroup.Text>
-              <Form.Control type="date" value={data?.data?.birthDate} disabled />
+              <Form.Control type="date" value={'Ngay sinh'} disabled />
             </InputGroup>
           </Form.Group>
         </Col>
@@ -65,7 +66,7 @@ export default function MainInformation(data: any) {
               <InputGroup.Text className="bg-light">
                 <MdAlternateEmail />
               </InputGroup.Text>
-              <Form.Control type="email" value={data?.data?.email} disabled />
+              <Form.Control type="email" value={user?.email || ''} disabled />
             </InputGroup>
           </Form.Group>
         </Col>
@@ -77,33 +78,7 @@ export default function MainInformation(data: any) {
               <InputGroup.Text className="bg-light">
                 <IoMdPhonePortrait />
               </InputGroup.Text>
-              <Form.Control type="tel" value={data?.data?.phoneNumber} disabled />
-            </InputGroup>
-          </Form.Group>
-        </Col>
-      </Row>
-
-      <Row className="mt-2">
-        <Col md={6}>
-          <Form.Group controlId="identifer">
-            <Form.Label>CCCD</Form.Label>
-            <InputGroup>
-              <InputGroup.Text className="bg-light">
-                <CiCreditCard2 />
-              </InputGroup.Text>
-              <Form.Control type="text" value={data?.data?.identifier} disabled />
-            </InputGroup>
-          </Form.Group>
-        </Col>
-
-        <Col md={6}>
-          <Form.Group controlId="gender">
-            <Form.Label>Giới tính</Form.Label>
-            <InputGroup>
-              <InputGroup.Text className="bg-light">
-                <BsGenderAmbiguous />
-              </InputGroup.Text>
-              <Form.Control type="text" value={convertGender(data?.data?.gender)} disabled />
+              <Form.Control type="tel" value={user?.phone?.toString()} disabled />
             </InputGroup>
           </Form.Group>
         </Col>
@@ -117,7 +92,7 @@ export default function MainInformation(data: any) {
               <InputGroup.Text className="bg-light">
                 <TiLocationArrowOutline />
               </InputGroup.Text>
-              <Form.Control type="text" placeholder="Xã" disabled value={data?.data?.address?.commune.name} />
+              <Form.Control type="text" placeholder="Xã" disabled value={user?.address?.toString()} />
             </InputGroup>
           </Form.Group>
         </Col>
@@ -127,7 +102,7 @@ export default function MainInformation(data: any) {
             <InputGroup.Text className="bg-light">
               <GrMapLocation />
             </InputGroup.Text>
-            <Form.Control type="text" placeholder="Quận" disabled value={data?.data?.address?.district.name} />
+            <Form.Control type="text" placeholder="Quận" disabled value={'Quận'} />
           </InputGroup>
         </Col>
 
@@ -136,7 +111,7 @@ export default function MainInformation(data: any) {
             <InputGroup.Text className="bg-light">
               <IoLocationOutline />
             </InputGroup.Text>
-            <Form.Control type="text" placeholder="Tỉnh" disabled value={data?.data?.address?.province.name} />
+            <Form.Control type="text" placeholder="Tỉnh" disabled value={'Tỉnh'} />
           </InputGroup>
         </Col>
       </Row>
@@ -147,7 +122,7 @@ export default function MainInformation(data: any) {
             <InputGroup.Text className="bg-light">
               <TbCurrentLocation />
             </InputGroup.Text>
-            <Form.Control type="text" placeholder="Chi tiết" disabled value={data?.data?.address?.detail} />
+            <Form.Control type="text" placeholder="Chi tiết" disabled value={'Detail'} />
           </InputGroup>
         </Col>
       </Row>

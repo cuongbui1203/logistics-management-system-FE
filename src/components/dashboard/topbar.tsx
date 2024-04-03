@@ -6,8 +6,8 @@ import { FaUserCircle } from 'react-icons/fa';
 import { Container, Row, Col } from 'react-bootstrap';
 import { usePathname, useRouter } from 'next/navigation';
 import '@/css/employee/topbar.css';
-import 'bootstrap/js/src/dropdown.js';
 import authApiRequest from '@/api/auth';
+import { useAppContext } from '@/components/app-provider';
 
 const itemVariants = {
   open: {
@@ -17,28 +17,12 @@ const itemVariants = {
   },
   closed: { opacity: 0, y: 20, transition: { duration: 0.2 } },
 };
-function useOutsideAlerter(ref: any) {
-  useEffect(() => {
-    /**
-     * Alert if clicked on outside of element
-     */
-    function handleClickOutside(event: any) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        alert('You clicked outside of me!');
-      }
-    }
-    // Bind the event listener
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [ref]);
-}
+
 export default function TopBar() {
-  const [profile, setProfile] = useState(true);
+  const [profile, setProfile] = useState(false);
   const profileRef = useRef(null);
-  const userName = 'User';
+  const { user } = useAppContext();
+  const userName = user?.name;
   const router = useRouter();
   const pathname = usePathname();
 
@@ -122,7 +106,6 @@ export default function TopBar() {
                   className="acc-list"
                   variants={itemVariants}
                   onClick={() => {
-                    setProfile(!profile);
                     router.push('/dashboard/information');
                   }}
                 >

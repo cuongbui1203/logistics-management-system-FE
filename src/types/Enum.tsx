@@ -5,11 +5,11 @@ import { RiRoadMapLine } from 'react-icons/ri';
 import { HiOutlineBuildingOffice } from 'react-icons/hi2';
 
 export enum RoleEnum {
-  Admin = 1,
-  User = 2,
-  Driver = 3,
-  Employee = 4,
-  Manager = 5,
+  Admin = 'Admin',
+  User = 'User',
+  Driver = 'Driver',
+  Employee = 'Employee',
+  Manager = 'Manager',
 }
 
 export const Role = {
@@ -67,7 +67,7 @@ export const listUrl = {
     icon: <RiRoadMapLine size={'2em'} />,
   },
   manageTransactionPoint: {
-    url: '/dashboard/workplate',
+    url: '/dashboard/workplate2',
     name: 'Điểm giao dịch',
     icon: <HiOutlineBuildingOffice size={'2em'} />,
   },

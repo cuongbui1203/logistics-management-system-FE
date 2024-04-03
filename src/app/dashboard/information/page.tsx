@@ -1,20 +1,13 @@
 'use client';
-import { getUserInfo } from '@/api/data';
+
 import MainInformation from '@/components/dashboard/information/mainInfo';
 import Preview from '@/components/dashboard/information/preview';
 import Security from '@/components/dashboard/information/security';
-import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 
 export default function Information() {
   const [currentPage, setCurrentPage] = useState('mainInformation');
-  const session = useSession();
-  if (!session.data?.token) {
-    return null;
-  }
-
-  const dataInfo = getUserInfo(session.data?.token);
 
   const handleButtonClick = (page: string) => {
     setCurrentPage(page);
@@ -24,7 +17,7 @@ export default function Information() {
     <Container>
       <Row>
         <Col xs="12" md="4">
-          <Preview data={dataInfo} />
+          <Preview />
         </Col>
 
         <Col>
@@ -45,7 +38,7 @@ export default function Information() {
             </button>
           </div>
           <div className="row mt-3">
-            {currentPage === 'mainInformation' && <MainInformation data={dataInfo} />}
+            {currentPage === 'mainInformation' && <MainInformation />}
             {currentPage === 'security' && <Security />}
           </div>
         </Col>
