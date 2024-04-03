@@ -19,3 +19,8 @@
 nextjs-portal {
   display: none;
 }
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

@@ -9,6 +9,7 @@ import { AuthBody, LoginBody, LoginBodyType } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import authApiRequest from '@/api/auth';
 import { useRouter } from 'next/navigation';
+import { ADMIN_LOGIN_REDIRECT, USER_LOGIN_REDIRECT } from '@/routes';
 
 export function LoginForm() {
   const router = useRouter();
@@ -32,10 +33,11 @@ export function LoginForm() {
         role: data.user.role.name,
       });
       await authApiRequest.auth(authBody);
-
-      console.log(data);
-      console.log(result.payload.message);
-      router.push('/login');
+      if (data.user.role.name === 'User' || data.user.role.name === 'Driver') {
+        router.push(USER_LOGIN_REDIRECT);
+        return;
+      }
+      router.push(ADMIN_LOGIN_REDIRECT);
     } catch (error) {
       setError('root', {
         message: errors.root?.message,
