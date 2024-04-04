@@ -1,0 +1,88 @@
+.topbar {
+  background-color: transparent;
+  z-index: 20000 !important;
+  padding: 5px;
+}
+
+.breadCrumbContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.breadcrumb {
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  color: var(--highlight-color);
+}
+
+.navBar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.usernameContainer {
+  padding: 5px 0;
+}
+
+.userName {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  padding-right: 0;
+}
+
+.avatarContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+  position: relative;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.list-infor {
+  background: white;
+  position: absolute;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  z-index: 9999999;
+}
+
+.acc-list {
+  border-radius: 30px;
+  cursor: pointer;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  display: block;
+}
+
+.acc-list:hover {
+  background-color: var(--background-color);
+  color: white;
+}
+
+.acc-list,
+.list-infor {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+}
+
+@media screen and (max-width: 769px) {
+  .breadcrumb {
+    display: none;
+  }
+}

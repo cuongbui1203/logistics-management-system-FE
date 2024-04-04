@@ -1,8 +1,19 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## About
+
+- Next.js 14
+- TypeScript
+- Bootstrap 5
+- ESLint
+- Zod
+- React Hook Form
+
 ## Getting Started
 
 First, run the development server:
+
+- Copy `.env.example` to `.env` and fill in the environment variables.
 
 ```bash
 npm run dev
