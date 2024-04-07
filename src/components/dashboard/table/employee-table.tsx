@@ -1,13 +1,24 @@
+'use client';
 import accountApiRequest from '@/api/account';
 import { EmployeeDetail } from '@/components/dashboard/button';
 import Pagination from '@/components/dashboard/pagination';
 import { AccountList } from '@/schema/account.schema';
 import React, { useEffect, useState } from 'react';
 import '@/css/employee/customTable.css';
+import { useDebouncedCallback } from 'use-debounce';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-export default function EmployeeTable({ page, query, showFilter }: any) {
+interface EmployeeTableProps {
+  page?: number;
+  query?: string;
+  showFilter?: boolean;
+}
+
+export default function EmployeeTable({ page, query, showFilter }: EmployeeTableProps) {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
   const [listEmployees, setListEmployees] = useState<AccountList>([]);
-  const [isLoading, setLoading] = useState(true);
   let totalPage = 1;
 
   useEffect(() => {
@@ -16,7 +27,6 @@ export default function EmployeeTable({ page, query, showFilter }: any) {
         await accountApiRequest.listAccountClient().then((res) => {
           setListEmployees(res.payload.data.data);
           totalPage = res.payload.data.total;
-          setLoading(false);
           console.log(res.payload.data.data);
         });
       } catch (error) {
@@ -26,8 +36,30 @@ export default function EmployeeTable({ page, query, showFilter }: any) {
     fetchData();
   }, []);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (!listEmployees) return <p>No profile data</p>;
+  const debounce = (type: string) =>
+    useDebouncedCallback((term) => {
+      const params = new URLSearchParams(searchParams);
+      if (term) {
+        params.set(type, term);
+      } else {
+        params.delete(type);
+      }
+      replace(`${pathname}?${params.toString()}`);
+    }, 300);
+
+  const handleName = debounce('name');
+  const handleEmID = debounce('EmId');
+  const handleAddress = debounce('address');
+  const handlePhone = debounce('phone');
+  const handleStatus = debounce('status');
+
+  // const {
+  //   dataRes: inforEmployees,
+  //   totalPage: totalPage,
+  //   itemPerPage: itemPerPage,
+  // } = getEmployee(page || 1, query);
+
+  if (listEmployees.length == 0) return <p>Loading...</p>;
 
   return (
     <div>
@@ -45,7 +77,7 @@ export default function EmployeeTable({ page, query, showFilter }: any) {
                   <th scope="col">Email</th>
                   <th scope="col"></th>
                 </tr>
-                {/* {showFilter && (
+                {showFilter && (
                   <tr className="filter">
                     <th scope="col"></th>
                     <th scope="col">
@@ -54,7 +86,7 @@ export default function EmployeeTable({ page, query, showFilter }: any) {
                     <th scope="col">
                       <input onChange={(e) => handleName(e.target.value)} placeholder="Lọc theo tên" />
                     </th>
-                    <th scope="col">
+                    {/* <th scope="col">
                       <select onChange={(e) => handleAddress(e.target.value)}>
                         <option value="">Chọn tỉnh/ thành phố</option>
                         {provinceData.map((province) => (
@@ -73,17 +105,18 @@ export default function EmployeeTable({ page, query, showFilter }: any) {
                           </option>
                         ))}
                       </select>
-                    </th>
+                    </th> */}
                     <th scope="col">
                       <input placeholder="Lọc theo sdt" onChange={(e) => handlePhone(e.target.value)} />
                     </th>
                     <th scope="col"></th>
                   </tr>
-                )} */}
+                )}
               </thead>
               <tbody className="table-group-divider">
                 {listEmployees.map((employee, index) => {
                   // const statusInfo = employeeStatus[employee?.status] || {};
+                  // const badgeColor = statusInfo.color || "secondary";
                   const badgeColor = 'secondary';
 
                   return (

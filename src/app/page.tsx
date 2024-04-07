@@ -26,7 +26,8 @@ export default function HomePage() {
 
   const handleSearch = () => {
     if (orderID.trim() !== '') {
-      router.push(`/customer/LockupOrders?query=${orderID}`);
+      console.log('orderID', orderID);
+      // router.push(`/customer/LockupOrders?query=${orderID}`);
     }
   };
 

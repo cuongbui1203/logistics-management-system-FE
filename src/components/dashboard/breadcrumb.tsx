@@ -1,5 +1,5 @@
 'use client';
-import { listUrl } from '@/types/Enum';
+import { listUrl } from '@/config/Enum';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Breadcrumb, BreadcrumbItem } from 'react-bootstrap';
