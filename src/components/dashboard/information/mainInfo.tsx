@@ -7,25 +7,11 @@ import { TiLocationArrowOutline } from 'react-icons/ti';
 import { GrMapLocation } from 'react-icons/gr';
 import { IoLocationOutline } from 'react-icons/io5';
 import { TbCurrentLocation } from 'react-icons/tb';
-import { useAppContext } from '@/components/app-provider';
+import { useAppContext } from '@/app/app-provider';
 import { IoMdPhonePortrait } from 'react-icons/io';
 
 export default function MainInformation() {
   const { user } = useAppContext();
-  const convertGender = (gender: string) => {
-    if (gender) {
-      switch (gender.toLowerCase()) {
-        case 'male':
-          return 'Nam';
-        case 'female':
-          return 'Nữ';
-        default:
-          return 'Không xác định';
-      }
-    } else {
-      return 'Không xác định';
-    }
-  };
 
   return (
     <div className="formContainer">
@@ -52,7 +38,7 @@ export default function MainInformation() {
               <InputGroup.Text className="bg-light">
                 <FaRegCalendar />
               </InputGroup.Text>
-              <Form.Control type="date" value={'Ngay sinh'} disabled />
+              <Form.Control type="date" value={user?.dob?.toString()} disabled />
             </InputGroup>
           </Form.Group>
         </Col>
@@ -92,7 +78,7 @@ export default function MainInformation() {
               <InputGroup.Text className="bg-light">
                 <TiLocationArrowOutline />
               </InputGroup.Text>
-              <Form.Control type="text" placeholder="Xã" disabled value={user?.address?.toString()} />
+              <Form.Control type="text" placeholder="Xã" disabled value={user?.address?.ward} />
             </InputGroup>
           </Form.Group>
         </Col>
@@ -102,7 +88,7 @@ export default function MainInformation() {
             <InputGroup.Text className="bg-light">
               <GrMapLocation />
             </InputGroup.Text>
-            <Form.Control type="text" placeholder="Quận" disabled value={'Quận'} />
+            <Form.Control type="text" placeholder="Quận" disabled value={user?.address?.district} />
           </InputGroup>
         </Col>
 
@@ -111,7 +97,7 @@ export default function MainInformation() {
             <InputGroup.Text className="bg-light">
               <IoLocationOutline />
             </InputGroup.Text>
-            <Form.Control type="text" placeholder="Tỉnh" disabled value={'Tỉnh'} />
+            <Form.Control type="text" placeholder="Tỉnh" disabled value={user?.address?.province} />
           </InputGroup>
         </Col>
       </Row>

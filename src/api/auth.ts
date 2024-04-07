@@ -1,17 +1,17 @@
-import { AuthBodyType, RegisterBodyType } from './../schema/auth.schema';
+import { AuthBodyType, RegisterBodyType } from '@/schema/auth.schema';
 import http from '@/lib/http';
 import { LoginBodyType, LoginResType } from '@/schema/auth.schema';
 import { MessageResType } from '@/schema/common.schema';
 
 const authApiRequest = {
-  login: (body: LoginBodyType) => http.post<LoginResType>('users/login', body),
-  register: (body: RegisterBodyType) => http.post<LoginResType>('users/register', body),
+  login: (body: LoginBodyType) => http.post<LoginResType>('api/users/login', body),
+  register: (body: RegisterBodyType) => http.post<LoginResType>('api/users/register', body),
   auth: (body: AuthBodyType) =>
     http.post('api/auth', body, {
       baseUrl: '',
     }),
   logoutFromNextServerToServer: (token: string) =>
-    http.delete<MessageResType>('users/me', {
+    http.delete<MessageResType>('api/users/me', {
       headers: {
         Authorization: `Bearer ${token}`,
       },

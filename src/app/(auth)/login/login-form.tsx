@@ -10,6 +10,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import authApiRequest from '@/api/auth';
 import { useRouter } from 'next/navigation';
 import { ADMIN_LOGIN_REDIRECT, USER_LOGIN_REDIRECT } from '@/routes';
+import { toast } from 'react-toastify';
+import { handleErrorApi } from '@/lib/utils';
+import { useAppContext } from '@/app/app-provider';
 
 export function LoginForm() {
   const router = useRouter();
@@ -22,6 +25,8 @@ export function LoginForm() {
     resolver: zodResolver(LoginBody),
   });
 
+  const { setUser } = useAppContext();
+
   async function onSubmit(values: LoginBodyType) {
     try {
       const result = await authApiRequest.login(values);
@@ -30,18 +35,17 @@ export function LoginForm() {
       const authBody = AuthBody.parse({
         token: data.token,
         csrf_token: data.csrf_token,
-        role: data.user.role.name,
       });
       await authApiRequest.auth(authBody);
+      setUser(data.user);
+      toast.success('Đăng nhập thành công');
       if (data.user.role.name === 'User' || data.user.role.name === 'Driver') {
         router.push(USER_LOGIN_REDIRECT);
         return;
       }
       router.push(ADMIN_LOGIN_REDIRECT);
-    } catch (error) {
-      setError('root', {
-        message: errors.root?.message,
-      });
+    } catch (error: any) {
+      handleErrorApi({ error, setError });
     }
   }
   return (
@@ -71,8 +75,8 @@ export function LoginForm() {
                     {...register('username')}
                   />
                 </InputGroup>
+                {errors.username && <Form.Text className="text-danger">{errors.username.message}</Form.Text>}
               </Form.Group>
-              {errors.username && <Form.Text className="text-danger">{errors.username.message}</Form.Text>}
             </Row>
 
             <Row>
@@ -93,8 +97,8 @@ export function LoginForm() {
                     {...register('password')}
                   />
                 </InputGroup>
+                {errors.password && <Form.Text className="text-danger">{errors.password.message}</Form.Text>}
               </Form.Group>
-              {errors.password && <Form.Text className="text-danger">{errors.password.message}</Form.Text>}
             </Row>
 
             <Row>

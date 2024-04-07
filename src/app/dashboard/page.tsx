@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import Statistic from '@/components/dashboard/statistic';
 import EmployeeTable from '@/components/dashboard/table/employee-table';
 import StatisticPoint from '@/components/dashboard/main/statistic-point';
-import { useAppContext } from '@/components/app-provider';
+import { useAppContext } from '@/app/app-provider';
 
 const roleComponents = {
   Admin: [
@@ -45,7 +45,7 @@ export default function Dashboard() {
   const { user } = useAppContext();
   const role = user?.role.name;
 
-  if (!role || role === 'User' || role === 'Driver') {
+  if (role === 'User' || role === 'Driver') {
     return <div>Không có quyền truy cập</div>;
   }
 

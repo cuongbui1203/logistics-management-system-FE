@@ -7,7 +7,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { usePathname, useRouter } from 'next/navigation';
 import '@/css/employee/topbar.css';
 import authApiRequest from '@/api/auth';
-import { useAppContext } from '@/components/app-provider';
+import { useAppContext } from '@/app/app-provider';
 
 const itemVariants = {
   open: {

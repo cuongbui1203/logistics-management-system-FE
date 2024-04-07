@@ -31,7 +31,7 @@ export default function EmployeeTable({ page, query, showFilter }: any) {
 
   return (
     <div>
-      <div className="mt-2 flow-root table">
+      <div className="mt-2 flow-root">
         <div className="inline-block min-w-full align-middle">
           <div className="rounded-lg bg-gray-50 md:pt-0 table-responsive ">
             <table className="employeeTable w-100">

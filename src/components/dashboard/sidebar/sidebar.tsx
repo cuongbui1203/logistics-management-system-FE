@@ -7,7 +7,7 @@ import { Col } from 'react-bootstrap';
 import { FaTruckFast } from 'react-icons/fa6';
 import '@/css/employee/sidebar.css';
 import envConfig from '@/envConfig';
-import { useAppContext } from '@/components/app-provider';
+import { useAppContext } from '@/app/app-provider';
 
 export default function SideBar() {
   const route = useRouter();

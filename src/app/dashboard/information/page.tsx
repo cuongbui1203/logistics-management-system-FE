@@ -9,10 +9,6 @@ import { Col, Container, Row } from 'react-bootstrap';
 export default function Information() {
   const [currentPage, setCurrentPage] = useState('mainInformation');
 
-  const handleButtonClick = (page: string) => {
-    setCurrentPage(page);
-  };
-
   return (
     <Container>
       <Row>
@@ -25,14 +21,14 @@ export default function Information() {
             <button
               type="button"
               className={`btn btn-outline-primary ${currentPage === 'mainInformation' ? 'active' : ''}`}
-              onClick={() => handleButtonClick('mainInformation')}
+              onClick={() => setCurrentPage('mainInformation')}
             >
               Thông tin
             </button>
             <button
               type="button"
               className={`btn btn-outline-primary ms-2 ${currentPage === 'security' ? 'active' : ''}`}
-              onClick={() => handleButtonClick('security')}
+              onClick={() => setCurrentPage('security')}
             >
               Bảo mật
             </button>

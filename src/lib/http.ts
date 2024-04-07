@@ -11,17 +11,18 @@ const ENTITY_ERROR_STATUS = 422;
 const AUTHENTICATION_ERROR_STATUS = 401;
 
 type EntityErrorPayload = {
-  message: string;
-  errors: {
-    field: string;
-    message: string;
-  }[];
+  success: boolean;
+  error: {
+    [key: string]: string[];
+  };
+  status_code: number;
 };
 
 export class HttpError extends Error {
   status: number;
   payload: {
-    message: string;
+    success: boolean;
+    status_code: number;
     [key: string]: any;
   };
   constructor({ status, payload }: { status: number; payload: any }) {

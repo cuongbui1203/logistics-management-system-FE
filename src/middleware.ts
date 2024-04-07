@@ -12,7 +12,7 @@ export default function middleware(req: NextRequest) {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   if (isPublicRoute || isApiAuthRoute) {
-    return NextResponse.next();
+    return;
   }
 
   // Đăng nhập rồi thì không cho vào login/register nữa
