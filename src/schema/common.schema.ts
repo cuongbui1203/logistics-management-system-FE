@@ -8,6 +8,29 @@ export const MessageRes = z
 
 export type MessageResType = z.TypeOf<typeof MessageRes>;
 
+export const AddressSchema = z.object({
+  provinceCode: z.string(),
+  districtCode: z.string(),
+  wardCode: z.string(),
+  province: z.string(),
+  district: z.string(),
+  ward: z.string(),
+});
+
+export const WorkPlateSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  address_id: z.string(),
+  type_id: z.number(),
+  created_at: z.string(),
+  updated_at: z.string(),
+  cap: z.string(),
+  vung: z.string(),
+  address: AddressSchema,
+});
+
+export type WorkPlateSchemaType = z.TypeOf<typeof WorkPlateSchema>;
+
 export const RoleSchema = z.object({
   id: z.number(),
   name: z.string(),
@@ -21,29 +44,18 @@ export const UserSchema = z.object({
   name: z.string(),
   email: z.string(),
   email_verified_at: z.string().nullable(),
-  created_at: z.number(),
-  updated_at: z.number(),
-  phone: z.number().nullable(),
+  created_at: z.number().nullable(),
+  updated_at: z.number().nullable(),
+  phone: z.string().nullable(),
   dob: z.date().nullable(),
   username: z.string(),
-  address: z.string().nullable(),
+  address: AddressSchema,
   role_id: z.number(),
   wp_id: z.string().nullable(),
   img_id: z.string().nullable(),
   role: RoleSchema,
-  work_plate: z.string().nullable(),
+  work_plate: WorkPlateSchema.nullable(),
   img: z.string().nullable(),
-});
-
-const WorkPlateSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  address_id: z.string(),
-  type_id: z.number(),
-  created_at: z.string(),
-  updated_at: z.string(),
-  cap: z.string(),
-  vung: z.string(),
 });
 
 export const AccountSchema = z.object({

@@ -1,5 +1,5 @@
 'use client';
-import { useAppContext } from '@/components/app-provider';
+import { useAppContext } from '@/app/app-provider';
 import React from 'react';
 import { Row } from 'react-bootstrap';
 
@@ -15,8 +15,7 @@ export default async function Preview() {
         Chức vụ: {user?.role.name || 'Không xác định'}
       </Row>
       <Row className="d-flex justify-content-center align-items-center text-center">
-        {/* Địa điểm công tác: {locationDetails} */}
-        Địa điểm công tác: "Không xác định"
+        Địa điểm công tác: {user?.work_plate?.name || 'Không xác định'}
       </Row>
     </div>
   );

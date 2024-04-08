@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import BootstrapClient from '@/components/bootstrap-client';
 import envConfig from '@/envConfig';
 import { cookies } from 'next/headers';
-import AppProvider from '@/components/app-provider';
+import AppProvider from '@/app/app-provider';
 import { AccountResType } from '@/schema/account.schema';
 import accountApiRequest from '@/api/account';
+import { ToastContainer } from 'react-toastify';
+import './globals.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -35,6 +37,7 @@ export default async function RootLayout({
         <AppProvider initialSessionToken={sessionToken?.value} user={user}>
           {children}
         </AppProvider>
+        <ToastContainer />
         <BootstrapClient />
       </body>
     </html>

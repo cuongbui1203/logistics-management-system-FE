@@ -5,6 +5,10 @@ import { cookies } from 'next/headers';
 export async function POST(request: Request) {
   const res = await request.json();
 
+  let header = new Headers();
+  header.append('Set-Cookie', 'token=; Path=/; HttpOnly; Max-Age=0');
+  header.append('Set-Cookie', 'csrfToken=; Path=/; HttpOnly; Max-Age=0');
+
   const force = res.force as boolean | undefined;
   if (force) {
     return Response.json(
@@ -13,10 +17,7 @@ export async function POST(request: Request) {
       },
       {
         status: 200,
-        headers: {
-          // Xóa cookie token
-          'Set-Cookie': `token=; Path=/; HttpOnly; Max-Age=0`,
-        },
+        headers: header,
       }
     );
   }
@@ -36,10 +37,7 @@ export async function POST(request: Request) {
     const result = await authApiRequest.logoutFromNextServerToServer(token.value);
     return Response.json(result.payload, {
       status: 200,
-      headers: {
-        // Xóa cookie token
-        'Set-Cookie': `token=; Path=/; HttpOnly; Max-Age=0`,
-      },
+      headers: header,
     });
   } catch (error) {
     if (error instanceof HttpError) {

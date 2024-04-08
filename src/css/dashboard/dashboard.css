@@ -12,7 +12,7 @@ body {
   width: 85%;
 }
 
-#main[data-isopen='false'] {
+#main[data-is-open='false'] {
   width: 100%;
 }
 
