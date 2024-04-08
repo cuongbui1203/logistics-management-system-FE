@@ -29,6 +29,8 @@ export const WorkPlateSchema = z.object({
   address: AddressSchema,
 });
 
+export type WorkPlateSchemaType = z.TypeOf<typeof WorkPlateSchema>;
+
 export const RoleSchema = z.object({
   id: z.number(),
   name: z.string(),

@@ -4,13 +4,12 @@ import { EmployeeDetail } from '@/components/dashboard/button';
 import Pagination from '@/components/dashboard/pagination';
 import { AccountList } from '@/schema/account.schema';
 import React, { useEffect, useState } from 'react';
-import '@/css/employee/customTable.css';
 import { useDebouncedCallback } from 'use-debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
+import '@/css/dashboard/customTable.css';
 interface EmployeeTableProps {
   page?: number;
-  query?: string;
+  query?: any;
   showFilter?: boolean;
 }
 

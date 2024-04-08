@@ -32,7 +32,7 @@ export default function Loading() {
   const company = envConfig.NEXT_PUBLIC_COMPANY_NAME;
   return (
     <div id="loading">
-      <div className="containerer">
+      <div className="containerLoading">
         <h1 className="text">
           <i>{company}</i>
         </h1>

@@ -3,6 +3,7 @@ import { generatePagination } from '@/lib/utils';
 import { usePathname, useSearchParams } from 'next/navigation';
 import '@/css/components/pagination.css';
 import Link from 'next/link';
+
 export default function Pagination({ totalPage }: { totalPage: number }) {
   if (!totalPage) totalPage = 1;
   const pathname = usePathname();

@@ -5,15 +5,16 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Col } from 'react-bootstrap';
 import { FaTruckFast } from 'react-icons/fa6';
-import '@/css/employee/sidebar.css';
 import envConfig from '@/envConfig';
 import { useAppContext } from '@/app/app-provider';
+import '@/css/dashboard/sidebar.css';
 
 export interface MenuToggleProps {
   toggle: () => void;
+  isOpen: boolean;
 }
 
-export default function SideBar({ toggle }: MenuToggleProps) {
+export default function SideBar({ toggle, isOpen }: MenuToggleProps) {
   const route = useRouter();
   const pathname = usePathname();
   const { user } = useAppContext();
@@ -31,7 +32,7 @@ export default function SideBar({ toggle }: MenuToggleProps) {
 
   return (
     <>
-      <motion.div className="sidebar" id="mySidebar">
+      <motion.div className="sidebar" id="mySidebar" exit={{ opacity: 0 }} data-is-open={isOpen}>
         <Link href="/dashboard" className="appName">
           <Col>
             <FaTruckFast size={'2em'} />
@@ -40,16 +41,14 @@ export default function SideBar({ toggle }: MenuToggleProps) {
         </Link>
         {rightURL?.map((link) => {
           return (
-            <div
+            <Link
               key={link.url.url}
               className={pathname == link.url.url ? 'bar-item button item-bar active' : 'bar-item button item-bar'}
-              onClick={() => {
-                route.push(link.url.url);
-              }}
+              href={link.url.url}
             >
               {link.url.icon}
               {link.url.name}
-            </div>
+            </Link>
           );
         })}
       </motion.div>

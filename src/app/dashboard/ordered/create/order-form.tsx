@@ -1,106 +1,106 @@
-"use client";
-import "@/css/employee/customForm.css";
-import "@/css/employee/customTable.css";
-import { useEffect, useState } from "react";
-import {
-  getDistrictByProvinceID,
-  getCommuneByDistrictID,
-  getAllProvince,
-} from "@/api/data";
-import { createOrder, estimateFee } from "@/api/action";
-import { FaTrash } from "react-icons/fa";
-import { Row, Col, Form } from "react-bootstrap";
-import PopUp from "../popup";
+'use client';
+import '@/css/employee/customForm.css';
+import '@/css/employee/customTable.css';
+import { useEffect, useState } from 'react';
+// import {
+//   getDistrictByProvinceID,
+//   getCommuneByDistrictID,
+//   getAllProvince,
+// } from "@/api/data";
+// import { createOrder, estimateFee } from "@/api/action";
+import { FaTrash } from 'react-icons/fa';
+import { Row, Col, Form } from 'react-bootstrap';
+import PopUp from '../../../../components/dashboard/popup';
 
 const order = {
   order: {
     sender: {
-      fullname: "",
-      phoneNumber: "",
+      fullname: '',
+      phoneNumber: '',
       address: {
-        detail: "",
-        communeID: "",
-        districtID: "",
-        provinceID: "",
+        detail: '',
+        communeID: '',
+        districtID: '',
+        provinceID: '',
       },
     },
     receiver: {
-      fullname: "",
-      phoneNumber: "",
+      fullname: '',
+      phoneNumber: '',
       address: {
-        detail: "",
-        communeID: "",
-        districtID: "",
-        provinceID: "",
+        detail: '',
+        communeID: '',
+        districtID: '',
+        provinceID: '',
       },
     },
-    failChoice: "return",
+    failChoice: 'return',
     receiverCOD: 0,
     receiverOtherFee: 0,
-    specialService: "Some special services",
+    specialService: 'Some special services',
   },
   goodsList: [],
 };
 export default function OrderForm() {
-  const provinceData = getAllProvince();
+  // const provinceData = getAllProvince();
 
-  const [senderProvince, setsenderProvince] = useState();
-  const districtDataSender = getDistrictByProvinceID(senderProvince);
-  districtDataSender.unshift({
-    name: "Chọn Quận/ Huyện",
-    districtID: 0,
-  });
-  const [senderDistrict, setsenderDistrict] = useState();
-  const communeDataSender = getCommuneByDistrictID(senderDistrict);
-  communeDataSender.unshift({
-    name: "Chọn Xã / Phường",
-    districtID: 0,
-  });
-  const [senderCommune, setsenderCommune] = useState();
+  // const [senderProvince, setsenderProvince] = useState();
+  // const districtDataSender = getDistrictByProvinceID(senderProvince);
+  // districtDataSender.unshift({
+  //   name: "Chọn Quận/ Huyện",
+  //   districtID: 0,
+  // });
+  // const [senderDistrict, setsenderDistrict] = useState();
+  // const communeDataSender = getCommuneByDistrictID(senderDistrict);
+  // communeDataSender.unshift({
+  //   name: "Chọn Xã / Phường",
+  //   districtID: 0,
+  // });
+  // const [senderCommune, setsenderCommune] = useState();
 
-  const [receiverProvince, setreceiverProvince] = useState();
-  const districtDataReceiver = getDistrictByProvinceID(receiverProvince);
-  districtDataReceiver.unshift({
-    name: "Chọn Quận/ Huyện",
-    districtID: 0,
-  });
-  const [receiverDistrict, setreceiverDistrict] = useState();
-  const communeDataReceiver = getCommuneByDistrictID(receiverDistrict);
-  communeDataReceiver.unshift({
-    name: "Chọn Xã / Phường",
-    districtID: 0,
-  });
-  const [receiverCommune, setreceiverCommune] = useState();
+  // const [receiverProvince, setreceiverProvince] = useState();
+  // const districtDataReceiver = getDistrictByProvinceID(receiverProvince);
+  // districtDataReceiver.unshift({
+  //   name: "Chọn Quận/ Huyện",
+  //   districtID: 0,
+  // });
+  // const [receiverDistrict, setreceiverDistrict] = useState();
+  // const communeDataReceiver = getCommuneByDistrictID(receiverDistrict);
+  // communeDataReceiver.unshift({
+  //   name: "Chọn Xã / Phường",
+  //   districtID: 0,
+  // });
+  // const [receiverCommune, setreceiverCommune] = useState();
 
-  const [addGoods, setAddGoods] = useState(false);
+  // const [addGoods, setAddGoods] = useState(false);
 
-  const [goodsList, setGoodsList] = useState([
-    {
-      id: 1,
-      goodsType: "",
-      realWeight: "",
-      convertedWeight: "",
-      quantity: "",
-      attached: "",
-    },
-  ]);
+  // const [goodsList, setGoodsList] = useState([
+  //   {
+  //     id: 1,
+  //     goodsType: "",
+  //     realWeight: "",
+  //     convertedWeight: "",
+  //     quantity: "",
+  //     attached: "",
+  //   },
+  // ]);
 
-  const addRow = () => {
-    const newRow = {
-      id: goodsList.length + 1,
-      goodsType: "",
-      realWeight: "",
-      convertedWeight: "",
-      quantity: "",
-      attached: "",
-    };
-    setGoodsList([...goodsList, newRow]);
-  };
+  // const addRow = () => {
+  //   const newRow = {
+  //     id: goodsList.length + 1,
+  //     goodsType: "",
+  //     realWeight: "",
+  //     convertedWeight: "",
+  //     quantity: "",
+  //     attached: "",
+  //   };
+  //   setGoodsList([...goodsList, newRow]);
+  // };
 
-  const removeRow = (id) => {
-    const updatedGoodsList = goodsList.filter((row) => row.id !== id);
-    setGoodsList(updatedGoodsList);
-  };
+  // const removeRow = (id) => {
+  //   const updatedGoodsList = goodsList.filter((row) => row.id !== id);
+  //   setGoodsList(updatedGoodsList);
+  // };
 
   const [popup, setPopup] = useState(false);
   const [taodon, settaodon] = useState(false);
@@ -155,56 +155,53 @@ export default function OrderForm() {
                   <Col xs={12} md={4}>
                     <Form.Select
                       onChange={(e) => {
-                        setsenderProvince(e.target.value);
-                        order.order.sender.address.provinceID = e.target.value;
-                        setsenderDistrict(0);
-                        setsenderCommune(0);
+                        // setsenderProvince(e.target.value);
+                        // order.order.sender.address.provinceID = e.target.value;
+                        // setsenderDistrict(0);
+                        // setsenderCommune(0);
                       }}
                     >
                       <option>Chọn Tỉnh / TP</option>
-                      {provinceData.map((province) => (
+                      {/* {provinceData.map((province) => (
                         <option
                           key={province.provinceID}
                           value={province.provinceID}
                         >
                           {province.name}
                         </option>
-                      ))}
+                      ))} */}
                     </Form.Select>
                   </Col>
                   <Col xs={12} md={4}>
                     <Form.Select
                       onChange={(e) => {
-                        setsenderDistrict(e.target.value);
-                        setsenderCommune(0);
-                        order.order.sender.address.districtID = e.target.value;
+                        // setsenderDistrict(e.target.value);
+                        // setsenderCommune(0);
+                        // order.order.sender.address.districtID = e.target.value;
                       }}
                     >
-                      {districtDataSender.map((district) => (
-                        <option
-                          key={district.districtID}
-                          value={district.districtID}
-                        >
+                      {/* {districtDataSender.map((district) => (
+                        <option key={district.districtID} value={district.districtID}>
                           {district.name}
                         </option>
-                      ))}
+                      ))} */}
                     </Form.Select>
                   </Col>
                   <Col xs={12} md={4}>
                     <Form.Select
                       onChange={(e) => {
-                        setsenderCommune(e.target.value);
-                        order.order.sender.address.communeID = e.target.value;
+                        // setsenderCommune(e.target.value);
+                        // order.order.sender.address.communeID = e.target.value;
                       }}
                     >
-                      {communeDataSender.map((commune) => (
+                      {/* {communeDataSender.map((commune) => (
                         <option
                           key={commune.communeID}
                           value={commune.communeID}
                         >
                           {commune.name}
                         </option>
-                      ))}
+                      ))} */}
                     </Form.Select>
                   </Col>
                 </Row>
@@ -262,60 +259,60 @@ export default function OrderForm() {
                   <Col xs={12} md={4}>
                     <Form.Select
                       onChange={(e) => {
-                        setreceiverProvince(e.target.value);
-                        order.order.receiver.address.provinceID =
-                          e.target.value;
-                        setreceiverDistrict(0);
-                        setreceiverCommune(0);
+                        // setreceiverProvince(e.target.value);
+                        // order.order.receiver.address.provinceID =
+                        //   e.target.value;
+                        // setreceiverDistrict(0);
+                        // setreceiverCommune(0);
                       }}
                     >
                       <option sender>Chọn Tỉnh / TP</option>
-                      {provinceData.map((province) => (
+                      {/* {provinceData.map((province) => (
                         <option
                           key={province.provinceID}
                           value={province.provinceID}
                         >
                           {province.name}
                         </option>
-                      ))}
+                      ))} */}
                     </Form.Select>
                   </Col>
 
                   <Col xs={12} md={4}>
                     <Form.Select
                       onChange={(e) => {
-                        setreceiverDistrict(e.target.value);
-                        order.order.receiver.address.districtID =
-                          e.target.value;
-                        setreceiverCommune(0);
+                        // setreceiverDistrict(e.target.value);
+                        // order.order.receiver.address.districtID =
+                        //   e.target.value;
+                        // setreceiverCommune(0);
                       }}
                     >
-                      {districtDataReceiver.map((district) => (
+                      {/* {districtDataReceiver.map((district) => (
                         <option
                           key={district.districtID}
                           value={district.districtID}
                         >
                           {district.name}
                         </option>
-                      ))}
+                      ))} */}
                     </Form.Select>
                   </Col>
 
                   <Col xs={12} md={4}>
                     <Form.Select
                       onChange={(e) => {
-                        setreceiverCommune(e.target.value);
-                        order.order.receiver.address.communeID = e.target.value;
+                        // setreceiverCommune(e.target.value);
+                        // order.order.receiver.address.communeID = e.target.value;
                       }}
                     >
-                      {communeDataReceiver.map((commune) => (
+                      {/* {communeDataReceiver.map((commune) => (
                         <option
                           key={commune.communeID}
                           value={commune.communeID}
                         >
                           {commune.name}
                         </option>
-                      ))}
+                      ))} */}
                     </Form.Select>
                   </Col>
                 </Row>
@@ -342,12 +339,12 @@ export default function OrderForm() {
                 <Form.Group>
                   <Form.Label>Trường hợp vận chuyển thất bại</Form.Label>
                   <Form.Select
-                    defaultValue={"return"}
+                    defaultValue={'return'}
                     onChange={(e) => {
                       order.order.failChoice = e.target.value;
                     }}
                   >
-                    <option value={"return"}>Hoàn trả</option>
+                    <option value={'return'}>Hoàn trả</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -356,9 +353,7 @@ export default function OrderForm() {
                   <Form.Label>Dịch vụ đặc biệt</Form.Label>
                   <Form.Control
                     placeholder="Dịch vụ đặc biệt"
-                    onChange={(e) =>
-                      (order.order.specialService = e.target.value)
-                    }
+                    onChange={(e) => (order.order.specialService = e.target.value)}
                   />
                 </Form.Group>
               </Col>
@@ -370,7 +365,7 @@ export default function OrderForm() {
                 <div className="formContainer h-100 pb-0">
                   <Row>
                     <Col>
-                      {" "}
+                      {' '}
                       <h3>Cước</h3>
                     </Col>
                     <Col>
@@ -381,9 +376,9 @@ export default function OrderForm() {
                           data-bs-toggle="modal"
                           data-bs-target="#staticBackdrop"
                           onClick={async () => {
-                            const res = await estimateFee(order);
-                            setEstimateCost(res);
-                            console.log(estimateCost);
+                            // const res = await estimateFee(order);
+                            // setEstimateCost(res);
+                            // console.log(estimateCost);
                           }}
                         >
                           Ước tính chi phí
@@ -399,7 +394,7 @@ export default function OrderForm() {
                           type="text"
                           placeholder="Cước chính"
                           disabled
-                          value={estimateCost?.mainPostage}
+                          // value={estimateCost?.mainPostage}
                         />
                       </Form.Group>
                     </Col>
@@ -410,7 +405,7 @@ export default function OrderForm() {
                           type="text"
                           placeholder="Phụ phí"
                           disabled
-                          value={estimateCost?.addedPostage}
+                          // value={estimateCost?.addedPostage}
                         />
                       </Form.Group>
                     </Col>
@@ -423,7 +418,7 @@ export default function OrderForm() {
                           type="text"
                           placeholder="Cước GTGT"
                           disabled
-                          value={estimateCost?.addedPostage}
+                          // value={estimateCost?.addedPostage}
                         />
                       </Form.Group>
                     </Col>
@@ -434,7 +429,7 @@ export default function OrderForm() {
                           type="text"
                           placeholder="Tổng cước"
                           disabled
-                          value={estimateCost?.addedPostage}
+                          // value={estimateCost?.addedPostage}
                         />
                       </Form.Group>
                     </Col>
@@ -447,7 +442,7 @@ export default function OrderForm() {
                           type="text"
                           placeholder="Cước GTGT"
                           disabled
-                          value={estimateCost?.addedPostage}
+                          // value={estimateCost?.addedPostage}
                         />
                       </Form.Group>
                     </Col>
@@ -458,7 +453,7 @@ export default function OrderForm() {
                           type="text"
                           placeholder="Tổng thu"
                           disabled
-                          value={estimateCost?.addedPostage}
+                          // value={estimateCost?.addedPostage}
                         />
                       </Form.Group>
                     </Col>
@@ -479,11 +474,11 @@ export default function OrderForm() {
                           required
                           placeholder="COD"
                           onChange={(e) => {
-                            order.order.receiverCOD = e.target.value;
-                            setReceiverFee({
-                              receiverCOD: e.target.value,
-                              receiverOtherFee: receiverFee.receiverOtherFee,
-                            });
+                            // order.order.receiverCOD = e.target.value;
+                            // setReceiverFee({
+                            //   receiverCOD: e.target.value,
+                            //   receiverOtherFee: receiverFee.receiverOtherFee,
+                            // });
                           }}
                         />
                       </Form.Group>
@@ -496,11 +491,11 @@ export default function OrderForm() {
                           required
                           placeholder="Thu khác"
                           onChange={(e) => {
-                            order.order.receiverOtherFee = e.target.value;
-                            setReceiverFee({
-                              receiverCOD: receiverFee.receiverCOD,
-                              receiverOtherFee: e.target.value,
-                            });
+                            // order.order.receiverOtherFee = e.target.value;
+                            // setReceiverFee({
+                            //   receiverCOD: receiverFee.receiverCOD,
+                            //   receiverOtherFee: e.target.value,
+                            // });
                           }}
                         />
                       </Form.Group>
@@ -513,10 +508,7 @@ export default function OrderForm() {
                         <Form.Control
                           type="text"
                           placeholder="Tổng thu"
-                          value={
-                            Number(receiverFee.receiverCOD) +
-                            Number(receiverFee.receiverOtherFee)
-                          }
+                          value={Number(receiverFee.receiverCOD) + Number(receiverFee.receiverOtherFee)}
                           disabled
                         />
                       </Form.Group>
@@ -540,8 +532,8 @@ export default function OrderForm() {
                     data-bs-toggle="modal"
                     data-bs-target="#staticBackdrop"
                     onClick={() => {
-                      setAddGoods(true);
-                      addRow();
+                      // setAddGoods(true);
+                      // addRow();
                     }}
                   >
                     Thêm hàng hóa
@@ -564,7 +556,7 @@ export default function OrderForm() {
                     </tr>
                   </thead>
                   <tbody>
-                    {goodsList.map((goods, index) => (
+                    {/* {goodsList.map((goods, index) => (
                       <tr key={goods.id}>
                         <td scope="col">{index + 1}</td>
                         <td scope="col">
@@ -636,7 +628,7 @@ export default function OrderForm() {
                           </button>
                         </td>
                       </tr>
-                    ))}
+                    ))} */}
                   </tbody>
                 </table>
               </div>
@@ -649,12 +641,12 @@ export default function OrderForm() {
               data-bs-toggle="modal"
               data-bs-target="#staticBackdrop"
               onClick={() => {
-                setPopup(!popup);
-                order.goodsList = goodsList;
-                order.goodsList.map((item) => {
-                  delete item?.id;
-                });
-                console.log(order);
+                // setPopup(!popup);
+                // order.goodsList = goodsList;
+                // order.goodsList.map((item) => {
+                //   delete item?.id;
+                // });
+                // console.log(order);
               }}
             >
               Tạo đơn hàng
@@ -662,7 +654,7 @@ export default function OrderForm() {
           </div>
         </div>
       )}
-      <PopUp
+      {/* <PopUp
         isOpen={popup}
         setIsOpen={setPopup}
         infor={10000}
@@ -670,7 +662,7 @@ export default function OrderForm() {
         dataCreate={order}
         print={print}
         setPrint={setPrint}
-      />
+      /> */}
     </>
   );
 }

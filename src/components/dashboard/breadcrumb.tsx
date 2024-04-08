@@ -1,33 +1,37 @@
 'use client';
+
 import { listUrl } from '@/config/Enum';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Breadcrumb, BreadcrumbItem } from 'react-bootstrap';
 
 export default function BreadCrumb() {
   const pathname = usePathname();
-  const listItem = ['dashboard'];
+  const [listItem, setListItem] = useState<string[]>(['dashboard']);
   useEffect(() => {
-    if (pathname.includes('list_ordered')) {
-      listItem.push('manageOrders');
+    let temp: string[] = ['dashboard'];
+
+    if (pathname.includes('ordered')) {
+      temp.push('manageOrders');
       if (pathname.includes('create')) {
-        listItem.push('createOrder');
+        temp.push('createOrder');
       } else if (pathname.includes('detail')) {
-        listItem.push('detailOrder');
+        temp.push('detailOrder');
       }
-    } else if (pathname.includes('list_employee')) {
-      listItem.push('manageEmployees');
+    } else if (pathname.includes('employee')) {
+      temp.push('manageEmployees');
       if (pathname.includes('create')) {
-        listItem.push('createEmployee');
+        temp.push('createEmployee');
       } else if (pathname.includes('detail')) {
-        listItem.push('detailEmployee');
+        temp.push('detailEmployee');
       }
-    } else if (pathname.includes('list_transaction')) {
-      listItem.push('manageTransactionPoint');
-    } else if (pathname.includes('list_workspace')) {
-      listItem.push('manageGoodsPoint');
+    } else if (pathname.includes('transaction')) {
+      temp.push('manageTransactions');
+    } else if (pathname.includes('workspace')) {
+      temp.push('manageWorkspaces');
     }
-  }, []);
+    setListItem(temp);
+  }, [pathname]);
   const route = useRouter();
   console.log(listItem);
 

@@ -1,39 +1,38 @@
-"use client";
-import { useState, useEffect } from "react";
-import { employeeRole, employeeStatus } from "@/api/utils";
-import { getEmployeebyID } from "@/api/data";
-import { Row, Col, Form } from "react-bootstrap";
-import useSWR from "swr";
-import { useSession } from "next-auth/react";
-import PopUp from "../popup";
-import { editEmployee } from "@/api/action";
-import "@/css/employee/customForm.css";
+'use client';
+import { useState, useEffect } from 'react';
+import { employeeRole, employeeStatus } from '@/api/utils';
+// import { getEmployeebyID } from '@/api/data';
+import { Row, Col, Form } from 'react-bootstrap';
+import useSWR from 'swr';
+import PopUp from '../../../../../components/dashboard/popup';
+// import { editEmployee } from '@/api/action';
+import '@/css/employee/customForm.css';
 
 export default function EmployeeInformation({ id }) {
-  const token = useSession().data?.accessToken;
-  const employee = getEmployeebyID(id);
-  const listRole = [
-    employeeRole["TRANSACTION_POINT_HEAD"],
-    employeeRole["GOODS_POINT_HEAD"],
-    employeeRole["GOODS_POINT_EMPLOYEE"],
-    employeeRole["TRANSACTION_POINT_EMPLOYEE"],
-  ];
-  useEffect(() => {
-    setNewInfor({
-      status: employee?.status,
-      role: employee?.role,
-      workingPointID: employee?.workingPointID,
-    });
-    setWorkingAddress({
-      provinceID: employee?.workingPoint?.address?.province?.provinceID,
-      communeID: employee?.workingPoint?.address?.commune?.communeID,
-      districtID: employee?.workingPoint?.address?.district?.districtID,
-      workingPointID: employee?.workingPointID,
-    });
-    setProvinceID(employee?.workingPoint?.address?.province?.provinceID);
-    setDistrictID(employee?.workingPoint?.address?.district?.districtID);
-    setCommuneID(employee?.workingPoint?.address?.commune?.communeID);
-  }, [employee]);
+  // const token = useSession().data?.accessToken;
+  // const employee = getEmployeebyID(id);
+  // const listRole = [
+  //   employeeRole['TRANSACTION_POINT_HEAD'],
+  //   employeeRole['GOODS_POINT_HEAD'],
+  //   employeeRole['GOODS_POINT_EMPLOYEE'],
+  //   employeeRole['TRANSACTION_POINT_EMPLOYEE'],
+  // ];
+  // useEffect(() => {
+  //   setNewInfor({
+  //     status: employee?.status,
+  //     role: employee?.role,
+  //     workingPointID: employee?.workingPointID,
+  //   });
+  //   setWorkingAddress({
+  //     provinceID: employee?.workingPoint?.address?.province?.provinceID,
+  //     communeID: employee?.workingPoint?.address?.commune?.communeID,
+  //     districtID: employee?.workingPoint?.address?.district?.districtID,
+  //     workingPointID: employee?.workingPointID,
+  //   });
+  //   setProvinceID(employee?.workingPoint?.address?.province?.provinceID);
+  //   setDistrictID(employee?.workingPoint?.address?.district?.districtID);
+  //   setCommuneID(employee?.workingPoint?.address?.commune?.communeID);
+  // }, [employee]);
   const [newInfor, setNewInfor] = useState();
 
   const [workingAddress, setWorkingAddress] = useState();
@@ -43,7 +42,7 @@ export default function EmployeeInformation({ id }) {
   const [communeID, setCommuneID] = useState();
 
   const { data: allProvincePoint, isLoading: isLoading } = useSWR([
-    "https://magicpost-uet.onrender.com/api/routingPoint/getallprovinces/",
+    'https://magicpost-uet.onrender.com/api/routingPoint/getallprovinces/',
     token,
   ]);
   const { data: allDistrictsPoint } = useSWR([
@@ -97,13 +96,7 @@ export default function EmployeeInformation({ id }) {
 
           <div className="col-md-6">
             <label htmlFor="dob">Ngày sinh</label>
-            <input
-              type="date"
-              className="form-control"
-              id="dob"
-              defaultValue={employee?.birthDate}
-              disabled
-            />
+            <input type="date" className="form-control" id="dob" defaultValue={employee?.birthDate} disabled />
           </div>
         </div>
 
@@ -161,8 +154,8 @@ export default function EmployeeInformation({ id }) {
           <div>Giới tính</div>
           <div className="col">
             <select className="form-select" value={employee?.gender} disabled>
-              <option value={"female"}>Nữ</option>
-              <option value={"male"}>Nam</option>
+              <option value={'female'}>Nữ</option>
+              <option value={'male'}>Nam</option>
             </select>
           </div>
         </div>
@@ -262,10 +255,7 @@ export default function EmployeeInformation({ id }) {
         </div>
 
         <Row>
-          <Form.Group
-            htmlFor="province"
-            className="col-sm-12 col-form-Form.Group"
-          >
+          <Form.Group htmlFor="province" className="col-sm-12 col-form-Form.Group">
             Địa điểm làm việc
           </Form.Group>
           <Col>
@@ -295,9 +285,7 @@ export default function EmployeeInformation({ id }) {
               <option value={0}>Chọn tỉnh/TP</option>
               {Array.isArray(allProvincePoint) &&
                 allProvincePoint?.map((province) => (
-                  <option value={Number(province.provinceID)}>
-                    {province.name}
-                  </option>
+                  <option value={Number(province.provinceID)}>{province.name}</option>
                 ))}
             </select>
           </Col>
@@ -328,9 +316,7 @@ export default function EmployeeInformation({ id }) {
               <option value={0}>Chọn Quận/Huyện</option>
               {Array.isArray(allDistrictsPoint) &&
                 allDistrictsPoint?.map((province) => (
-                  <option value={Number(province.districtID)}>
-                    {province.name}
-                  </option>
+                  <option value={Number(province.districtID)}>{province.name}</option>
                 ))}
             </select>
           </Col>
@@ -362,11 +348,7 @@ export default function EmployeeInformation({ id }) {
                 Chọn Xã/Phường
               </option>
               {Array.isArray(allCommunePoint) &&
-                allCommunePoint?.map((province) => (
-                  <option value={Number(province.communeID)}>
-                    {province.name}
-                  </option>
-                ))}
+                allCommunePoint?.map((province) => <option value={Number(province.communeID)}>{province.name}</option>)}
             </select>
           </Col>
           <Col>
@@ -390,9 +372,7 @@ export default function EmployeeInformation({ id }) {
               <option selected>Địa điểm làm việc</option>
               {Array.isArray(transactionPoint) &&
                 transactionPoint?.map((province) => (
-                  <option value={Number(province.transactionPointID)}>
-                    {province.name}
-                  </option>
+                  <option value={Number(province.transactionPointID)}>{province.name}</option>
                 ))}
             </select>
           </Col>

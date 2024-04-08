@@ -61,7 +61,7 @@ export function LoginForm() {
             </Row>
             <Row>
               <Form.Group className="mb-3">
-                <Form.Label htmlFor="form3Example3" className="text-light">
+                <Form.Label htmlFor="username" className="text-light">
                   Tài khoản
                 </Form.Label>
                 <InputGroup>
@@ -69,6 +69,7 @@ export function LoginForm() {
                     <FaRegUser />
                   </InputGroup.Text>
                   <Form.Control
+                    id="username"
                     placeholder="Tài khoản"
                     aria-label="Username"
                     aria-describedby="basic-addon1"
@@ -81,7 +82,7 @@ export function LoginForm() {
 
             <Row>
               <Form.Group className="mb-3">
-                <Form.Label htmlFor="form3Example4" className="text-light">
+                <Form.Label htmlFor="password" className="text-light">
                   Mật khẩu
                 </Form.Label>
                 <InputGroup>
@@ -89,6 +90,7 @@ export function LoginForm() {
                     <LuLock />
                   </InputGroup.Text>
                   <Form.Control
+                    id="password"
                     placeholder="Mật khẩu"
                     aria-label="Password"
                     type="password"

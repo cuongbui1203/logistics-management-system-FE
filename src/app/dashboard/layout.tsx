@@ -3,8 +3,8 @@ import { Container } from 'react-bootstrap';
 import { AnimationSequence, motion, useAnimate } from 'framer-motion';
 import SideBar from '@/components/dashboard/sidebar';
 import TopBar from '@/components/dashboard/topbar';
-import '@/css/employee/dashboard.css';
 import { useEffect, useState } from 'react';
+import '@/css/dashboard/dashboard.css';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(true);
@@ -27,8 +27,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <motion.div ref={scope}>
-      <SideBar toggle={() => setIsOpen(!isOpen)} />
-      <motion.div id="main" data-isopen={isOpen}>
+      <SideBar toggle={() => setIsOpen(!isOpen)} isOpen />
+      <motion.div id="main" data-is-open={isOpen}>
         <TopBar />
         <motion.section id="noidung" className="p-3">
           <Container>{children}</Container>

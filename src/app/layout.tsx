@@ -6,11 +6,10 @@ import { cookies } from 'next/headers';
 import AppProvider from '@/app/app-provider';
 import { AccountResType } from '@/schema/account.schema';
 import accountApiRequest from '@/api/account';
+import { ToastContainer } from 'react-toastify';
 import './globals.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
-
 
 const inter = Inter({ subsets: ['latin'] });
 

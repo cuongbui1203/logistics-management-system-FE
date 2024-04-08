@@ -1,13 +1,11 @@
 'use client';
 
-import style from '@/css/customer/homePage.module.css';
 import Image from 'react-bootstrap/Image';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import Link from 'next/link';
 import { Container, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
 import { MdMyLocation } from 'react-icons/md';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaRegFile, FaRegBuilding } from 'react-icons/fa6';
 import { LiaMapMarkedAltSolid } from 'react-icons/lia';
@@ -18,10 +16,12 @@ import { RiUserHeartLine, RiTruckLine } from 'react-icons/ri';
 import { BsPeople } from 'react-icons/bs';
 import { PiMoneyDuotone } from 'react-icons/pi';
 import envConfig from '@/envConfig';
+import style from '@/css/home.module.css';
 
 export default function HomePage() {
   const router = useRouter();
-  const [orderID, setOrderID] = useState('');
+  // const [orderID, setOrderID] = useState('');
+  let orderID: string = '';
   const company = envConfig.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
 
   const handleSearch = () => {
@@ -30,6 +30,8 @@ export default function HomePage() {
       // router.push(`/customer/LockupOrders?query=${orderID}`);
     }
   };
+
+  console.log('Render HomePage');
 
   return (
     <div className={style.homePageContainer}>
@@ -68,7 +70,7 @@ export default function HomePage() {
                     formMethod="get"
                     placeholder="Nhập mã bưu gửi"
                     className="rounded-pill"
-                    onChange={(e) => setOrderID(e.target.value)}
+                    onChange={(e) => (orderID = e.target.value)}
                   />
                   <Button className="rounded-pill mx-2" onClick={handleSearch}>
                     🔍

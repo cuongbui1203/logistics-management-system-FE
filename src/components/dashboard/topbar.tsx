@@ -1,13 +1,14 @@
 'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import BreadCrumb from './breadcrumb';
 import { FaUserCircle } from 'react-icons/fa';
 import { Container, Row, Col } from 'react-bootstrap';
 import { usePathname, useRouter } from 'next/navigation';
-import '@/css/employee/topbar.css';
 import authApiRequest from '@/api/auth';
 import { useAppContext } from '@/app/app-provider';
+import '@/css/dashboard/topbar.css';
 
 const itemVariants = {
   open: {
@@ -26,16 +27,17 @@ export default function TopBar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  useEffect(() => {
-    const closeProfile = (e: any) => {
-      setProfile(false);
-      console.log(1);
-    };
-    if (profile) {
-      document.body.addEventListener('click', closeProfile);
-    } else document.body.removeEventListener('click', closeProfile);
-    return () => document.body.removeEventListener('click', closeProfile);
-  }, [profile]);
+  const closeProfile = (e: any) => {
+    setProfile(false);
+    console.log(1);
+  };
+
+  // useEffect(() => {
+  //   if (profile) {
+  //     document.body.addEventListener('click', closeProfile);
+  //   } else document.body.removeEventListener('click', closeProfile);
+  //   return () => document.body.removeEventListener('click', closeProfile);
+  // }, [profile]);
 
   const handleLogout = async () => {
     try {
