@@ -1,6 +1,6 @@
 'use client';
 import { Container, Row, Col } from 'react-bootstrap';
-import style from '@/css/customer/footer.module.css';
+import style from '@/css/footer.module.css';
 import { FaAngleRight } from 'react-icons/fa6';
 import Link from 'next/link';
 import envConfig from '@/envConfig';

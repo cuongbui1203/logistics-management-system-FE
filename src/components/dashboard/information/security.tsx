@@ -49,6 +49,10 @@ export default function Security() {
               type="button"
               className="btn btnCreate"
               onClick={() => {
+                // const success = await changePassword({
+                //   newPass: password,
+                // });
+                // setHaveCode(true);
                 alert('Thành công');
               }}
             >
@@ -72,7 +76,12 @@ export default function Security() {
                       <InputGroup.Text className="bg-light">
                         <MdOutlinePassword />
                       </InputGroup.Text>
-                      <Form.Control placeholder="Mã xác thực" />
+                      <Form.Control
+                        placeholder="Mã xác thực"
+                        onChange={(e) => {
+                          // setVerifiedCode(e);
+                        }}
+                      />
                     </InputGroup>
                   </Form.Group>
                 </Col>
@@ -82,6 +91,11 @@ export default function Security() {
                       type="button"
                       className="btn btnCreate"
                       onClick={async () => {
+                        // setSuccess(true);
+                        // const success = await changePassword({
+                        //   newPass: password,
+                        //   verifiedCode: verifiedCode,
+                        // });
                         alert('Thành công');
                       }}
                     >

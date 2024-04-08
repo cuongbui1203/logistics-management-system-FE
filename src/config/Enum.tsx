@@ -16,31 +16,31 @@ export const Role = {
   Admin: {
     name: 'Quản trị viên',
     role: 'Admin',
-    right: ['dashboard', 'manageGoodsPoint', 'manageTransactionPoint', 'manageEmployees'],
+    right: ['dashboard', 'manageGoodsPoint', 'manageTransactions', 'manageEmployees'],
     left: ['manageOrders', 'createOrder'],
   },
   Manager: {
     name: 'Nhân viên điểm tập kết',
     role: 'GOODS_POINT_EMPLOYEE',
-    left: ['manageEmployees', 'manageGoodsPoint', 'manageTransactionPoint'],
+    left: ['manageEmployees', 'manageGoodsPoint', 'manageTransactions'],
     right: ['dashboard', 'manageOrders'],
   },
   Driver: {
     name: 'Quản lí điểm tập kết',
     role: 'GOODS_POINT_HEAD',
-    left: ['manageGoodsPoint', 'manageTransactionPoint', 'createOrder'],
+    left: ['manageGoodsPoint', 'manageTransactions', 'createOrder'],
     right: ['dashboard', 'manageOrders', 'manageEmployees'],
   },
   Employee: {
     name: 'Nhân viên điểm giao dịch',
     role: 'TRANSACTION_POINT_EMPLOYEE',
-    left: ['manageGoodsPoint', 'manageTransactionPoint', 'manageEmployees'],
+    left: ['manageGoodsPoint', 'manageTransactions', 'manageEmployees'],
     right: ['dashboard', 'manageOrders'],
   },
   User: {
     name: 'Quản lí điểm giao dịch',
     role: 'TRANSACTION_POINT_HEAD',
-    left: ['manageGoodsPoint', 'manageTransactionPoint', 'createOrder'],
+    left: ['manageGoodsPoint', 'manageTransactions', 'createOrder'],
     right: ['dashboard', 'manageOrders', 'manageEmployees'],
   },
 };
@@ -66,8 +66,8 @@ export const listUrl = {
     name: 'Điểm tập kết',
     icon: <RiRoadMapLine size={'2em'} />,
   },
-  manageTransactionPoint: {
-    url: '/dashboard/workplate2',
+  manageTransactions: {
+    url: '/dashboard/transaction',
     name: 'Điểm giao dịch',
     icon: <HiOutlineBuildingOffice size={'2em'} />,
   },

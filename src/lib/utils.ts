@@ -1,4 +1,7 @@
 import moment from 'moment';
+import { UseFormSetError } from 'react-hook-form';
+import { EntityError } from './http';
+import { toast } from 'react-toastify';
 
 /**
  * Formats a date in the specified format.
@@ -38,4 +41,27 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
  */
 export const normalizePath = (path: string) => {
   return path.startsWith('/') ? path.slice(1) : path;
+};
+
+export const handleErrorApi = ({
+  error,
+  setError,
+  duration,
+}: {
+  error: any;
+  setError?: UseFormSetError<any>;
+  duration?: number;
+}) => {
+  if (error instanceof EntityError && setError) {
+    Object.keys(error.payload.error).forEach((key) => {
+      setError(key, {
+        type: 'manual',
+        message: error.payload.error[key].join(' '),
+      });
+    });
+  } else {
+    toast.error('Đăng nhập thất bại!', {
+      autoClose: duration || 3000,
+    });
+  }
 };
