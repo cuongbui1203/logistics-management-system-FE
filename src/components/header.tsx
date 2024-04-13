@@ -102,9 +102,14 @@ export function Header() {
                 {user.name}
               </Link>
             ) : (
-              <Link href="/login" className="btn btn-primary">
-                Đăng nhập
-              </Link>
+              <Nav>             
+                <Link href="/login" className="btn btn-primary" style={{ marginRight: '10px' }}>
+                  Đăng nhập
+                </Link>
+                <Link href="/register" className="btn btn-primary">
+                  Đăng kí
+                </Link>
+            </Nav>
             )}
           </Navbar.Collapse>
         </Container>

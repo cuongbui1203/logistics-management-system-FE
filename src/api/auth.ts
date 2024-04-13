@@ -5,7 +5,7 @@ import { MessageResType } from '@/schema/common.schema';
 
 const authApiRequest = {
   login: (body: LoginBodyType) => http.post<LoginResType>('api/users/login', body),
-  register: (body: RegisterBodyType) => http.post<LoginResType>('api/users/register', body),
+  register: (body: RegisterBodyType) => http.post<LoginResType>('api/users', body),
   auth: (body: AuthBodyType) =>
     http.post('api/auth', body, {
       baseUrl: '',

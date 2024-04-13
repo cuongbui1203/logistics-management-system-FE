@@ -60,7 +60,7 @@ export const handleErrorApi = ({
       });
     });
   } else {
-    toast.error('Đăng nhập thất bại!', {
+    toast.error('Yêu cầu thất bại!', {
       autoClose: duration || 3000,
     });
   }
