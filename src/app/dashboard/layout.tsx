@@ -5,8 +5,17 @@ import SideBar from '@/components/dashboard/sidebar';
 import TopBar from '@/components/dashboard/topbar';
 import { useEffect, useState } from 'react';
 import '@/css/dashboard/dashboard.css';
+import { useAppContext } from '../app-provider';
+import { UserRole } from '@/config/Enum';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const { user } = useAppContext();
+  const role = user?.role.name;
+
+  if (role === UserRole.User || role === UserRole.Driver) {
+    return <div>Không có quyền truy cập</div>;
+  }
+  
   const [isOpen, setIsOpen] = useState(true);
   const [scope, animate] = useAnimate();
   useEffect(() => {

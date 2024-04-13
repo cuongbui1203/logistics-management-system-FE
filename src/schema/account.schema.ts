@@ -4,14 +4,14 @@ import z from 'zod';
 export const AccountNewReq = z.object({
   name: z.string(),
   email: z.string(),
-  password: z.string(),
+  // password: z.string(),
   phone: z.string(),
-  dob: z.date().nullable(),
-  username: z.string(),
-  address: z.number(),
+  dob: z.string().nullable(),
+  // username: z.string(),
+  address_id: z.number(),
   role_id: z.number(),
-  wp_id: z.string().nullable(),
-  img_id: z.string().nullable(),
+  // wp_id: z.string().nullable(),
+  // img_id: z.string().nullable(),
 });
 
 export type AccountNewReqType = z.TypeOf<typeof AccountNewReq>;

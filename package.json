@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
+    "apexcharts": "^3.48.0",
     "bootstrap": "^5.3.3",
     "framer-motion": "^11.0.20",
     "moment": "^2.30.1",
