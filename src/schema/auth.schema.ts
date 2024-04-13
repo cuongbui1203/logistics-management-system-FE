@@ -9,16 +9,16 @@ export const RegisterBody = z
     password: z.string().min(6).max(100),
     password_confirmation: z.string().min(6).max(100),
   })
-  .strict();
-  // .superRefine(({ confirmPassword, password }, ctx) => {
-  //   if (confirmPassword !== password) {
-  //     ctx.addIssue({
-  //       code: 'custom',
-  //       message: 'Mật khẩu không khớp',
-  //       path: ['confirmPassword'],
-  //     });
-  //   }
-  // });
+  .strict()
+  .superRefine(({ confirmPassword, password }, ctx) => {
+    if (confirmPassword !== password) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Mật khẩu không khớp',
+        path: ['confirmPassword'],
+      });
+    }
+  });
 
 export type RegisterBodyType = z.TypeOf<typeof RegisterBody>;
 
