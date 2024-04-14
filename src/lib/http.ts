@@ -87,6 +87,7 @@ const request = async <Response>(
 
   const res = await fetch(fullUrl, {
     ...options,
+    credentials: 'include',
     headers: {
       ...baseHeaders,
       ...options?.headers,

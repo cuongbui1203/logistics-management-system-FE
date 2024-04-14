@@ -10,8 +10,8 @@ export const RegisterBody = z
     password_confirmation: z.string().min(6).max(100),
   })
   .strict()
-  .superRefine(({ confirmPassword, password }, ctx) => {
-    if (confirmPassword !== password) {
+  .superRefine(({ password_confirmation, password }, ctx) => {
+    if (password_confirmation !== password) {
       ctx.addIssue({
         code: 'custom',
         message: 'Mật khẩu không khớp',
