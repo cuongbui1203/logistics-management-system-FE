@@ -1,4 +1,7 @@
+import { workPlateApiRequest } from '@/api/workplate';
 import TransactionPointTable from '@/components/dashboard/table/transactionPoint-table';
+import { WorkPlateResType } from '@/schema/workplate.schema';
+import { cookies } from 'next/headers';
 
 interface TransactionPageProps {
   searchParams: {
@@ -22,6 +25,13 @@ export default async function TransactionPage({ searchParams }: TransactionPageP
     startOrdersSort: searchParams.startOrdersSort,
     endOrdersSort: searchParams.endOrdersSort,
   };
+  const cookieStore = cookies();
+  const token = cookieStore.get('token');
+  let listWorkPlates: WorkPlateResType[] = [];
+  if (token) {
+    const data = await workPlateApiRequest.getWorkPlate(token.value);
+    listWorkPlates = data.payload.data;
+  }
 
   return (
     <div className="tableContainer">
@@ -31,7 +41,7 @@ export default async function TransactionPage({ searchParams }: TransactionPageP
         </div>
       </div>
       <div className="row">
-        <TransactionPointTable page={query.page} query={query} limit={query.limit} />
+        <TransactionPointTable page={query.page} query={query} limit={query.limit} data={listWorkPlates} />
       </div>
     </div>
   );

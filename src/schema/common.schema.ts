@@ -69,3 +69,14 @@ export const AccountSchema = z.object({
 });
 
 export type UserSchemaType = z.TypeOf<typeof UserSchema>;
+
+export const AddressDetailSchema = z.object({
+  code: z.string(),
+  name: z.string(),
+  name_en: z.string(),
+  full_name: z.string(),
+  full_name_en: z.string(),
+  code_name: z.string(),
+});
+
+export type AddressDetailSchemaType = z.TypeOf<typeof AddressDetailSchema>;

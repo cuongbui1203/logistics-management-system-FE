@@ -4,44 +4,52 @@ import { LuPackage2 } from 'react-icons/lu';
 import { RiRoadMapLine } from 'react-icons/ri';
 import { HiOutlineBuildingOffice } from 'react-icons/hi2';
 
-export enum RoleEnum {
-  Admin = 'Admin',
-  User = 'User',
-  Driver = 'Driver',
-  Employee = 'Employee',
-  Manager = 'Manager',
-}
+export const UserRole = {
+  Admin: 'Admin',
+  User: 'User',
+  Driver: 'Driver',
+  Employee: 'Employee',
+  Manager: 'Manager',
+};
+
+export const RoleId = [
+  { id: 1, name: 'Admin' },
+  { id: 2, name: 'User' },
+  { id: 3, name: 'Driver' },
+  { id: 4, name: 'Employee' },
+  { id: 5, name: 'Manager' },
+];
 
 export const Role = {
   Admin: {
+    id: 1,
     name: 'Quản trị viên',
-    role: 'Admin',
-    right: ['dashboard', 'manageGoodsPoint', 'manageTransactions', 'manageEmployees'],
+    tabs: ['dashboard', 'manageTransshipment', 'manageTransactions', 'manageEmployees'],
     left: ['manageOrders', 'createOrder'],
   },
   Manager: {
-    name: 'Nhân viên điểm tập kết',
-    role: 'GOODS_POINT_EMPLOYEE',
-    left: ['manageEmployees', 'manageGoodsPoint', 'manageTransactions'],
-    right: ['dashboard', 'manageOrders'],
+    id: 5,
+    name: 'Quản lí',
+    tabs: ['dashboard', 'manageOrders'],
+    left: ['manageEmployees', 'manageTransshipment', 'manageTransactions'],
   },
   Driver: {
-    name: 'Quản lí điểm tập kết',
-    role: 'GOODS_POINT_HEAD',
-    left: ['manageGoodsPoint', 'manageTransactions', 'createOrder'],
-    right: ['dashboard', 'manageOrders', 'manageEmployees'],
+    id: 3,
+    name: 'Tài xế',
+    left: ['manageTransshipment', 'manageTransactions', 'createOrder'],
+    tabs: ['dashboard', 'manageOrders', 'manageEmployees'],
   },
   Employee: {
-    name: 'Nhân viên điểm giao dịch',
-    role: 'TRANSACTION_POINT_EMPLOYEE',
-    left: ['manageGoodsPoint', 'manageTransactions', 'manageEmployees'],
-    right: ['dashboard', 'manageOrders'],
+    id: 4,
+    name: 'Nhân viên',
+    tabs: ['dashboard', 'manageOrders'],
+    left: ['manageTransshipment', 'manageTransactions', 'manageEmployees'],
   },
   User: {
-    name: 'Quản lí điểm giao dịch',
-    role: 'TRANSACTION_POINT_HEAD',
-    left: ['manageGoodsPoint', 'manageTransactions', 'createOrder'],
-    right: ['dashboard', 'manageOrders', 'manageEmployees'],
+    id: 2,
+    name: 'Người dùng',
+    left: ['manageTransshipment', 'manageTransactions', 'createOrder'],
+    tabs: ['dashboard', 'manageOrders', 'manageEmployees'],
   },
 };
 
@@ -61,15 +69,15 @@ export const listUrl = {
     name: 'Đơn hàng',
     icon: <LuPackage2 size={'2em'} />,
   },
-  manageGoodsPoint: {
+  manageTransshipment: {
     url: '/dashboard/workplate',
     name: 'Điểm tập kết',
-    icon: <RiRoadMapLine size={'2em'} />,
+    icon: <HiOutlineBuildingOffice size={'2em'} />,
   },
   manageTransactions: {
     url: '/dashboard/transaction',
     name: 'Điểm giao dịch',
-    icon: <HiOutlineBuildingOffice size={'2em'} />,
+    icon: <RiRoadMapLine size={'2em'} />,
   },
   createEmployee: {
     url: '/dashboard/employee/create',
@@ -90,5 +98,56 @@ export const listUrl = {
     url: '/dashboard/ordered/[id]/detail',
     name: 'Chi tiết đơn hàng',
     icon: <HiOutlineBuildingOffice size={'2em'} />,
+  },
+};
+
+/**
+ * Defines order status information.
+ */
+export const orderStatus = {
+  forwarded: {
+    name: 'forwarded',
+    now: 'Đã vận chuyển',
+    next: [
+      {
+        code: 'customer_sent',
+        name: 'Xác nhận người nhận đã nhận được hàng',
+      },
+      {
+        code: 'customer_returned',
+        name: 'Xác nhận hàng bị hoàn trả',
+      },
+    ],
+    color: 'success',
+  },
+  arriving: {
+    name: 'arriving',
+    now: 'Đang vận chuyển đến',
+    next: {
+      name: 'Xác nhận đã đến',
+      code: 'on_stock',
+    },
+    color: 'warning',
+  },
+  on_stock: {
+    name: 'on_stock',
+    now: 'Trong kho',
+    next: {
+      name: 'Xác nhận chuyển tiếp',
+      code: 'forwarded',
+    },
+    color: 'danger',
+  },
+  customer_sent: {
+    name: 'customer_sent',
+    now: 'Người nhận đã nhận được hàng',
+    next: null,
+    color: 'primary',
+  },
+  customer_returned: {
+    name: 'customer_returned',
+    now: 'Hàng bị hoàn trả',
+    next: null,
+    color: 'dark',
   },
 };

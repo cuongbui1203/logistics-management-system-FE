@@ -16,6 +16,7 @@ First, run the development server:
 - Copy `.env.example` to `.env` and fill in the environment variables.
 
 ```bash
+npm i
 npm run dev
 # or
 yarn dev

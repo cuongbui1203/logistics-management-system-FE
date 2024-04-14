@@ -22,11 +22,11 @@ export default function SideBar({ toggle, isOpen }: MenuToggleProps) {
   console.log('role', role);
 
   const keyRole = role as keyof typeof Role;
-  const rightRole = Role[keyRole]?.right;
-  const rightURL = [];
-  for (var i in rightRole) {
-    let key = rightRole[i] as keyof typeof listUrl;
-    rightURL.push({ url: listUrl[key] });
+  const listTabs = Role[keyRole]?.tabs;
+  const listTabView = [];
+  for (var i in listTabs) {
+    let key = listTabs[i] as keyof typeof listUrl;
+    listTabView.push(listUrl[key]);
   }
   const company = envConfig.NEXT_PUBLIC_COMPANY_NAME;
 
@@ -39,15 +39,15 @@ export default function SideBar({ toggle, isOpen }: MenuToggleProps) {
             {company}
           </Col>
         </Link>
-        {rightURL?.map((link) => {
+        {listTabView?.map((link) => {
           return (
             <Link
-              key={link.url.url}
-              className={pathname == link.url.url ? 'bar-item button item-bar active' : 'bar-item button item-bar'}
-              href={link.url.url}
+              key={link.url}
+              className={pathname == link.url ? 'bar-item button item-bar active' : 'bar-item button item-bar'}
+              href={link.url}
             >
-              {link.url.icon}
-              {link.url.name}
+              {link.icon}
+              {link.name}
             </Link>
           );
         })}
