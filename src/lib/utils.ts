@@ -3,8 +3,6 @@ import { UseFormSetError } from 'react-hook-form';
 import { EntityError } from './http';
 import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
-import { UserWithoutWordplateType } from '@/schema/auth.schema';
-import { UserSchemaType } from '@/schema/common.schema';
 
 /**
  * Formats a date in the specified format.
