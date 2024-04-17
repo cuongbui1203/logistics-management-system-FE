@@ -1,15 +1,16 @@
 'use client';
+
 import { LuLock } from 'react-icons/lu';
 import { FaRegUser } from 'react-icons/fa';
 import style from '@/css/login.module.css';
 import Link from 'next/link';
 import { Container, Row, Col, Image, Form, Button, InputGroup } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { AuthBody, RegisterBody, RegisterBodyType } from '@/schema/auth.schema';
+import { RegisterBody, RegisterBodyType } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import authApiRequest from '@/api/auth';
 import { useRouter } from 'next/navigation';
-import {LOGIN_REDIRECT } from '@/routes';
+import { LOGIN_REDIRECT } from '@/routes';
 import { toast } from 'react-toastify';
 import { handleErrorApi } from '@/lib/utils';
 import { useAppContext } from '@/app/app-provider';
@@ -28,6 +29,7 @@ export function RegisterForm() {
   const { setUser } = useAppContext();
 
   async function onSubmit(values: RegisterBodyType) {
+    console.log(values);
     try {
       const result = await authApiRequest.register(values);
       toast.success('Đăng kí thành công');
@@ -35,7 +37,6 @@ export function RegisterForm() {
     } catch (error: any) {
       handleErrorApi({ error, setError });
     }
-    console.log(values)
   }
   return (
     <Container fluid className={style.container}>
@@ -151,7 +152,9 @@ export function RegisterForm() {
                     {...register('password_confirmation')}
                   />
                 </InputGroup>
-                {errors.password_confirmation && <Form.Text className="text-danger">{errors.password_confirmation.message}</Form.Text>}
+                {errors.password_confirmation && (
+                  <Form.Text className="text-danger">{errors.password_confirmation.message}</Form.Text>
+                )}
               </Form.Group>
             </Row>
 

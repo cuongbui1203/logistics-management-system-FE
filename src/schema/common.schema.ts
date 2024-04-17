@@ -24,9 +24,17 @@ export const WorkPlateSchema = z.object({
   type_id: z.number(),
   created_at: z.string(),
   updated_at: z.string(),
-  cap: z.string(),
-  vung: z.string(),
   address: AddressSchema,
+  manager: z.object({
+    id: z.number(),
+    name: z.string(),
+    address: z.string().nullable(),
+  }),
+  type: z.object({
+    id: z.number(),
+    name: z.string(),
+    for: z.number(),
+  }),
 });
 
 export type WorkPlateSchemaType = z.TypeOf<typeof WorkPlateSchema>;

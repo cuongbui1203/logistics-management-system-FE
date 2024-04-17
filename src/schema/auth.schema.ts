@@ -1,4 +1,4 @@
-import { AddressSchema, UserSchema } from '@/schema/common.schema';
+import { AccountSchema, AddressSchema, UserSchema } from '@/schema/common.schema';
 import z from 'zod';
 
 export const RegisterBody = z
@@ -6,8 +6,8 @@ export const RegisterBody = z
     name: z.string().trim().min(2).max(256),
     username: z.string().trim().min(2).max(256),
     email: z.string().email(),
-    password: z.string().min(6).max(100),
-    password_confirmation: z.string().min(6).max(100),
+    password: z.string().min(6, 'Mật khẩu phải có độ dài tối thiểu là 6').max(100),
+    password_confirmation: z.string().min(6, 'Mật khẩu phải có độ dài tối thiểu là 6').max(100),
   })
   .strict()
   .superRefine(({ password_confirmation, password }, ctx) => {
@@ -15,7 +15,7 @@ export const RegisterBody = z
       ctx.addIssue({
         code: 'custom',
         message: 'Mật khẩu không khớp',
-        path: ['confirmPassword'],
+        path: ['password_confirmation'],
       });
     }
   });
@@ -87,3 +87,60 @@ export const UpdateUserRes = z.object({
 });
 
 export type UpdateUserResType = z.TypeOf<typeof UpdateUserRes>;
+
+export const AccountNewReq = z.object({
+  name: z.string(),
+  email: z.string(),
+  password: z.string(),
+  phone: z.string(),
+  dob: z.string().nullable(),
+  username: z.string(),
+  address_id: z.string(),
+  role_id: z.number(),
+  wp_id: z.string().nullable(),
+  img_id: z.string().optional(),
+});
+
+export type AccountNewReqType = z.TypeOf<typeof AccountNewReq>;
+
+export const AccountRes = z.object({
+  success: z.boolean(),
+  data: UserSchema,
+  message: z.string(),
+});
+
+export type AccountResType = z.TypeOf<typeof AccountRes>;
+
+export const AccountListRes = z.object({
+  success: z.boolean(),
+  data: z.object({
+    total: z.number(),
+    currentPage: z.number(),
+    pageSize: z.number(),
+    data: z.array(AccountSchema),
+  }),
+  message: z.string(),
+});
+
+export type AccountListResType = z.TypeOf<typeof AccountListRes>;
+
+export type AccountList = AccountListResType['data']['data'];
+
+export const ChangePasswordReq = z
+  .object({
+    old_password: z.string(),
+    new_password: z.string().min(6, 'Mật khẩu phải có độ dài tối thiểu là 6').max(100),
+    new_password_confirmation: z.string().min(6, 'Mật khẩu phải có độ dài tối thiểu là 6').max(100),
+  })
+  .strict()
+  .superRefine(({ new_password_confirmation, new_password }, ctx) => {
+    if (new_password_confirmation !== new_password) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Mật khẩu không khớp',
+        path: ['new_password_confirmation'],
+      });
+    }
+  });
+
+export type ChangePasswordReqType = z.TypeOf<typeof ChangePasswordReq>;

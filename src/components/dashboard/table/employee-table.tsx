@@ -2,11 +2,12 @@
 import accountApiRequest from '@/api/account';
 import { EmployeeDetail } from '@/components/dashboard/button';
 import Pagination from '@/components/dashboard/pagination';
-import { AccountList } from '@/schema/account.schema';
+import { AccountList } from '@/schema/auth.schema';
 import React, { useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import '@/css/dashboard/customTable.css';
+import { RoleId, UserRole } from '@/config/Enum';
 interface EmployeeTableProps {
   page?: number;
   query?: any;
@@ -24,9 +25,10 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
     const fetchData = async () => {
       try {
         await accountApiRequest.listAccountClient().then((res) => {
-          setListEmployees(res.payload.data.data);
-          totalPage = res.payload.data.total;
-          console.log(res.payload.data.data);
+          const filtered = res.payload.data.data.filter((item) => item.role.name !== UserRole.User);
+          setListEmployees(filtered);
+          totalPage = filtered.length;
+          // console.log(res.payload.data.data);
         });
       } catch (error) {
         console.log(error);

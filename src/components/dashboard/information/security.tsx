@@ -1,123 +1,103 @@
 'use client';
-// import { changePassword } from "@/api/action";
-import { useState } from 'react';
+
+import accountApiRequest from '@/api/account';
+import { handleErrorApi } from '@/lib/utils';
+import { ChangePasswordReq, ChangePasswordReqType } from '@/schema/auth.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, Row, Col, Button, InputGroup } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 import { MdOutlinePassword } from 'react-icons/md';
 import { RiLockPasswordLine } from 'react-icons/ri';
+import { toast } from 'react-toastify';
 
 export default function Security() {
-  const [password, setpass] = useState();
-  const [haveCode, setHaveCode] = useState(false);
-  const [verifiedCode, setVerifiedCode] = useState();
-  const [thanhcong, setSuccess] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<ChangePasswordReqType>({
+    resolver: zodResolver(ChangePasswordReq),
+    defaultValues: {
+      old_password: '',
+      new_password: '',
+      new_password_confirmation: '',
+    },
+  });
+
+  async function onSubmit(values: ChangePasswordReqType) {
+    console.log(values);
+
+    try {
+      const result = await accountApiRequest.changePasswordClient(values);
+
+      toast.success('Cập nhật thông tin thành công');
+    } catch (error: any) {
+      handleErrorApi({ error, setError });
+    }
+  }
+
   return (
     <div className="formContainer">
-      {haveCode || (
-        <Form>
-          <Row>
-            <h3>Thay đổi mật khẩu</h3>
-          </Row>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <Row>
+          <h3>Thay đổi mật khẩu</h3>
+        </Row>
 
-          <Row className="mt-2">
-            <Col md={6}>
-              <Form.Group controlId="newPassword">
-                <Form.Label>Mật khẩu mới</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text className="bg-light">
-                    <MdOutlinePassword />
-                  </InputGroup.Text>
-                  <Form.Control type="password" placeholder="Mật khẩu mới" />
-                </InputGroup>
-              </Form.Group>
-            </Col>
+        <Row className="mt-2">
+          <Col md={6}>
+            <Form.Group controlId="oldPassword">
+              <Form.Label>Mật khẩu cũ</Form.Label>
+              <InputGroup>
+                <InputGroup.Text className="bg-light">
+                  <MdOutlinePassword />
+                </InputGroup.Text>
+                <Form.Control type="password" placeholder="Mật khẩu cũ" {...register('old_password')} />
+              </InputGroup>
+            </Form.Group>
+          </Col>
+        </Row>
 
-            <Col md={6}>
-              <Form.Group controlId="confirmPassword">
-                <Form.Label>Xác nhận mật khẩu mới</Form.Label>
-                <InputGroup>
-                  <InputGroup.Text className="bg-light">
-                    <RiLockPasswordLine />
-                  </InputGroup.Text>
-                  <Form.Control type="password" placeholder="Xác nhận mật khẩu mới" />
-                </InputGroup>
-              </Form.Group>
-            </Col>
-          </Row>
+        <Row className="mt-2">
+          <Col md={6}>
+            <Form.Group controlId="newPassword">
+              <Form.Label>Mật khẩu mới</Form.Label>
+              <InputGroup>
+                <InputGroup.Text className="bg-light">
+                  <MdOutlinePassword />
+                </InputGroup.Text>
+                <Form.Control type="password" placeholder="Mật khẩu mới" {...register('new_password')} />
+              </InputGroup>
+              {errors.new_password && <Form.Text className="text-danger">{errors.new_password.message}</Form.Text>}
+            </Form.Group>
+          </Col>
 
-          <div className="mt-3 btnContainer">
-            <Button
-              type="button"
-              className="btn btnCreate"
-              onClick={() => {
-                // const success = await changePassword({
-                //   newPass: password,
-                // });
-                // setHaveCode(true);
-                alert('Thành công');
-              }}
-            >
-              Xác nhận
-            </Button>
-          </div>
-        </Form>
-      )}
-      {haveCode && (
-        <div>
-          {thanhcong || (
-            <Form>
-              <Row>
-                <h3>Thay đổi mật khẩu</h3>
-              </Row>
-              <Row className="mt-2">
-                <Col md={6}>
-                  <Form.Group controlId="newPassword">
-                    <Form.Label>Nhập mã được gửi về email</Form.Label>
-                    <InputGroup>
-                      <InputGroup.Text className="bg-light">
-                        <MdOutlinePassword />
-                      </InputGroup.Text>
-                      <Form.Control
-                        placeholder="Mã xác thực"
-                        onChange={(e) => {
-                          // setVerifiedCode(e);
-                        }}
-                      />
-                    </InputGroup>
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <div className="mt-3 btnContainer">
-                    <Button
-                      type="button"
-                      className="btn btnCreate"
-                      onClick={async () => {
-                        // setSuccess(true);
-                        // const success = await changePassword({
-                        //   newPass: password,
-                        //   verifiedCode: verifiedCode,
-                        // });
-                        alert('Thành công');
-                      }}
-                    >
-                      Xác nhận
-                    </Button>
-                  </div>
-                </Col>
-              </Row>
-            </Form>
-          )}
-          {thanhcong && (
-            <Form>
-              <Row>
-                <h3>Thay đổi mật khẩu</h3>
-              </Row>
-              <Row>
-                <h4>Đổi mật khẩu thành công</h4>
-              </Row>
-            </Form>
-          )}
+          <Col md={6}>
+            <Form.Group controlId="confirmPassword">
+              <Form.Label>Xác nhận mật khẩu mới</Form.Label>
+              <InputGroup>
+                <InputGroup.Text className="bg-light">
+                  <RiLockPasswordLine />
+                </InputGroup.Text>
+                <Form.Control
+                  type="password"
+                  placeholder="Xác nhận mật khẩu mới"
+                  {...register('new_password_confirmation')}
+                />
+              </InputGroup>
+              {errors.new_password_confirmation && (
+                <Form.Text className="text-danger">{errors.new_password_confirmation.message}</Form.Text>
+              )}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <div className="mt-3 btnContainer">
+          <Button type="submit" className="btn btnCreate" disabled={isSubmitting}>
+            {isSubmitting ? 'Đang xử lý...' : 'Xác nhận'}
+          </Button>
         </div>
-      )}
+      </Form>
     </div>
   );
 }

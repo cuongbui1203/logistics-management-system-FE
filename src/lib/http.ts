@@ -10,11 +10,14 @@ type CustomOptions = Omit<RequestInit, 'method'> & {
 const ENTITY_ERROR_STATUS = 422;
 const AUTHENTICATION_ERROR_STATUS = 401;
 
+type FormError = {
+  message: string[];
+  field: string;
+};
+
 type EntityErrorPayload = {
   success: boolean;
-  error: {
-    [key: string]: string[];
-  };
+  error: FormError[];
   status_code: number;
 };
 

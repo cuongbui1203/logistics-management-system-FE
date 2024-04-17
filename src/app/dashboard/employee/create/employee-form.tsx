@@ -1,22 +1,26 @@
 'use client';
 import { useEffect, useState } from 'react';
-// import { createEmployee } from '@/api/action';
-// import { employeeRole } from '@/api/utils';
-// import { getDistrictByProvinceID, getCommuneByDistrictID, getAllProvince } from '@/api/data';
 import PopUp from '../../../../components/dashboard/popup';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import useSWR from 'swr';
 import { useAppContext } from '@/app/app-provider';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AccountNewReq, AccountNewReqType } from '@/schema/account.schema';
+import { AccountNewReq, AccountNewReqType } from '@/schema/auth.schema';
 import '@/css/dashboard/customForm.css';
 import { addressApiRequest } from '@/api/address';
-import { AddressDetailSchemaType } from '@/schema/common.schema';
+import { AddressDetailSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
 import { RoleId, UserRole } from '@/config/Enum';
+import { workPlateApiRequest } from '@/api/workplate';
+import accountApiRequest from '@/api/account';
+import { handleErrorApi } from '@/lib/utils';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 export default function EmployeeForm() {
   const { user } = useAppContext();
+  const router = useRouter();
+
   const userRole = user?.role?.name;
 
   const {
@@ -30,11 +34,24 @@ export default function EmployeeForm() {
 
   async function onSubmit(values: AccountNewReqType) {
     console.log(values);
+    try {
+      await accountApiRequest.createAccount(values).then((res) => {
+        if (res.payload.success) {
+          router.push('/dashboard/employee');
+          toast.success('Tạo nhân viên thành công');
+        } else {
+          toast.error('Tạo nhân viên thất bại');
+        }
+      });
+    } catch (error) {
+      handleErrorApi({ error, setError });
+    }
   }
 
   const [listProvince, setListProvince] = useState<AddressDetailSchemaType[]>([]);
   const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
   const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
+  const [listWp, setListWp] = useState<WorkPlateSchemaType[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -63,6 +80,14 @@ export default function EmployeeForm() {
     });
   };
 
+  const onSelectWard = (e: any) => {
+    const wardID = e.target.value;
+    workPlateApiRequest.getWorkPlateSuggestClient(wardID).then((res) => {
+      setListWp(res.payload.data);
+      console.log(res.payload.data);
+    });
+  };
+
   // const [popup, setPopup] = useState(false);
 
   if (listProvince.length == 0) return <p>Loading...</p>;
@@ -70,10 +95,32 @@ export default function EmployeeForm() {
   return (
     <div className="formContainer">
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Row>
+        <Row className="mt-2">
           <h3>Thông tin nhân viên</h3>
         </Row>
-        <Row>
+
+        <Row className="mt-2">
+          <Col xs={12} md={6}>
+            <Form.Group>
+              <Form.Label htmlFor="username">Tên đăng nhập</Form.Label>
+              <Form.Control type="text" id="username" placeholder="Tên đăng nhập" {...register('username')} />
+            </Form.Group>
+          </Col>
+          <Col xs={12} md={6}>
+            <Form.Group>
+              <Form.Label htmlFor="password">Mật khẩu</Form.Label>
+              <Form.Control
+                type="text"
+                id="password"
+                placeholder="Mật khẩu"
+                defaultValue={'1'}
+                {...register('password')}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <Row className="mt-2">
           <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label>Họ và tên</Form.Label>
@@ -89,7 +136,7 @@ export default function EmployeeForm() {
           </Col>
         </Row>
 
-        <Row>
+        <Row className="mt-2">
           <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label htmlFor="email">Địa chỉ Email</Form.Label>
@@ -105,7 +152,7 @@ export default function EmployeeForm() {
           </Col>
         </Row>
 
-        <Row>
+        <Row className="mt-2">
           <Form.Group className="col-sm-12 col-form-Form.Group">Địa chỉ</Form.Group>
           <Col xs={12} md={4}>
             <select
@@ -119,7 +166,7 @@ export default function EmployeeForm() {
               <option disabled>Chọn Tỉnh / TP</option>
               {listProvince.map((province) => (
                 <option key={province.code} value={province.code}>
-                  {province.name}
+                  {province.full_name}
                 </option>
               ))}
             </select>
@@ -136,7 +183,7 @@ export default function EmployeeForm() {
               <option disabled>Chọn Quận/ Huyện</option>
               {listDistrict.map((district) => (
                 <option key={district.code} value={district.code}>
-                  {district.name}
+                  {district.full_name}
                 </option>
               ))}
             </select>
@@ -147,20 +194,20 @@ export default function EmployeeForm() {
               className="form-select"
               defaultValue={'Chọn phường xã'}
               {...register('address_id', {
-                setValueAs: (v) => parseInt(v),
+                onChange: (e) => onSelectWard(e),
               })}
             >
               <option disabled>Chọn phường xã</option>
               {listWard.map((ward) => (
                 <option key={ward.code} value={ward.code}>
-                  {ward.name}
+                  {ward.full_name}
                 </option>
               ))}
             </select>
           </Col>
         </Row>
 
-        <Row>
+        <Row className="mt-2">
           {userRole && userRole === UserRole.Admin && (
             <Col>
               <Form.Group>
@@ -174,113 +221,41 @@ export default function EmployeeForm() {
                   })}
                 >
                   <option disabled>Chọn vai trò</option>
-                  {RoleId.map((role) => {
-                    return (
-                      <option key={role.id} value={role.id}>
-                        {role.name}
-                      </option>
-                    );
-                  })}
+                  {RoleId.map((role) => (
+                    <option key={role.id} value={role.id}>
+                      {role.name}
+                    </option>
+                  ))}
                 </select>
               </Form.Group>
             </Col>
           )}
         </Row>
         {userRole && userRole === 'Admin' && (
-          <Row>
-            <Form.Group className="col-sm-12 col-form-Form.Group">Địa điểm làm việc</Form.Group>
-            <Col xs={12} md={4}>
-              <select
-                className="form-select"
-                onChange={(e) => {
-                  // setWorkingAddress({
-                  //   provinceID: e.target.value,
-                  //   communeID: 0,
-                  //   districtID: 0,
-                  // });
-                  // setUrl(
-                  //   `https://magicpost-uet.onrender.com/api/transactionPoint/customerGet/?provinceID=${e.target.value}`
-                  // );
-                }}
-                defaultValue={'Chọn tỉnh/TP'}
-              >
-                <option value={0}>Chọn tỉnh/TP</option>
-                {/* {Array.isArray(allProvincePoint) &&
-                  allProvincePoint?.map((province) => (
-                    <option key={province.provinceID} value={province.provinceID}>
-                      {province.name}
-                    </option>
-                  ))} */}
-              </select>
-            </Col>
-            <Col xs={12} md={4}>
-              <select
-                className="form-select"
-                onChange={(e) => {
-                  // setWorkingAddress({
-                  //   provinceID: workingAddress.provinceID,
-                  //   communeID: 0,
-                  //   districtID: e.target.value,
-                  // });
-                  // setUrl(
-                  //   `https://magicpost-uet.onrender.com/api/transactionPoint/customerGet/?provinceID=${workingAddress.provinceID}&districtID=${e.target.value}`
-                  // );
-                }}
-                defaultValue={'Chọn Quận/Huyện'}
-              >
-                <option value={0}>Chọn Quận/Huyện</option>
-                {/* {Array.isArray(allDistrictsPoint) &&
-                  allDistrictsPoint?.map((province) => (
-                    <option key={province.districtID} value={province.districtID}>
-                      {province.name}
-                    </option>
-                  ))} */}
-              </select>
-            </Col>
-            <Col xs={12} md={4}>
-              <select
-                className="form-select"
-                onChange={(e) => {
-                  // setWorkingAddress({
-                  //   provinceID: workingAddress.provinceID,
-                  //   communeID: e.target.value,
-                  //   districtID: workingAddress.districtID,
-                  // });
-                  // setUrl(
-                  //   `https://magicpost-uet.onrender.com/api/transactionPoint/customerGet/?provinceID=${workingAddress.provinceID}&districtID=${workingAddress.districtID}&communeID=${e.target.value}`
-                  // );
-                }}
-                defaultValue={'Chọn Xã/Phường'}
-              >
-                <option value={0}>Chọn Xã/Phường</option>
-                {/* {Array.isArray(allCommunePoint) &&
-                  allCommunePoint?.map((province) => (
-                    <option key={province.communeID} value={province.communeID}>
-                      {province.name}
-                    </option>
-                  ))} */}
-              </select>
-            </Col>
+          <Row className="mt-2">
             <Col>
-              <select
-                className="form-select"
-                onChange={(e) => {
-                  // employee.workingPointID = e.target.value;
-                }}
-                defaultValue={'Địa điểm làm việc'}
-              >
-                <option>Địa điểm làm việc</option>
-                {/* {Array.isArray(transactionPoint) &&
-                  transactionPoint?.map((province) => (
-                    <option key={province.transactionPointID} value={province.transactionPointID}>
-                      {province.name}
+              <Form.Group className="col-sm-12 col-form-Form.Group">
+                <Form.Label htmlFor="workplate">Địa điểm làm việc</Form.Label>
+                <select
+                  id="workplate"
+                  className="form-select"
+                  defaultValue={'Địa điểm làm việc'}
+                  {...register('wp_id')}
+                >
+                  <option key={0} disabled>
+                    Chọn địa điểm làm việc
+                  </option>
+                  {listWp.map((wp) => (
+                    <option key={wp.id} value={wp.id}>
+                      {wp.name} - {wp.address.province}, {wp.address.district}, {wp.address.ward}
                     </option>
-                  ))} */}
-              </select>
+                  ))}
+                </select>
+              </Form.Group>
             </Col>
           </Row>
         )}
-        <Row>
+        <Row className="mt-2">
           <div className="mt-3 btnContainer">
             <button className="btn btnCreate" type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Đang xử lý...' : 'Tạo nhân viên'}

@@ -24,7 +24,7 @@ export const Role = {
   Admin: {
     id: 1,
     name: 'Quản trị viên',
-    tabs: ['dashboard', 'manageTransshipment', 'manageTransactions', 'manageEmployees'],
+    tabs: ['dashboard', 'manageTransshipment', 'manageTransactions', 'manageEmployees', 'manageOrders', 'createOrder'],
     left: ['manageOrders', 'createOrder'],
   },
   Manager: {
@@ -70,8 +70,8 @@ export const listUrl = {
     icon: <LuPackage2 size={'2em'} />,
   },
   manageTransshipment: {
-    url: '/dashboard/workplate',
-    name: 'Điểm tập kết',
+    url: '/dashboard/transshipment',
+    name: 'Điểm trung chuyển',
     icon: <HiOutlineBuildingOffice size={'2em'} />,
   },
   manageTransactions: {
@@ -101,9 +101,12 @@ export const listUrl = {
   },
 };
 
-/**
- * Defines order status information.
- */
+export const WorkPlateEnumType = {
+  Warehouse: 1,
+  Transaction: 2,
+  Transshipment: 3,
+};
+
 export const orderStatus = {
   forwarded: {
     name: 'forwarded',

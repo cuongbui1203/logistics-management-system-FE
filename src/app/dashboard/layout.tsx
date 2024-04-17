@@ -1,4 +1,5 @@
 'use client';
+
 import { Container } from 'react-bootstrap';
 import { AnimationSequence, motion, useAnimate } from 'framer-motion';
 import SideBar from '@/components/dashboard/sidebar';

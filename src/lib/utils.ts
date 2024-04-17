@@ -50,14 +50,14 @@ export const handleErrorApi = ({
   duration,
 }: {
   error: any;
-  setError?: UseFormSetError<any>;
+  setError: UseFormSetError<any>;
   duration?: number;
 }) => {
   if (error instanceof EntityError && setError) {
-    Object.keys(error.payload.error).forEach((key) => {
-      setError(key, {
+    error.payload.error.forEach((err) => {
+      setError(err.field, {
         type: 'manual',
-        message: error.payload.error[key].join(' '),
+        message: err.message[0],
       });
     });
   } else {
