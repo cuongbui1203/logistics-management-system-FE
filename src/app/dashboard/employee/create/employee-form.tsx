@@ -12,9 +12,15 @@ import { addressApiRequest } from '@/api/address';
 import { AddressDetailSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
 import { RoleId, UserRole } from '@/config/Enum';
 import { workPlateApiRequest } from '@/api/workplate';
+import accountApiRequest from '@/api/account';
+import { handleErrorApi } from '@/lib/utils';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 export default function EmployeeForm() {
   const { user } = useAppContext();
+  const router = useRouter();
+
   const userRole = user?.role?.name;
 
   const {
@@ -28,6 +34,18 @@ export default function EmployeeForm() {
 
   async function onSubmit(values: AccountNewReqType) {
     console.log(values);
+    try {
+      await accountApiRequest.createAccount(values).then((res) => {
+        if (res.payload.success) {
+          router.push('/dashboard/employee');
+          toast.success('Tạo nhân viên thành công');
+        } else {
+          toast.error('Tạo nhân viên thất bại');
+        }
+      });
+    } catch (error) {
+      handleErrorApi({ error, setError });
+    }
   }
 
   const [listProvince, setListProvince] = useState<AddressDetailSchemaType[]>([]);
