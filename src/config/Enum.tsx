@@ -70,7 +70,7 @@ export const listUrl = {
     icon: <LuPackage2 size={'2em'} />,
   },
   manageTransshipment: {
-    url: '/dashboard/workplate',
+    url: '/dashboard/transshipment',
     name: 'Điểm tập kết',
     icon: <HiOutlineBuildingOffice size={'2em'} />,
   },

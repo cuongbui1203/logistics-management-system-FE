@@ -2,11 +2,8 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Pagination from '../pagination';
-// import { getAllProvince, getAllTransactionPoint } from "@/api/data";
 import { useDebouncedCallback } from 'use-debounce';
 import '@/css/dashboard/customTable.css';
-import { useEffect, useState } from 'react';
-import { workPlateApiRequest } from '@/api/workplate';
 import { WorkPlateResType } from '@/schema/workplate.schema';
 
 interface TransactionPointTableProps {
@@ -28,9 +25,6 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
   const handleAddress = (e: any) => {};
   const handleStartOrdersSort = (e: any) => {};
   const handleEndOrdersSort = (e: any) => {};
-
-  console.log(data);
-  
 
   // const handleHeadName = useDebouncedCallback((term) => {
   //   const params = new URLSearchParams(searchParams);
@@ -107,15 +101,23 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
             <table className="transactionTable">
               <thead>
                 <tr>
-                  <th scope="col">STT</th>
-                  <th scope="col">Tên điểm</th>
-                  <th scope="col">Trưởng điểm</th>
-                  <th scope="col">Địa chỉ</th>
-                  <th scope="col">Đơn hàng đã nhận</th>
-                  <th scope="col">Đơn hàng đã chuyển</th>
+                  <th scope="col" className="col-1">
+                    STT
+                  </th>
+                  <th scope="col" className="col-3">
+                    Tên điểm
+                  </th>
+                  <th scope="col" className="col-3">
+                    Trưởng điểm
+                  </th>
+                  <th scope="col" className="col-3">
+                    Địa chỉ
+                  </th>
+                  {/* <th scope="col">Đơn hàng đã nhận</th>
+                  <th scope="col">Đơn hàng đã chuyển</th> */}
                 </tr>
                 <tr className="filter">
-                  <th scope="col"></th>
+                  <th scope="col"> </th>
                   <th scope="col">
                     <input onChange={(e) => handleName(e.target.value)} placeholder="Lọc theo tên điểm" />
                   </th>
@@ -135,7 +137,7 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
                                             ))} */}
                     </select>
                   </th>
-                  <th scope="col">
+                  {/* <th scope="col">
                     <select onChange={(e) => handleEndOrdersSort(e.target.value)}>
                       <option value="">Sắp xếp theo</option>
                       <option value="ASC">Tăng</option>
@@ -148,7 +150,7 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
                       <option value="ASC">Tăng</option>
                       <option value="DESC">Giảm</option>
                     </select>
-                  </th>
+                  </th> */}
                 </tr>
               </thead>
               <tbody className="table-group-divider">
@@ -156,12 +158,12 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
                   <tr key={workplate.id}>
                     <td>{index + 1}</td>
                     <td>{workplate.name}</td>
-                    <td>{workplate.address_id}</td>
+                    <td>{workplate.manager?.name}</td>
                     <td>
                       {workplate.address.ward},{workplate.address.district},{workplate.address.province}
                     </td>
-                    <td>{workplate.type.name}</td>
-                    <td>{workplate.id}</td>
+                    {/* <td>{workplate.type.name}</td>
+                    <td>{workplate.id}</td> */}
                   </tr>
                 ))}
               </tbody>
@@ -169,7 +171,7 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
           </div>
         </div>
       </div>
-      {/* <Pagination totalPage={dataRes?.totalPages || 1} /> */}
+      <Pagination totalPage={1} />
     </div>
   );
 }

@@ -37,6 +37,7 @@ export function LoginForm() {
         csrf_token: data.csrf_token,
       });
       await authApiRequest.auth(authBody);
+      // await authApiRequest.getCsrfTokenClient();
       setUser(data.user);
       toast.success('Đăng nhập thành công');
       if (data.user.role.name === 'User' || data.user.role.name === 'Driver') {
@@ -108,12 +109,9 @@ export function LoginForm() {
               </Button>
               {errors.root && <Form.Text className="text-danger">{errors.root.message}</Form.Text>}
             </Row>
-            <Row>
-            </Row>
+            <Row></Row>
             <Row className="m-1 text-center">
-              <Link href="/register">
-                Chưa có tài khoản? Đăng kí tài khoản mới.
-              </Link>
+              <Link href="/register">Chưa có tài khoản? Đăng kí tài khoản mới.</Link>
             </Row>
           </Form>
         </Col>
