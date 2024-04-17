@@ -1,5 +1,5 @@
 import http from '@/lib/http';
-import { WorkPlateListResType } from '@/schema/workplate.schema';
+import { WorkPlateListResType, WorkPlateNewReqType } from '@/schema/workplate.schema';
 
 export const workPlateApiRequest = {
   getWorkPlateClient: () => http.get<WorkPlateListResType>('api/work-plates'),
@@ -11,4 +11,5 @@ export const workPlateApiRequest = {
     }),
   getWorkPlateSuggestClient: (address_id: string) =>
     http.get<WorkPlateListResType>(`api/work-plates/suggestion-wp?address_id=${address_id}`),
+  createTransaction: (body: WorkPlateNewReqType) => http.post<WorkPlateListResType>('api/work-plates', body),
 };

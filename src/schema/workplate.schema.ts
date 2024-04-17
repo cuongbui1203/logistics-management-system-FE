@@ -31,3 +31,11 @@ export const WorkPlateListRes = z.object({
 });
 
 export type WorkPlateListResType = z.TypeOf<typeof WorkPlateListRes>;
+
+export const WorkPlateNewReq = z.object({
+  name: z.string(),
+  address_id: z.string(),
+  type_id: z.number(),
+});
+
+export type WorkPlateNewReqType = z.TypeOf<typeof WorkPlateNewReq>;

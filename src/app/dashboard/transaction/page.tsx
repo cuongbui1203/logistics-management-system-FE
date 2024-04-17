@@ -1,7 +1,9 @@
 import { workPlateApiRequest } from '@/api/workplate';
+import { CreateTransaction } from '@/components/dashboard/button';
 import TransactionPointTable from '@/components/dashboard/table/transactionPoint-table';
 import { WorkPlateResType } from '@/schema/workplate.schema';
 import { cookies } from 'next/headers';
+import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 import { FiUserPlus } from 'react-icons/fi';
 
@@ -43,10 +45,7 @@ export default async function TransactionPage({ searchParams }: TransactionPageP
         </div>
 
         <div className="col btnContainer">
-          <Button className="btnCreate">
-            {/* <FiUserPlus size={'2em'} /> */}
-            Tạo điểm giao dịch
-          </Button>
+          <CreateTransaction />
         </div>
       </div>
       <div className="row mt-2">

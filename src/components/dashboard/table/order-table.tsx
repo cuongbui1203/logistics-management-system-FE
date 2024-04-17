@@ -4,11 +4,11 @@ import { OrderDetail } from '../button';
 import Pagination from '../pagination';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
-import '@/css/dashboard/customTable.css';
 import { useEffect } from 'react';
 import { addressApiRequest } from '@/api/address';
 import { AddressDetailSchemaType } from '@/schema/common.schema';
 import { orderStatus } from '@/config/Enum';
+import '@/css/dashboard/customTable.css';
 
 export default function OrderTable({ page, query, showFilter }: any) {
   const searchParams = useSearchParams();
@@ -151,7 +151,7 @@ export default function OrderTable({ page, query, showFilter }: any) {
           </table>
         </div>
       </div>
-      {/* <Pagination totalPage={totalPage} /> */}
+      <Pagination totalPage={1} />
     </div>
   );
 }
