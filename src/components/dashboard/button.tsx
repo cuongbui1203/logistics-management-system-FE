@@ -20,6 +20,37 @@ export function CreateEmployee() {
     </Button>
   );
 }
+
+export function CreateTransaction() {
+  const route = useRouter();
+  return (
+    <Button
+      onClick={() => {
+        route.push('/dashboard/transaction/create');
+      }}
+      className="btnCreate"
+    >
+      {/* <LuPackagePlus size={'2em'} /> */}
+      Tạo điểm giao dịch
+    </Button>
+  );
+}
+
+export function CreateTransshipment() {
+  const route = useRouter();
+  return (
+    <Button
+      onClick={() => {
+        route.push('/dashboard/transshipment/create');
+      }}
+      className="btnCreate"
+    >
+      {/* <LuPackagePlus size={'2em'} /> */}
+      Tạo điểm trung chuyển
+    </Button>
+  );
+}
+
 export function CreateOrder() {
   const route = useRouter();
   return (

@@ -1,32 +1,120 @@
 'use client';
-import { Form, Row, Col, InputGroup } from 'react-bootstrap';
+
+import { Form, Row, Col, InputGroup, Button } from 'react-bootstrap';
 import { FaRegUserCircle } from 'react-icons/fa';
 import { FaRegCalendar } from 'react-icons/fa';
 import { MdAlternateEmail } from 'react-icons/md';
-import { TiLocationArrowOutline } from 'react-icons/ti';
-import { GrMapLocation } from 'react-icons/gr';
-import { IoLocationOutline } from 'react-icons/io5';
-import { TbCurrentLocation } from 'react-icons/tb';
 import { useAppContext } from '@/app/app-provider';
 import { IoMdPhonePortrait } from 'react-icons/io';
+import { useForm } from 'react-hook-form';
+import { UpdateUserBody, UpdateUserBodyType } from '@/schema/auth.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useState } from 'react';
+import { AddressDetailSchemaType, UserSchemaType } from '@/schema/common.schema';
+import { addressApiRequest } from '@/api/address';
+import authApiRequest from '@/api/auth';
+import { toast } from 'react-toastify';
+import { formatDate2 } from '@/lib/utils';
 
 export default function MainInformation() {
-  const { user } = useAppContext();
+  const { user, setUser } = useAppContext();
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateUserBodyType>({
+    resolver: zodResolver(UpdateUserBody),
+    defaultValues: {
+      name: user?.name || '',
+      dob: formatDate2(user?.dob),
+      email: user?.email || '',
+      phone: user?.phone?.toString() || '',
+      address_id: user?.address?.wardCode || '',
+    },
+  });
+
+  async function onSubmit(values: UpdateUserBodyType) {
+    console.log(values);
+
+    if (!user) return;
+
+    try {
+      const result = await authApiRequest.updateUserClient(values, user.id);
+
+      const data = result.payload.data;
+      const newUser: UserSchemaType = {
+        ...user,
+        name: data.name,
+        dob: data.dob,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+      };
+      setUser(newUser);
+
+      toast.success('Cập nhật thông tin thành công');
+    } catch (error: any) {
+      console.log(error);
+    }
+  }
+
+  const [listProvince, setListProvince] = useState<AddressDetailSchemaType[]>([]);
+  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
+  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await addressApiRequest.getProvinceClient().then((res) => {
+          setListProvince(res.payload.data);
+        });
+        if (user?.address !== undefined) {
+          await addressApiRequest.getDistrictClient(user.address.provinceCode).then((res) => {
+            setListDistrict(res.payload.data);
+          });
+          await addressApiRequest.getWardClient(user?.address.districtCode).then((res) => {
+            setListWard(res.payload.data);
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const onSelectProvince = (e: any) => {
+    const provinceID = e.target.value;
+    addressApiRequest.getDistrictClient(provinceID).then((res) => {
+      setListDistrict(res.payload.data);
+    });
+  };
+
+  const onSelectDistrict = (e: any) => {
+    const districtID = e.target.value;
+    addressApiRequest.getWardClient(districtID).then((res) => {
+      setListWard(res.payload.data);
+    });
+  };
+
+  if (listProvince.length == 0) return <p>Loading...</p>;
 
   return (
-    <div className="formContainer">
+    <Form className="formContainer" onSubmit={handleSubmit(onSubmit)}>
       <Row>
         <h3>Thông tin nhân viên</h3>
       </Row>
       <Row className="mt-2">
         <Col md={6}>
-          <Form.Group controlId="fullName">
+          <Form.Group controlId="name">
             <Form.Label>Họ và tên</Form.Label>
             <InputGroup>
               <InputGroup.Text className="bg-light">
                 <FaRegUserCircle />
               </InputGroup.Text>
-              <Form.Control type="text" value={user?.name || ''} disabled />
+              <Form.Control type="text" {...register('name')} />
             </InputGroup>
           </Form.Group>
         </Col>
@@ -38,7 +126,7 @@ export default function MainInformation() {
               <InputGroup.Text className="bg-light">
                 <FaRegCalendar />
               </InputGroup.Text>
-              <Form.Control type="date" value={user?.dob?.toString()} disabled />
+              <Form.Control type="date" {...register('dob')} />
             </InputGroup>
           </Form.Group>
         </Col>
@@ -52,19 +140,19 @@ export default function MainInformation() {
               <InputGroup.Text className="bg-light">
                 <MdAlternateEmail />
               </InputGroup.Text>
-              <Form.Control type="email" value={user?.email || ''} disabled />
+              <Form.Control type="email" {...register('email')} />
             </InputGroup>
           </Form.Group>
         </Col>
 
         <Col md={6}>
-          <Form.Group controlId="phoneNumber">
+          <Form.Group controlId="phone">
             <Form.Label>Số điện thoại</Form.Label>
             <InputGroup>
               <InputGroup.Text className="bg-light">
                 <IoMdPhonePortrait />
               </InputGroup.Text>
-              <Form.Control type="tel" value={user?.phone?.toString()} disabled />
+              <Form.Control type="tel" {...register('phone')} />
             </InputGroup>
           </Form.Group>
         </Col>
@@ -73,45 +161,54 @@ export default function MainInformation() {
       <Row className="mt-2">
         <Form.Label className="col-sm-12 col-form-label">Địa chỉ</Form.Label>
         <Col md={4}>
-          <Form.Group controlId="commune">
-            <InputGroup>
-              <InputGroup.Text className="bg-light">
-                <TiLocationArrowOutline />
-              </InputGroup.Text>
-              <Form.Control type="text" placeholder="Xã" disabled value={user?.address?.ward} />
-            </InputGroup>
-          </Form.Group>
+          <select
+            className="form-select"
+            id="province"
+            onChange={(e) => {
+              onSelectProvince(e);
+            }}
+            defaultValue={user?.address.provinceCode}
+          >
+            {listProvince.map((province) => (
+              <option key={province.code} value={province.code}>
+                {province.full_name}
+              </option>
+            ))}
+          </select>
         </Col>
 
         <Col md={4}>
-          <InputGroup>
-            <InputGroup.Text className="bg-light">
-              <GrMapLocation />
-            </InputGroup.Text>
-            <Form.Control type="text" placeholder="Quận" disabled value={user?.address?.district} />
-          </InputGroup>
+          <select
+            className="form-select"
+            onChange={(e) => {
+              onSelectDistrict(e);
+            }}
+            defaultValue={user?.address.districtCode}
+          >
+            {listDistrict.map((district) => (
+              <option key={district.code} value={district.code}>
+                {district.full_name}
+              </option>
+            ))}
+          </select>
         </Col>
 
         <Col md={4}>
-          <InputGroup>
-            <InputGroup.Text className="bg-light">
-              <IoLocationOutline />
-            </InputGroup.Text>
-            <Form.Control type="text" placeholder="Tỉnh" disabled value={user?.address?.province} />
-          </InputGroup>
+          <select className="form-select" defaultValue={user?.address.wardCode} {...register('address_id')}>
+            {listWard.map((ward) => (
+              <option key={ward.code} value={ward.code}>
+                {ward.full_name}
+              </option>
+            ))}
+          </select>
         </Col>
       </Row>
 
-      <Row className="mt-2">
-        <Col>
-          <InputGroup>
-            <InputGroup.Text className="bg-light">
-              <TbCurrentLocation />
-            </InputGroup.Text>
-            <Form.Control type="text" placeholder="Chi tiết" disabled value={'Detail'} />
-          </InputGroup>
-        </Col>
-      </Row>
-    </div>
+      <div className="mt-3 btnContainer d-flex justify-content-center">
+        <Button type="submit" className="btn btnCreate" disabled={isSubmitting}>
+          {isSubmitting ? 'Đang xử lý...' : 'Cập nhật thông tin'}
+        </Button>
+      </div>
+    </Form>
   );
 }

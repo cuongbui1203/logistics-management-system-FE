@@ -1,79 +1,68 @@
 'use client';
+
 import { OrderDetail } from '../button';
-// import { getOrder } from '@/api/data';
 import Pagination from '../pagination';
-// import { getAllProvince } from '@/api/data';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { orderStatus } from '@/api/utils';
 import { useDebouncedCallback } from 'use-debounce';
+import { useEffect } from 'react';
+import { addressApiRequest } from '@/api/address';
+import { AddressDetailSchemaType } from '@/schema/common.schema';
+import { orderStatus } from '@/config/Enum';
 import '@/css/dashboard/customTable.css';
 
 export default function OrderTable({ page, query, showFilter }: any) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const provinceData = getAllProvince();
-  const { dataRes: inforOrders, totalPages: totalPage, itemPerPage: itemPerPage } = getOrder(page || 1, query);
-  const userWorkingPointID = useSession()?.data?.user?.workingPointID;
-  const handleID = useDebouncedCallback((term) => {
-    const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set('orderID', term);
-    } else {
-      params.delete('orderID');
-    }
-    replace(`${pathname}?${params.toString()}`);
-  }, 300);
-  const handleStartAd = useDebouncedCallback((term) => {
-    const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set('startAddress', term);
-    } else {
-      params.delete('startAddress');
-    }
-    replace(`${pathname}?${params.toString()}`);
-  }, 300);
-  const handleEndAd = useDebouncedCallback((term) => {
-    const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set('endAddress', term);
-    } else {
-      params.delete('endAddress');
-    }
-    replace(`${pathname}?${params.toString()}`);
-  }, 300);
+  // const { dataRes: inforOrders, totalPages: totalPage, itemPerPage: itemPerPage } = getOrder(page || 1, query);
+  // const userWorkingPointID = useSession()?.data?.user?.workingPointID;
 
-  const handleTimeCreate = useDebouncedCallback((term) => {
-    const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set('timeCreate', term);
-    } else {
-      params.delete('timeCreate');
-    }
-    replace(`${pathname}?${params.toString()}`);
-  }, 300);
-  const handleStatus = useDebouncedCallback((term) => {
-    const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set('status', term);
-    } else {
-      params.delete('status');
-    }
-    replace(`${pathname}?${params.toString()}`);
-  }, 300);
+  let provinceData: AddressDetailSchemaType[] = [];
 
-  const formatDateTime = (dateTimeString) => {
-    const options = {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await addressApiRequest.getProvinceClient().then((res) => {
+          provinceData = res.payload.data;
+        });
+      } catch (error) {
+        console.log(error);
+      }
     };
-    const formattedDateTime = new Date(dateTimeString).toLocaleDateString('en-US', options);
-    return formattedDateTime;
-  };
+    fetchData();
+  }, []);
+
+  const debounce = (type: string) =>
+    useDebouncedCallback((term) => {
+      const params = new URLSearchParams(searchParams);
+      if (term) {
+        params.set(type, term);
+      } else {
+        params.delete(type);
+      }
+      replace(`${pathname}?${params.toString()}`);
+    }, 300);
+
+  const handleID = debounce('orderID');
+  const handleStartAd = debounce('startAddress');
+  const handleEndAd = debounce('endAddress');
+
+  const handleTimeCreate = debounce('timeCreate');
+  const handleStatus = debounce('status');
+
+  // const formatDateTime = (dateTimeString: any) => {
+  //   const options = {
+  //     year: 'numeric',
+  //     month: 'numeric',
+  //     day: 'numeric',
+  //     hour: 'numeric',
+  //     minute: 'numeric',
+  //     second: 'numeric',
+  //   };
+  //   const formattedDateTime = new Date(dateTimeString).toLocaleDateString('en-US', options);
+  //   return formattedDateTime;
+  // };
+
   return (
     <div className="mt-2 flow-root table">
       <div className="inline-block min-w-full ">
@@ -97,9 +86,9 @@ export default function OrderTable({ page, query, showFilter }: any) {
                   </th>
                   <th scope="col">
                     <select defaultValue={query?.startAddress} onChange={(e) => handleStartAd(e.target.value)}>
-                      <option value={''}>Chọn tỉnh/ thành phố</option>
+                      <option disabled>Chọn tỉnh/ thành phố</option>
                       {provinceData.map((province) => (
-                        <option key={province.provinceIDnceID} value={province.provinceID}>
+                        <option key={province.code} value={province.code}>
                           {province.name}
                         </option>
                       ))}
@@ -109,7 +98,7 @@ export default function OrderTable({ page, query, showFilter }: any) {
                     <select defaultValue={query?.endAddress} onChange={(e) => handleEndAd(e.target.value)}>
                       <option value={''}>Chọn tỉnh/ thành phố</option>
                       {provinceData.map((province) => (
-                        <option key={province.provinceIDnceID} value={province.provinceID}>
+                        <option key={province.code} value={province.code}>
                           {province.name}
                         </option>
                       ))}
@@ -129,7 +118,7 @@ export default function OrderTable({ page, query, showFilter }: any) {
                       <option value={''}>Trạng thái</option>
                       {Object.keys(orderStatus).map((statusKey) => (
                         <option key={statusKey} value={statusKey}>
-                          {orderStatus[statusKey].now}
+                          {/* {orderStatus[statusKey].now} */}
                         </option>
                       ))}
                     </select>
@@ -139,7 +128,7 @@ export default function OrderTable({ page, query, showFilter }: any) {
               )}
             </thead>
             <tbody className="table-group-divider">
-              {inforOrders?.map((data, index) => {
+              {/* {inforOrders?.map((data, index) => {
                 const statusInfo = orderStatus[data?.goodsStatus] || {};
                 const badgeColor = statusInfo.color || 'secondary';
                 return (
@@ -157,12 +146,12 @@ export default function OrderTable({ page, query, showFilter }: any) {
                     </td>
                   </tr>
                 );
-              })}
+              })} */}
             </tbody>
           </table>
         </div>
       </div>
-      <Pagination totalPage={totalPage} />
+      <Pagination totalPage={1} />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import moment from 'moment';
 import { UseFormSetError } from 'react-hook-form';
 import { EntityError } from './http';
 import { toast } from 'react-toastify';
+import dayjs from 'dayjs';
 
 /**
  * Formats a date in the specified format.
@@ -49,19 +50,26 @@ export const handleErrorApi = ({
   duration,
 }: {
   error: any;
-  setError?: UseFormSetError<any>;
+  setError: UseFormSetError<any>;
   duration?: number;
 }) => {
   if (error instanceof EntityError && setError) {
-    Object.keys(error.payload.error).forEach((key) => {
-      setError(key, {
+    error.payload.error.forEach((err) => {
+      setError(err.field, {
         type: 'manual',
-        message: error.payload.error[key].join(' '),
+        message: err.message[0],
       });
     });
   } else {
-    toast.error('Đăng nhập thất bại!', {
+    toast.error('Yêu cầu thất bại!', {
       autoClose: duration || 3000,
     });
   }
+};
+
+export const formatDate2 = (date: Date | null | undefined) => {
+  if (!date) {
+    return '';
+  }
+  return dayjs(date).format('YYYY-MM-DD');
 };

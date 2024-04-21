@@ -1,4 +1,5 @@
 'use client';
+
 import Chart from 'react-apexcharts';
 import { useState } from 'react';
 import { formatDate } from '@/lib/utils';
@@ -6,7 +7,7 @@ import { motion } from 'framer-motion';
 import { Button } from 'react-bootstrap';
 import Card from '@/components/dashboard/main/card';
 import { monthlyOptions, yearlyOptions } from '@/config/ChartOption';
-// import { fetchProfitStatistic, formatDate } from '@/api/data';
+// import { fetchProfitStatistic } from '@/api/data';
 
 const defaultOptions = {
   chart: {

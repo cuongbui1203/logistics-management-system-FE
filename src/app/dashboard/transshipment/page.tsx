@@ -1,9 +1,8 @@
 import { workPlateApiRequest } from '@/api/workplate';
-import { CreateTransaction } from '@/components/dashboard/button';
+import { CreateTransshipment } from '@/components/dashboard/button';
 import TransactionPointTable from '@/components/dashboard/table/transactionPoint-table';
 import { WorkPlateResType } from '@/schema/workplate.schema';
 import { cookies } from 'next/headers';
-import Link from 'next/link';
 import { Button } from 'react-bootstrap';
 import { FiUserPlus } from 'react-icons/fi';
 
@@ -34,18 +33,18 @@ export default async function TransactionPage({ searchParams }: TransactionPageP
   let listWorkPlates: WorkPlateResType[] = [];
   if (token) {
     const data = await workPlateApiRequest.getWorkPlate(token.value);
-    listWorkPlates = data.payload.data.filter((item) => item.type.id === 2);
+    listWorkPlates = data.payload.data.filter((item) => item.type.id === 3);
   }
 
   return (
     <div className="tableContainer">
       <div className="row ">
         <div className="col">
-          <h3>Danh sách điểm giao dịch</h3>
+          <h3>Danh sách điểm trung chuyển</h3>
         </div>
 
         <div className="col btnContainer">
-          <CreateTransaction />
+          <CreateTransshipment />
         </div>
       </div>
       <div className="row mt-2">

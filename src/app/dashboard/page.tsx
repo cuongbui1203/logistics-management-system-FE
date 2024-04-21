@@ -1,5 +1,9 @@
 'use client';
-import Overview from '@/components/dashboard/main/overview';
+
+import dynamic from 'next/dynamic';
+
+const Overview = dynamic(() => import('@/components/dashboard/main/overview'), { ssr: false });
+// import Overview from '@/components/dashboard/main/overview';
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { motion } from 'framer-motion';
@@ -10,6 +14,7 @@ import { useAppContext } from '@/app/app-provider';
 import StatisticGoodsPoint from '@/components/dashboard/main/statisticGoodsPoint';
 import StatisticTransPoint from '@/components/dashboard/main/statisticTransPoint';
 import OrderTable from '@/components/dashboard/table/order-table';
+import { UserRole } from '@/config/Enum';
 
 const roleComponents = {
   Admin: [
@@ -51,7 +56,7 @@ export default function Dashboard() {
   const { user } = useAppContext();
   const role = user?.role.name;
 
-  if (role === 'User' || role === 'Driver') {
+  if (role === UserRole.User || role === UserRole.Driver) {
     return <div>Không có quyền truy cập</div>;
   }
 

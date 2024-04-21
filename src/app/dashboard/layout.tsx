@@ -1,12 +1,22 @@
 'use client';
+
 import { Container } from 'react-bootstrap';
 import { AnimationSequence, motion, useAnimate } from 'framer-motion';
 import SideBar from '@/components/dashboard/sidebar';
 import TopBar from '@/components/dashboard/topbar';
 import { useEffect, useState } from 'react';
 import '@/css/dashboard/dashboard.css';
+import { useAppContext } from '../app-provider';
+import { UserRole } from '@/config/Enum';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const { user } = useAppContext();
+  const role = user?.role.name;
+
+  if (role === UserRole.User || role === UserRole.Driver) {
+    return <div>Không có quyền truy cập</div>;
+  }
+
   const [isOpen, setIsOpen] = useState(true);
   const [scope, animate] = useAnimate();
   useEffect(() => {
@@ -30,9 +40,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <SideBar toggle={() => setIsOpen(!isOpen)} isOpen />
       <motion.div id="main" data-is-open={isOpen}>
         <TopBar />
-        <motion.section id="noidung" className="p-3">
+        <motion.main id="noidung" className="p-3">
           <Container>{children}</Container>
-        </motion.section>
+        </motion.main>
       </motion.div>
     </motion.div>
   );

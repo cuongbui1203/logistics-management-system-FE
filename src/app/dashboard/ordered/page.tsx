@@ -28,11 +28,10 @@ export default async function OrderPage(searchParams: IOrderPage) {
         <div className="col">
           <h3>Danh sách đơn hàng</h3>
         </div>
-        {userRole === 'Employee' && (
-          <div className="col btnContainer">
-            <CreateOrder />
-          </div>
-        )}
+
+        <div className="col btnContainer">
+          <CreateOrder />
+        </div>
       </div>
 
       <div className="row">

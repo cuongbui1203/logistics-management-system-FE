@@ -37,6 +37,7 @@ export function LoginForm() {
         csrf_token: data.csrf_token,
       });
       await authApiRequest.auth(authBody);
+      // await authApiRequest.getCsrfTokenClient();
       setUser(data.user);
       toast.success('Đăng nhập thành công');
       if (data.user.role.name === 'User' || data.user.role.name === 'Driver') {
@@ -102,24 +103,15 @@ export function LoginForm() {
                 {errors.password && <Form.Text className="text-danger">{errors.password.message}</Form.Text>}
               </Form.Group>
             </Row>
-
-            <Row>
-              <Col>
-                <Form.Check type="checkbox" id="form2Example3" label="Ghi nhớ" className="text-light" />
-              </Col>
-
-              <Col className="d-flex justify-content-end">
-                <Link href="/" className="text-light">
-                  Quay lại trang chủ
-                </Link>
-              </Col>
-            </Row>
-
             <Row className="m-1">
               <Button variant="primary" size="lg" className="login-btn" type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Đang xử lý...' : 'Đăng nhập'}
               </Button>
               {errors.root && <Form.Text className="text-danger">{errors.root.message}</Form.Text>}
+            </Row>
+            <Row></Row>
+            <Row className="m-1 text-center">
+              <Link href="/register">Chưa có tài khoản? Đăng kí tài khoản mới.</Link>
             </Row>
           </Form>
         </Col>

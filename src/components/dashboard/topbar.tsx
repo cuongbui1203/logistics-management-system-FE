@@ -28,16 +28,15 @@ export default function TopBar() {
   const pathname = usePathname();
 
   const closeProfile = (e: any) => {
-    setProfile(false);
-    console.log(1);
+    if (!profile) {
+      setProfile(false);
+    }
   };
 
-  // useEffect(() => {
-  //   if (profile) {
-  //     document.body.addEventListener('click', closeProfile);
-  //   } else document.body.removeEventListener('click', closeProfile);
-  //   return () => document.body.removeEventListener('click', closeProfile);
-  // }, [profile]);
+  useEffect(() => {
+    document.body.addEventListener('click', closeProfile);
+    return () => document.body.removeEventListener('click', closeProfile);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -64,7 +63,7 @@ export default function TopBar() {
               <Container
                 ref={profileRef}
                 onClick={() => {
-                  console.log(profile);
+                  console.log('TopBar ', profile);
                   setProfile(!profile);
                 }}
               >

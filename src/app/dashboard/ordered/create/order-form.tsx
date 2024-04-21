@@ -1,6 +1,6 @@
 'use client';
-import '@/css/employee/customForm.css';
-import '@/css/employee/customTable.css';
+import '@/css/dashboard/customForm.css';
+import '@/css/dashboard/customTable.css';
 import { useEffect, useState } from 'react';
 // import {
 //   getDistrictByProvinceID,
@@ -266,7 +266,7 @@ export default function OrderForm() {
                         // setreceiverCommune(0);
                       }}
                     >
-                      <option sender>Chọn Tỉnh / TP</option>
+                      <option>Chọn Tỉnh / TP</option>
                       {/* {provinceData.map((province) => (
                         <option
                           key={province.provinceID}

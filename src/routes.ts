@@ -10,3 +10,4 @@ export const apiAuthPrefix = '/api/auth';
 
 export const USER_LOGIN_REDIRECT = '/';
 export const ADMIN_LOGIN_REDIRECT = '/dashboard';
+export const LOGIN_REDIRECT = '/login'
