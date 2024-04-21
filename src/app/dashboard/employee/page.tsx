@@ -1,6 +1,6 @@
 'use client';
 import { useAppContext } from '@/app/app-provider';
-import { CreateEmployee } from '@/components/dashboard/button';
+import { CreateEmployee } from '@/components/button';
 import EmployeeTable from '@/components/dashboard/table/employee-table';
 import { UserRole } from '@/config/Enum';
 

@@ -1,16 +1,21 @@
 'use client';
 
 import { addressApiRequest } from '@/api/address';
+import { workPlateApiRequest } from '@/api/workplate';
 import { useAppContext } from '@/app/app-provider';
 import { UserRole, WorkPlateEnumType } from '@/config/Enum';
+import { handleErrorApi } from '@/lib/utils';
 import { AddressDetailSchemaType } from '@/schema/common.schema';
 import { WorkPlateNewReq, WorkPlateNewReqType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 export default function TransactionForm() {
+  const router = useRouter();
   const { user } = useAppContext();
   const userRole = user?.role?.name;
 
@@ -33,18 +38,17 @@ export default function TransactionForm() {
 
   async function onSubmit(values: WorkPlateNewReqType) {
     console.log(values);
-    // try {
-    //   await workPlateApiRequest.createAccount(values).then((res) => {
-    //     if (res.payload.success) {
-    //       router.push('/dashboard/employee');
-    //       toast.success('Tạo nhân viên thành công');
-    //     } else {
-    //       toast.error('Tạo nhân viên thất bại');
-    //     }
-    //   });
-    // } catch (error) {
-    //   handleErrorApi({ error, setError });
-    // }
+    try {
+      await workPlateApiRequest.createWP(values).then((res) => {
+        if (res.payload.success) {
+          toast.success('Tạo điểm giao dịch thành công');
+          router.push('/dashboard/transaction');
+          router.refresh();
+        }
+      });
+    } catch (error) {
+      handleErrorApi({ error, setError });
+    }
   }
 
   const [listProvince, setListProvince] = useState<AddressDetailSchemaType[]>([]);
@@ -89,7 +93,7 @@ export default function TransactionForm() {
           <Col xs={12} md={6}>
             <Form.Group>
               <Form.Label htmlFor="username">Tên điểm giao dịch</Form.Label>
-              <Form.Control type="text" id="username" placeholder="Tên đăng nhập" {...register('name')} />
+              <Form.Control type="text" id="username" placeholder="Tên điểm giao dịch" {...register('name')} />
             </Form.Group>
           </Col>
         </Row>

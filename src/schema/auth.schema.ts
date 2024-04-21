@@ -46,6 +46,7 @@ export type LoginResType = z.TypeOf<typeof LoginRes>;
 export const AuthBody = z.object({
   token: z.string(),
   csrf_token: z.string(),
+  id: z.number(),
 });
 
 export type AuthBodyType = z.TypeOf<typeof AuthBody>;

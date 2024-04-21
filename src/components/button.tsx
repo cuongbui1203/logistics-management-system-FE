@@ -1,10 +1,37 @@
 'use client';
 
-import { Button } from 'react-bootstrap';
+import { Button, Form, InputGroup } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
 import { FaRegEye } from 'react-icons/fa';
 import { FiUserPlus } from 'react-icons/fi';
 import { LuPackagePlus } from 'react-icons/lu';
+
+export function SearchOrder() {
+  const route = useRouter();
+  let orderID: string = '';
+  const handleSearch = () => {
+    if (orderID.trim() !== '') {
+      console.log('orderID', orderID);
+      // router.push(`/customer/LockupOrders?query=${orderID}`);
+    }
+  };
+  return (
+    <InputGroup>
+      <Form.Control
+        type="text"
+        id="inputCode"
+        name="code"
+        formMethod="get"
+        placeholder="Nhập mã bưu gửi"
+        className="rounded-pill"
+        onChange={(e) => (orderID = e.target.value)}
+      />
+      <Button className="rounded-pill mx-2" onClick={handleSearch}>
+        🔍
+      </Button>
+    </InputGroup>
+  );
+}
 
 export function CreateEmployee() {
   const route = useRouter();

@@ -1,6 +1,6 @@
 'use client';
 import { clientSessionToken } from '@/lib/http';
-import { AccountResType } from '@/schema/account.schema';
+import { AccountResType } from '@/schema/auth.schema';
 import { createContext, useContext, useState } from 'react';
 
 type User = AccountResType['data'];
@@ -33,6 +33,8 @@ export default function AppProvider({
       clientSessionToken.value = initialSessionToken;
     }
   });
+
+  console.log('clientSessionToken', clientSessionToken.value);
 
   return (
     <AppContext.Provider

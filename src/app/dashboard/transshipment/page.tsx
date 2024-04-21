@@ -1,5 +1,5 @@
 import { workPlateApiRequest } from '@/api/workplate';
-import { CreateTransshipment } from '@/components/dashboard/button';
+import { CreateTransshipment } from '@/components/button';
 import TransactionPointTable from '@/components/dashboard/table/transactionPoint-table';
 import { WorkPlateResType } from '@/schema/workplate.schema';
 import { cookies } from 'next/headers';

@@ -1,6 +1,6 @@
 'use client';
 import accountApiRequest from '@/api/account';
-import { EmployeeDetail } from '@/components/dashboard/button';
+import { EmployeeDetail } from '@/components/button';
 import Pagination from '@/components/dashboard/pagination';
 import { AccountList } from '@/schema/auth.schema';
 import React, { useEffect, useState } from 'react';
@@ -25,10 +25,9 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
     const fetchData = async () => {
       try {
         await accountApiRequest.listAccountClient().then((res) => {
-          const filtered = res.payload.data.data.filter((item) => item.role.name !== UserRole.User);
-          setListEmployees(filtered);
-          totalPage = filtered.length;
-          // console.log(res.payload.data.data);
+          setListEmployees(res.payload.data.data);
+          totalPage = res.payload.data.total;
+          console.log(res.payload.data.data);
         });
       } catch (error) {
         console.log(error);

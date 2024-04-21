@@ -47,6 +47,16 @@ export class EntityError extends HttpError {
 
 class Token {
   private token = '';
+  private userId = 0;
+
+  get id() {
+    return this.userId;
+  }
+
+  set id(id: number) {
+    this.userId = id;
+  }
+
   get value() {
     return this.token;
   }
@@ -139,11 +149,14 @@ const request = async <Response>(
 
   // Đảm bảo logic dưới đây chỉ chạy ở phía client (browser)
   if (typeof window !== 'undefined') {
+    console.log('Client side', url);
+
     if (['users/login', 'users/register'].some((item) => item === normalizePath(url))) {
       clientSessionToken.value = (payload as LoginResType).data.token;
-      console.log('clientSessionToken', clientSessionToken.value);
-    } else if ('auth/logout' === normalizePath(url)) {
+      clientSessionToken.id = (payload as LoginResType).data.user.id;
+    } else if ('api/auth/logout' === normalizePath(url)) {
       clientSessionToken.value = '';
+      clientSessionToken.id = 0;
     }
   }
 

@@ -1,4 +1,5 @@
 'use client';
+
 import { LuLock } from 'react-icons/lu';
 import { FaRegUser } from 'react-icons/fa';
 import style from '@/css/login.module.css';
@@ -35,17 +36,20 @@ export function LoginForm() {
       const authBody = AuthBody.parse({
         token: data.token,
         csrf_token: data.csrf_token,
+        id: data.user.id,
       });
       await authApiRequest.auth(authBody);
       // await authApiRequest.getCsrfTokenClient();
-      setUser(data.user);
       toast.success('Đăng nhập thành công');
       if (data.user.role.name === 'User' || data.user.role.name === 'Driver') {
         router.push(USER_LOGIN_REDIRECT);
         return;
       }
       router.push(ADMIN_LOGIN_REDIRECT);
+      setUser(data.user);
     } catch (error: any) {
+      console.log(error);
+
       handleErrorApi({ error, setError });
     }
   }

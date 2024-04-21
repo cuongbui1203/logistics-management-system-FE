@@ -11,5 +11,5 @@ export const workPlateApiRequest = {
     }),
   getWorkPlateSuggestClient: (address_id: string) =>
     http.get<WorkPlateListResType>(`api/work-plates/suggestion-wp?address_id=${address_id}`),
-  createTransaction: (body: WorkPlateNewReqType) => http.post<WorkPlateListResType>('api/work-plates', body),
+  createWP: (body: WorkPlateNewReqType) => http.post<WorkPlateListResType>('api/work-plates', body),
 };
