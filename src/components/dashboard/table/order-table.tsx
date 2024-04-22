@@ -1,6 +1,6 @@
 'use client';
 
-import { OrderDetail } from '../button';
+import { OrderDetail } from '../../button';
 import Pagination from '../pagination';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';

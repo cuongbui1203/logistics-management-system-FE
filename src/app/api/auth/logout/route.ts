@@ -8,6 +8,7 @@ export async function POST(request: Request) {
   let header = new Headers();
   header.append('Set-Cookie', 'token=; Path=/; HttpOnly; Max-Age=0');
   header.append('Set-Cookie', 'csrfToken=; Path=/; HttpOnly; Max-Age=0');
+  header.append('Set-Cookie', 'id=; Path=/; HttpOnly; Max-Age=0');
 
   const force = res.force as boolean | undefined;
   if (force) {
@@ -40,6 +41,7 @@ export async function POST(request: Request) {
       headers: header,
     });
   } catch (error) {
+    console.log(error);
     if (error instanceof HttpError) {
       return Response.json(error.payload, {
         status: error.status,

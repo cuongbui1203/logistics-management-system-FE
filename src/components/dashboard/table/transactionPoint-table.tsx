@@ -5,6 +5,7 @@ import Pagination from '../pagination';
 import { useDebouncedCallback } from 'use-debounce';
 import '@/css/dashboard/customTable.css';
 import { WorkPlateResType } from '@/schema/workplate.schema';
+import { TransactionDetail } from '@/components/button';
 
 interface TransactionPointTableProps {
   page: any;
@@ -95,28 +96,29 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
 
   return (
     <div>
-      <div className="mt-2 flow-root table">
-        <div className="inline-block min-w-full align-middle d-flex justify-content-center">
-          <div className="rounded-lg bg-gray-50 md:pt-0 table-responsive">
-            <table className="transactionTable">
+      <div className="mt-2 flow-root">
+        <div className="inline-block min-w-full align-middle">
+          <div className="rounded-lg bg-gray-50 md:pt-0 table-responsive text-nowrap">
+            <table className="transactionTable w-100">
               <thead>
                 <tr>
-                  <th scope="col" className="col-1">
+                  <th scope="col" className="col-sm-1">
                     STT
                   </th>
-                  <th scope="col" className="col-3">
+                  <th scope="col" className="col-sm-2">
                     Tên điểm
                   </th>
-                  <th scope="col" className="col-3">
+                  <th scope="col" className="col-sm-2">
                     Trưởng điểm
                   </th>
-                  <th scope="col" className="col-3">
+                  <th scope="col" className="col-sm-6">
                     Địa chỉ
                   </th>
+                  <th scope="col"></th>
                   {/* <th scope="col">Đơn hàng đã nhận</th>
                   <th scope="col">Đơn hàng đã chuyển</th> */}
                 </tr>
-                <tr className="filter">
+                {/* <tr className="filter">
                   <th scope="col"> </th>
                   <th scope="col">
                     <input onChange={(e) => handleName(e.target.value)} placeholder="Lọc theo tên điểm" />
@@ -134,7 +136,7 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
                                                 >
                                                     {province.name}
                                                 </option>
-                                            ))} */}
+                                            ))}
                     </select>
                   </th>
                   {/* <th scope="col">
@@ -150,8 +152,8 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
                       <option value="ASC">Tăng</option>
                       <option value="DESC">Giảm</option>
                     </select>
-                  </th> */}
-                </tr>
+                  </th> 
+                </tr> */}
               </thead>
               <tbody className="table-group-divider">
                 {data?.map((workplate, index) => (
@@ -164,6 +166,10 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
                     </td>
                     {/* <td>{workplate.type.name}</td>
                     <td>{workplate.id}</td> */}
+                    <td className="d-flex justify-content-center gap-1">
+                      <TransactionDetail id={workplate?.id} />
+                      {/* <EmployeeDelete id={employee?.id} onRefresh={() => setRefresh(true)} /> */}
+                    </td>
                   </tr>
                 ))}
               </tbody>

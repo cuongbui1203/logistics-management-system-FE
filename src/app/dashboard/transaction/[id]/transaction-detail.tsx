@@ -6,7 +6,7 @@ import { useAppContext } from '@/app/app-provider';
 import { UserRole, WorkPlateEnumType } from '@/config/Enum';
 import { handleErrorApi } from '@/lib/utils';
 import { AddressDetailSchemaType } from '@/schema/common.schema';
-import { WorkPlateNewReq, WorkPlateNewReqType } from '@/schema/workplate.schema';
+import { WorkPlateNewReq, WorkPlateNewReqType, WorkPlateResType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-export default function TransactionForm() {
+export default function TransactionDetail({ workPlate }: { workPlate: WorkPlateResType }) {
   const router = useRouter();
   const { user } = useAppContext();
   const userRole = user?.role?.name;
@@ -31,8 +31,9 @@ export default function TransactionForm() {
   } = useForm<WorkPlateNewReqType>({
     resolver: zodResolver(WorkPlateNewReq),
     defaultValues: {
-      name: '',
+      name: workPlate?.name,
       type_id: WorkPlateEnumType.Transaction,
+      address_id: workPlate?.address_id,
     },
   });
 
@@ -41,9 +42,9 @@ export default function TransactionForm() {
     try {
       await workPlateApiRequest.createWP(values).then((res) => {
         if (res.payload.success) {
-          toast.success('Tạo điểm giao dịch thành công');
-          router.push('/dashboard/transaction');
-          router.refresh();
+          toast.success('Cập nhật điểm giao dịch thành công');
+          // router.push('/dashboard/transaction');
+          // router.refresh();
         }
       });
     } catch (error) {
@@ -60,6 +61,12 @@ export default function TransactionForm() {
       try {
         await addressApiRequest.getProvinceClient().then((res) => {
           setListProvince(res.payload.data);
+        });
+        addressApiRequest.getDistrictClient(workPlate.address.provinceCode).then((res) => {
+          setListDistrict(res.payload.data);
+        });
+        addressApiRequest.getWardClient(workPlate.address.districtCode).then((res) => {
+          setListWard(res.payload.data);
         });
       } catch (error) {
         console.log(error);
@@ -107,7 +114,7 @@ export default function TransactionForm() {
               onChange={(e) => {
                 onSelectProvince(e);
               }}
-              defaultValue={'Chọn Tỉnh / TP'}
+              defaultValue={workPlate.address.provinceCode}
             >
               <option disabled>Chọn Tỉnh / TP</option>
               {listProvince.map((province) => (
@@ -124,7 +131,7 @@ export default function TransactionForm() {
               onChange={(e) => {
                 onSelectDistrict(e);
               }}
-              defaultValue={'Chọn Quận/ Huyện'}
+              defaultValue={workPlate.address.districtCode}
             >
               <option disabled>Chọn Quận/ Huyện</option>
               {listDistrict.map((district) => (
@@ -136,7 +143,7 @@ export default function TransactionForm() {
           </Col>
 
           <Col xs={12} md={4}>
-            <select className="form-select" defaultValue={'Chọn phường xã'} {...register('address_id')}>
+            <select className="form-select" defaultValue={workPlate.address.wardCode} {...register('address_id')}>
               <option disabled>Chọn phường xã</option>
               {listWard.map((ward) => (
                 <option key={ward.code} value={ward.code}>
@@ -148,26 +155,9 @@ export default function TransactionForm() {
         </Row>
 
         <Row className="mt-2">
-          <Col xs={12} md={6}>
-            <Form.Group>
-              <Form.Label htmlFor="username">Khu vực</Form.Label>
-              {/* TODO:  */}
-              <select className="form-select" defaultValue={'Chọn khu vực'} {...register('address_id')}>
-                <option disabled>Chọn phường xã</option>
-                {listWard.map((ward) => (
-                  <option key={ward.code} value={ward.code}>
-                    {ward.full_name}
-                  </option>
-                ))}
-              </select>
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Row className="mt-2">
           <div className="mt-3 btnContainer">
             <Button className="btn btnCreate" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Đang xử lý...' : 'Tạo điểm giao dịch'}
+              {isSubmitting ? 'Đang xử lý...' : 'Cập nhật điểm giao dịch'}
             </Button>
           </div>
         </Row>

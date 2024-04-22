@@ -1,5 +1,5 @@
 import http from '@/lib/http';
-import { WorkPlateListResType, WorkPlateNewReqType } from '@/schema/workplate.schema';
+import { WorkPlateDetailResType, WorkPlateListResType, WorkPlateNewReqType } from '@/schema/workplate.schema';
 
 export const workPlateApiRequest = {
   getWorkPlateClient: () => http.get<WorkPlateListResType>('api/work-plates'),
@@ -11,5 +11,11 @@ export const workPlateApiRequest = {
     }),
   getWorkPlateSuggestClient: (address_id: string) =>
     http.get<WorkPlateListResType>(`api/work-plates/suggestion-wp?address_id=${address_id}`),
-  createTransaction: (body: WorkPlateNewReqType) => http.post<WorkPlateListResType>('api/work-plates', body),
+  createWP: (body: WorkPlateNewReqType) => http.post<WorkPlateListResType>('api/work-plates', body),
+  getDetailWorkPlate: (token: string, id: string) =>
+    http.get<WorkPlateDetailResType>(`api/work-plates/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }),
 };

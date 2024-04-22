@@ -32,6 +32,14 @@ export const WorkPlateListRes = z.object({
 
 export type WorkPlateListResType = z.TypeOf<typeof WorkPlateListRes>;
 
+export const WorkPlateDetailRes = z.object({
+  success: z.boolean(),
+  data: WorkPlateRes,
+  message: z.string(),
+});
+
+export type WorkPlateDetailResType = z.TypeOf<typeof WorkPlateDetailRes>;
+
 export const WorkPlateNewReq = z.object({
   name: z.string(),
   address_id: z.string(),

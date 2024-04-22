@@ -7,15 +7,14 @@ import { useForm } from 'react-hook-form';
 import { AccountNewReq, AccountNewReqType } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
-import { handleErrorApi } from '@/lib/utils';
-import { AddressDetailSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
+import { formatDate2, handleErrorApi } from '@/lib/utils';
+import { AddressDetailSchemaType, UserSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
 import { addressApiRequest } from '@/api/address';
 import { workPlateApiRequest } from '@/api/workplate';
 import { RoleId, UserRole } from '@/config/Enum';
 import { useAppContext } from '@/app/app-provider';
-import { useRouter } from 'next/navigation';
 
-export default function EmployeeInformation({ id }: { id: string }) {
+export default function EmployeeInformation({ employee }: { employee: UserSchemaType }) {
   const { user } = useAppContext();
 
   const userRole = user?.role?.name;
@@ -27,6 +26,16 @@ export default function EmployeeInformation({ id }: { id: string }) {
     formState: { errors, isSubmitting },
   } = useForm<AccountNewReqType>({
     resolver: zodResolver(AccountNewReq),
+    defaultValues: {
+      name: employee?.name,
+      email: employee?.email,
+      phone: employee?.phone || '',
+      dob: formatDate2(employee?.dob),
+      username: employee?.username,
+      address_id: employee?.address.wardCode,
+      role_id: employee?.role.id,
+      wp_id: employee?.wp_id,
+    },
   });
 
   async function onSubmit(values: AccountNewReqType) {
@@ -48,6 +57,15 @@ export default function EmployeeInformation({ id }: { id: string }) {
       try {
         await addressApiRequest.getProvinceClient().then((res) => {
           setListProvince(res.payload.data);
+        });
+        addressApiRequest.getDistrictClient(employee.address.provinceCode).then((res) => {
+          setListDistrict(res.payload.data);
+        });
+        addressApiRequest.getWardClient(employee.address.districtCode).then((res) => {
+          setListWard(res.payload.data);
+        });
+        workPlateApiRequest.getWorkPlateSuggestClient(employee.address.wardCode).then((res) => {
+          setListWp(res.payload.data);
         });
       } catch (error) {
         console.log(error);
@@ -94,18 +112,6 @@ export default function EmployeeInformation({ id }: { id: string }) {
               <Form.Control type="text" id="username" placeholder="Tên đăng nhập" {...register('username')} />
             </Form.Group>
           </Col>
-          <Col xs={12} md={6}>
-            <Form.Group>
-              <Form.Label htmlFor="password">Mật khẩu</Form.Label>
-              <Form.Control
-                type="text"
-                id="password"
-                placeholder="Mật khẩu"
-                defaultValue={'1'}
-                {...register('password')}
-              />
-            </Form.Group>
-          </Col>
         </Row>
 
         <Row className="mt-2">
@@ -149,7 +155,7 @@ export default function EmployeeInformation({ id }: { id: string }) {
               onChange={(e) => {
                 onSelectProvince(e);
               }}
-              defaultValue={'Chọn Tỉnh / TP'}
+              defaultValue={employee?.address.provinceCode}
             >
               <option disabled>Chọn Tỉnh / TP</option>
               {listProvince.map((province) => (
@@ -166,7 +172,7 @@ export default function EmployeeInformation({ id }: { id: string }) {
               onChange={(e) => {
                 onSelectDistrict(e);
               }}
-              defaultValue={'Chọn Quận/ Huyện'}
+              defaultValue={employee?.address.districtCode}
             >
               <option disabled>Chọn Quận/ Huyện</option>
               {listDistrict.map((district) => (
@@ -180,7 +186,7 @@ export default function EmployeeInformation({ id }: { id: string }) {
           <Col xs={12} md={4}>
             <select
               className="form-select"
-              defaultValue={'Chọn phường xã'}
+              defaultValue={employee?.address.wardCode}
               {...register('address_id', {
                 onChange: (e) => onSelectWard(e),
               })}
@@ -246,7 +252,7 @@ export default function EmployeeInformation({ id }: { id: string }) {
         <Row className="mt-2">
           <div className="mt-3 btnContainer">
             <button className="btn btnCreate" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Đang xử lý...' : 'Tạo nhân viên'}
+              {isSubmitting ? 'Đang xử lý...' : 'Cập nhật thông tin'}
             </button>
           </div>
         </Row>
