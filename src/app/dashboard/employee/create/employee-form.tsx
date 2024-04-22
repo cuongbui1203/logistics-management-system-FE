@@ -44,7 +44,7 @@ export default function EmployeeForm() {
         }
       });
     } catch (error) {
-      handleErrorApi({ error, setError });
+      handleErrorApi({ error, setError, message: 'Tạo nhân viên thất bại' });
     }
   }
 
@@ -104,6 +104,7 @@ export default function EmployeeForm() {
             <Form.Group>
               <Form.Label htmlFor="username">Tên đăng nhập</Form.Label>
               <Form.Control type="text" id="username" placeholder="Tên đăng nhập" {...register('username')} />
+              {errors.username && <Form.Text className="text-danger">{errors.username.message}</Form.Text>}
             </Form.Group>
           </Col>
           <Col xs={12} md={6}>
@@ -141,6 +142,7 @@ export default function EmployeeForm() {
             <Form.Group>
               <Form.Label htmlFor="email">Địa chỉ Email</Form.Label>
               <Form.Control type="email" id="email" placeholder="Địa chỉ email" {...register('email')} required />
+              {errors.email && <Form.Text className="text-danger">{errors.email.message}</Form.Text>}
             </Form.Group>
           </Col>
 

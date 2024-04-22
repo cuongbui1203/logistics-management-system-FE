@@ -116,7 +116,7 @@ const request = async <Response>(
       );
     } else if (res.status === AUTHENTICATION_ERROR_STATUS) {
       console.log('Authentication error');
-
+      // TODO: Xử lý token hết hạn thì logout
       if (typeof window !== 'undefined') {
         location.href = '/';
         toast.error('Không có quyền truy cập');

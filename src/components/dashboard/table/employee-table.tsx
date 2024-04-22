@@ -1,13 +1,13 @@
 'use client';
 import accountApiRequest from '@/api/account';
-import { EmployeeDetail } from '@/components/button';
+import { EmployeeDelete, EmployeeDetail } from '@/components/button';
 import Pagination from '@/components/dashboard/pagination';
 import { AccountList } from '@/schema/auth.schema';
 import React, { useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import '@/css/dashboard/customTable.css';
-import { RoleId, UserRole } from '@/config/Enum';
+
 interface EmployeeTableProps {
   page?: number;
   query?: any;
@@ -19,6 +19,7 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
   const pathname = usePathname();
   const { replace } = useRouter();
   const [listEmployees, setListEmployees] = useState<AccountList>([]);
+  const [refresh, setRefresh] = useState(false);
   let totalPage = 1;
 
   useEffect(() => {
@@ -65,21 +66,19 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
     <div>
       <div className="mt-2 flow-root">
         <div className="inline-block min-w-full align-middle">
-          <div className="rounded-lg bg-gray-50 md:pt-0 table-responsive ">
+          <div className="rounded-lg bg-gray-50 md:pt-0 table-responsive">
             <table className="employeeTable w-100">
               <thead>
                 <tr>
-                  <th scope="col">STT</th>
-                  <th scope="col">Mã nhân viên</th>
+                  <th scope="col">ID</th>
                   <th scope="col">Họ và tên</th>
-                  <th scope="col">Địa chỉ</th>
+                  <th scope="col">Địa điểm làm việc</th>
                   <th scope="col">Chức vụ</th>
                   <th scope="col">Email</th>
                   <th scope="col"></th>
                 </tr>
                 {showFilter && (
                   <tr className="filter">
-                    <th scope="col"></th>
                     <th scope="col">
                       <input onChange={(e) => handleEmID(e.target.value)} placeholder="Lọc theo mã nhân viên" />
                     </th>
@@ -114,14 +113,13 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
                 )}
               </thead>
               <tbody className="table-group-divider">
-                {listEmployees.map((employee, index) => {
+                {listEmployees.map((employee) => {
                   // const statusInfo = employeeStatus[employee?.status] || {};
                   // const badgeColor = statusInfo.color || "secondary";
                   const badgeColor = 'secondary';
 
                   return (
                     <tr key={employee?.id}>
-                      <td>{index + 1}</td>
                       <td>{employee?.id}</td>
                       <td>{employee.name || 'name'}</td>
                       <td>{employee?.work_plate?.name || ''}</td>
@@ -129,8 +127,9 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
                         <span className={`badge rounded-pill bg-${badgeColor} p-2`}>{employee?.role.name}</span>
                       </td>
                       <td>{employee?.email || 'Không có'}</td>
-                      <td className="d-flex justify-content-center">
+                      <td className="d-flex justify-content-center gap-1">
                         <EmployeeDetail id={employee?.id} />
+                        <EmployeeDelete id={employee?.id} onRefresh={() => setRefresh(true)} />
                       </td>
                     </tr>
                   );
