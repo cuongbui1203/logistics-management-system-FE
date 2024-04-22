@@ -28,7 +28,7 @@ const authApiRequest = {
       }
     ),
   updateUserClient: (body: UpdateUserBodyType, id: number) => http.put<UpdateUserResType>(`api/users/${id}`, body),
-  getCsrfTokenClient: () => http.get('/sanctum/csrf-cookie'),
+  getCsrfTokenClient: () => http.get<null>('/sanctum/csrf-cookie'),
 };
 
 export default authApiRequest;

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import BreadCrumb from './breadcrumb';
 import { FaUserCircle } from 'react-icons/fa';
 import { Container, Row, Col } from 'react-bootstrap';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import authApiRequest from '@/api/auth';
 import { useAppContext } from '@/app/app-provider';
 import '@/css/dashboard/topbar.css';
@@ -25,18 +25,17 @@ export default function TopBar() {
   const { user } = useAppContext();
   const userName = user?.name;
   const router = useRouter();
-  const pathname = usePathname();
 
-  const closeProfile = (e: any) => {
+  const closeProfile = () => {
     if (!profile) {
       setProfile(false);
     }
   };
 
-  useEffect(() => {
-    document.body.addEventListener('click', closeProfile);
-    return () => document.body.removeEventListener('click', closeProfile);
-  }, []);
+  // useEffect(() => {
+  //   document.body.addEventListener('click', closeProfile);
+  //   return () => document.body.removeEventListener('click', closeProfile);
+  // }, []);
 
   const handleLogout = async () => {
     try {
@@ -44,9 +43,9 @@ export default function TopBar() {
       router.push('/login');
     } catch (error) {
       console.log(error);
-      authApiRequest.logoutFromNextClientToNextServer(true).then((res) => {
-        router.push(`/login?redirectFrom=${pathname}`);
-      });
+      // authApiRequest.logoutFromNextClientToNextServer(true).then((res) => {
+      //   router.push(`/login?redirectFrom=${pathname}`);
+      // });
     }
   };
 
@@ -63,7 +62,6 @@ export default function TopBar() {
               <Container
                 ref={profileRef}
                 onClick={() => {
-                  console.log('TopBar ', profile);
                   setProfile(!profile);
                 }}
               >
@@ -82,9 +80,9 @@ export default function TopBar() {
                   open: {
                     clipPath: 'inset(0% 0% 0% 0% round 10px)',
                     transition: {
-                      type: 'spring',
+                      // type: 'spring',
                       bounce: 0,
-                      duration: 0.7,
+                      duration: 0.5,
                       delayChildren: 0.3,
                       staggerChildren: 0.05,
                     },
@@ -93,9 +91,9 @@ export default function TopBar() {
                   closed: {
                     clipPath: 'inset(10% 5% 90% 5% round 10px)',
                     transition: {
-                      type: 'spring',
+                      // type: 'spring',
                       bounce: 0,
-                      duration: 0.3,
+                      duration: 0.2,
                       display: 'inline',
                     },
                     display: 'none',
@@ -106,7 +104,8 @@ export default function TopBar() {
                 <motion.li
                   className="acc-list"
                   variants={itemVariants}
-                  onClick={() => {
+                  onClick={(e) => {
+                    closeProfile();
                     router.push('/dashboard/information');
                   }}
                 >

@@ -47,10 +47,12 @@ export const normalizePath = (path: string) => {
 export const handleErrorApi = ({
   error,
   setError,
+  message,
   duration,
 }: {
   error: any;
   setError: UseFormSetError<any>;
+  message?: string;
   duration?: number;
 }) => {
   if (error instanceof EntityError && setError) {
@@ -61,7 +63,7 @@ export const handleErrorApi = ({
       });
     });
   } else {
-    toast.error('Yêu cầu thất bại!', {
+    toast.error(message || 'Yêu cầu thất bại!', {
       autoClose: duration || 3000,
     });
   }

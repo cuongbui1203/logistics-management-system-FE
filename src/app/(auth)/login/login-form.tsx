@@ -47,10 +47,9 @@ export function LoginForm() {
       }
       router.push(ADMIN_LOGIN_REDIRECT);
       setUser(data.user);
+      // router.refresh();
     } catch (error: any) {
-      console.log(error);
-
-      handleErrorApi({ error, setError });
+      handleErrorApi({ error, setError, message: 'Đăng nhập thất bại!' });
     }
   }
   return (

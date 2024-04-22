@@ -2,6 +2,7 @@ import z from 'zod';
 
 export const MessageRes = z
   .object({
+    success: z.boolean(),
     message: z.string(),
   })
   .strict();

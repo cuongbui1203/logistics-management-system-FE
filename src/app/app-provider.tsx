@@ -34,8 +34,6 @@ export default function AppProvider({
     }
   });
 
-  console.log('clientSessionToken', clientSessionToken.value);
-
   return (
     <AppContext.Provider
       value={{

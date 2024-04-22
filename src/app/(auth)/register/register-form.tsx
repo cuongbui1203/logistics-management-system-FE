@@ -13,7 +13,6 @@ import { useRouter } from 'next/navigation';
 import { LOGIN_REDIRECT } from '@/routes';
 import { toast } from 'react-toastify';
 import { handleErrorApi } from '@/lib/utils';
-import { useAppContext } from '@/app/app-provider';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -26,8 +25,6 @@ export function RegisterForm() {
     resolver: zodResolver(RegisterBody),
   });
 
-  const { setUser } = useAppContext();
-
   async function onSubmit(values: RegisterBodyType) {
     console.log(values);
     try {
@@ -35,7 +32,7 @@ export function RegisterForm() {
       toast.success('Đăng kí thành công');
       router.push(LOGIN_REDIRECT);
     } catch (error: any) {
-      handleErrorApi({ error, setError });
+      handleErrorApi({ error, setError, message: 'Đăng kí thất bại!' });
     }
   }
   return (
@@ -86,7 +83,7 @@ export function RegisterForm() {
                     {...register('username')}
                   />
                 </InputGroup>
-                {errors.name && <Form.Text className="text-danger">{errors.name.message}</Form.Text>}
+                {errors.username && <Form.Text className="text-danger">{errors.username.message}</Form.Text>}
               </Form.Group>
             </Row>
             <Row>
