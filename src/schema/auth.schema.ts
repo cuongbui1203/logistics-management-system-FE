@@ -62,14 +62,6 @@ export const UpdateUserBody = z.object({
 
 export type UpdateUserBodyType = z.TypeOf<typeof UpdateUserBody>;
 
-export const UpdateUserRes = z.object({
-  success: z.boolean(),
-  data: UserSchema,
-  message: z.string(),
-});
-
-export type UpdateUserResType = z.TypeOf<typeof UpdateUserRes>;
-
 export const AccountNewReq = z.object({
   name: z.string(),
   email: z.string(),

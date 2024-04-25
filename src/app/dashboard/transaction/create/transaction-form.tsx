@@ -9,12 +9,12 @@ import { AddressDetailSchemaType } from '@/schema/common.schema';
 import { WorkPlateNewReq, WorkPlateNewReqType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-export default function TransactionForm() {
+export default function TransactionForm({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
   const router = useRouter();
   const { user } = useAppContext();
   const userRole = user?.role?.name;
@@ -51,22 +51,8 @@ export default function TransactionForm() {
     }
   }
 
-  const [listProvince, setListProvince] = useState<AddressDetailSchemaType[]>([]);
   const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
   const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await addressApiRequest.getProvinceClient().then((res) => {
-          setListProvince(res.payload.data);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;

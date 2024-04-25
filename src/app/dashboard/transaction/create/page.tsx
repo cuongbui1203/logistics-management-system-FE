@@ -1,5 +1,7 @@
+import { addressApiRequest } from '@/api/address';
 import TransactionForm from './transaction-form';
 
-export default function CreateTransaction() {
-  return <TransactionForm />;
+export default async function CreateTransaction() {
+  const listProvince = await addressApiRequest.getProvinceClient();
+  return <TransactionForm listProvince={listProvince.payload.data} />;
 }

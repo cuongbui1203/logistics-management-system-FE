@@ -1,8 +1,7 @@
 'use client';
-import { useEffect, useState } from 'react';
-import PopUp from '../../../../components/dashboard/popup';
-import { Container, Row, Col, Form } from 'react-bootstrap';
-import useSWR from 'swr';
+
+import { useState } from 'react';
+import { Row, Col, Form } from 'react-bootstrap';
 import { useAppContext } from '@/app/app-provider';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,7 +16,7 @@ import { handleErrorApi } from '@/lib/utils';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
-export default function EmployeeForm() {
+export default function EmployeeForm({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
   const { user } = useAppContext();
   const router = useRouter();
 
@@ -48,23 +47,9 @@ export default function EmployeeForm() {
     }
   }
 
-  const [listProvince, setListProvince] = useState<AddressDetailSchemaType[]>([]);
   const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
   const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
   const [listWp, setListWp] = useState<WorkPlateSchemaType[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await addressApiRequest.getProvinceClient().then((res) => {
-          setListProvince(res.payload.data);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;
@@ -89,8 +74,6 @@ export default function EmployeeForm() {
   };
 
   // const [popup, setPopup] = useState(false);
-
-  if (listProvince.length == 0) return <p>Loading...</p>;
 
   return (
     <div className="formContainer">

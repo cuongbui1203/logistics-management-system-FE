@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import EmployeeInformation from './employee-detail';
 import { UserSchemaType } from '@/schema/common.schema';
 import accountApiRequest from '@/api/account';
+import { addressApiRequest } from '@/api/address';
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
@@ -9,5 +10,17 @@ export default async function Page({ params }: { params: { id: string } }) {
   const token = cookieStore.get('token');
   const data = await accountApiRequest.getInfo(token?.value || '', id);
   const user: UserSchemaType = data.payload.data;
-  return <EmployeeInformation employee={user} />;
+
+  const listProvince = await addressApiRequest.getProvinceClient();
+  const listDistrict = await addressApiRequest.getDistrictClient(user.address.provinceCode);
+  const listWard = await addressApiRequest.getWardClient(user.address.districtCode);
+
+  return (
+    <EmployeeInformation
+      employee={user}
+      listProvince={listProvince.payload.data}
+      listDistrict_1={listDistrict.payload.data}
+      listWard_1={listWard.payload.data}
+    />
+  );
 }

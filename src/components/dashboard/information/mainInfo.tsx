@@ -10,13 +10,13 @@ import { useForm } from 'react-hook-form';
 import { UpdateUserBody, UpdateUserBodyType } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
-import { AddressDetailSchemaType, UserSchemaType } from '@/schema/common.schema';
+import { AddressDetailSchemaType } from '@/schema/common.schema';
 import { addressApiRequest } from '@/api/address';
 import authApiRequest from '@/api/auth';
 import { toast } from 'react-toastify';
-import { formatDate2 } from '@/lib/utils';
+import { formatDate2, handleErrorApi } from '@/lib/utils';
 
-export default function MainInformation() {
+export default function MainInformation({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
   const { user, setUser } = useAppContext();
 
   const {
@@ -36,40 +36,26 @@ export default function MainInformation() {
   });
 
   async function onSubmit(values: UpdateUserBodyType) {
-    console.log(values);
-
     if (!user) return;
 
     try {
       const result = await authApiRequest.updateUserClient(values, user.id);
 
       const data = result.payload.data;
-      const newUser: UserSchemaType = {
-        ...user,
-        name: data.name,
-        dob: data.dob,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-      };
-      setUser(newUser);
+      setUser(data);
 
       toast.success('Cập nhật thông tin thành công');
     } catch (error: any) {
-      console.log(error);
+      handleErrorApi({ error, setError, message: 'Cập nhật thông tin thất bại!' });
     }
   }
 
-  const [listProvince, setListProvince] = useState<AddressDetailSchemaType[]>([]);
   const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
   const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await addressApiRequest.getProvinceClient().then((res) => {
-          setListProvince(res.payload.data);
-        });
         if (user?.address !== undefined) {
           await addressApiRequest.getDistrictClient(user.address.provinceCode).then((res) => {
             setListDistrict(res.payload.data);
@@ -99,7 +85,7 @@ export default function MainInformation() {
     });
   };
 
-  if (listProvince.length == 0) return <p>Loading...</p>;
+  if (listWard.length == 0) return <p>Loading...</p>;
 
   return (
     <Form className="formContainer" onSubmit={handleSubmit(onSubmit)}>
@@ -116,6 +102,7 @@ export default function MainInformation() {
               </InputGroup.Text>
               <Form.Control type="text" {...register('name')} />
             </InputGroup>
+            {errors.name && <Form.Text className="text-danger">{errors.name.message}</Form.Text>}
           </Form.Group>
         </Col>
 
@@ -128,6 +115,7 @@ export default function MainInformation() {
               </InputGroup.Text>
               <Form.Control type="date" {...register('dob')} />
             </InputGroup>
+            {errors.dob && <Form.Text className="text-danger">{errors.dob.message}</Form.Text>}
           </Form.Group>
         </Col>
       </Row>
@@ -142,6 +130,7 @@ export default function MainInformation() {
               </InputGroup.Text>
               <Form.Control type="email" {...register('email')} />
             </InputGroup>
+            {errors.email && <Form.Text className="text-danger">{errors.email.message}</Form.Text>}
           </Form.Group>
         </Col>
 
