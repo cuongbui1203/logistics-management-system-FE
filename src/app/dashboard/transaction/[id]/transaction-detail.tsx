@@ -46,13 +46,14 @@ export default function TransactionDetail({
       name: workPlate?.name,
       type_id: WorkPlateEnumType.Transaction,
       address_id: workPlate?.address_id,
+      cap: workPlate.cap,
     },
   });
 
   async function onSubmit(values: WorkPlateNewReqType) {
     console.log(values);
     try {
-      await workPlateApiRequest.createWP(values).then((res) => {
+      await workPlateApiRequest.updateWP(workPlate.id, values).then((res) => {
         if (res.payload.success) {
           toast.success('Cập nhật điểm giao dịch thành công');
           // router.push('/dashboard/transaction');

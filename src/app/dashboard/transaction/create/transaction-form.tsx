@@ -19,6 +19,21 @@ export default function TransactionForm({ listProvince }: { listProvince: Addres
   const { user } = useAppContext();
   const userRole = user?.role?.name;
 
+  const Area = [
+    {
+      id: '1',
+      name: 'Tỉnh / Thành phố',
+    },
+    {
+      code: '2',
+      name: 'Quận / Huyện',
+    },
+    {
+      code: '3',
+      name: 'Phường / Xã',
+    },
+  ];
+
   if (userRole !== UserRole.Admin) {
     return <div>403</div>;
   }
@@ -136,13 +151,15 @@ export default function TransactionForm({ listProvince }: { listProvince: Addres
         <Row className="mt-2">
           <Col xs={12} md={6}>
             <Form.Group>
-              <Form.Label htmlFor="username">Khu vực</Form.Label>
+              <Form.Label htmlFor="area">Khu vực</Form.Label>
               {/* TODO:  */}
-              <select className="form-select" defaultValue={'Chọn khu vực'} {...register('address_id')}>
-                <option disabled>Chọn phường xã</option>
-                {listWard.map((ward) => (
-                  <option key={ward.code} value={ward.code}>
-                    {ward.full_name}
+              <select id="area" className="form-select" defaultValue={'Chọn khu vực'} {...register('cap')}>
+                <option key={0} disabled>
+                  Chọn khu vực
+                </option>
+                {Area.map((area) => (
+                  <option key={area.id} value={area.id}>
+                    {area.name}
                   </option>
                 ))}
               </select>
