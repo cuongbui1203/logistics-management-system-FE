@@ -8,6 +8,7 @@ export const WorkPlateRes = z.object({
   created_at: z.string(),
   updated_at: z.string(),
   type_id: z.number(),
+  cap: z.number(),
   address: AddressSchema,
   manager: z.object({
     id: z.number(),
@@ -32,10 +33,19 @@ export const WorkPlateListRes = z.object({
 
 export type WorkPlateListResType = z.TypeOf<typeof WorkPlateListRes>;
 
+export const WorkPlateDetailRes = z.object({
+  success: z.boolean(),
+  data: WorkPlateRes,
+  message: z.string(),
+});
+
+export type WorkPlateDetailResType = z.TypeOf<typeof WorkPlateDetailRes>;
+
 export const WorkPlateNewReq = z.object({
   name: z.string(),
   address_id: z.string(),
   type_id: z.number(),
+  cap: z.number(),
 });
 
 export type WorkPlateNewReqType = z.TypeOf<typeof WorkPlateNewReq>;

@@ -71,7 +71,7 @@ export default function Dashboard() {
       </Row>
 
       <Row>
-        {roleComponents[userRole].map((component, index) => (
+        {roleComponents[userRole]?.map((component, index) => (
           <React.Fragment key={index}>{component}</React.Fragment>
         ))}
       </Row>

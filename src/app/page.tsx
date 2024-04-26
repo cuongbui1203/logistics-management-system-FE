@@ -1,12 +1,9 @@
-'use client';
-
 import Image from 'react-bootstrap/Image';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import Link from 'next/link';
-import { Container, Button, Form, Row, Col, InputGroup } from 'react-bootstrap';
+import { Container, Form, Row, Col } from 'react-bootstrap';
 import { MdMyLocation } from 'react-icons/md';
-import { useRouter } from 'next/navigation';
 import { FaRegFile, FaRegBuilding } from 'react-icons/fa6';
 import { LiaMapMarkedAltSolid } from 'react-icons/lia';
 import { GoRocket } from 'react-icons/go';
@@ -17,19 +14,10 @@ import { BsPeople } from 'react-icons/bs';
 import { PiMoneyDuotone } from 'react-icons/pi';
 import envConfig from '@/envConfig';
 import style from '@/css/home.module.css';
+import { SearchOrder } from '@/components/button';
 
 export default function HomePage() {
-  const router = useRouter();
-  // const [orderID, setOrderID] = useState('');
-  let orderID: string = '';
   const company = envConfig.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
-
-  const handleSearch = () => {
-    if (orderID.trim() !== '') {
-      console.log('orderID', orderID);
-      // router.push(`/customer/LockupOrders?query=${orderID}`);
-    }
-  };
 
   console.log('Render HomePage');
 
@@ -62,20 +50,7 @@ export default function HomePage() {
                   <MdMyLocation size={'1em'} />
                   Tra cứu bưu gửi
                 </Form.Label>
-                <InputGroup>
-                  <Form.Control
-                    type="text"
-                    id="inputCode"
-                    name="code"
-                    formMethod="get"
-                    placeholder="Nhập mã bưu gửi"
-                    className="rounded-pill"
-                    onChange={(e) => (orderID = e.target.value)}
-                  />
-                  <Button className="rounded-pill mx-2" onClick={handleSearch}>
-                    🔍
-                  </Button>
-                </InputGroup>
+                <SearchOrder />
               </Form>
             </Col>
             <Col xs={6} md={2} className={`${style.lookupItem} text-center mt-3 mt-md-0`}>

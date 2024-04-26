@@ -6,7 +6,7 @@ import { useAppContext } from '@/app/app-provider';
 import { UserRole, WorkPlateEnumType } from '@/config/Enum';
 import { handleErrorApi } from '@/lib/utils';
 import { AddressDetailSchemaType } from '@/schema/common.schema';
-import { WorkPlateNewReq, WorkPlateNewReqType } from '@/schema/workplate.schema';
+import { WorkPlateNewReq, WorkPlateNewReqType, WorkPlateResType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -14,25 +14,22 @@ import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-export default function TransactionForm({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
+interface TransactionDetailProps {
+  workPlate: WorkPlateResType;
+  listProvince: AddressDetailSchemaType[];
+  listDistrict_1: AddressDetailSchemaType[];
+  listWard_1: AddressDetailSchemaType[];
+}
+
+export default function TransactionDetail({
+  workPlate,
+  listProvince,
+  listDistrict_1,
+  listWard_1,
+}: TransactionDetailProps) {
   const router = useRouter();
   const { user } = useAppContext();
   const userRole = user?.role?.name;
-
-  const Area = [
-    {
-      id: '1',
-      name: 'Tỉnh / Thành phố',
-    },
-    {
-      code: '2',
-      name: 'Quận / Huyện',
-    },
-    {
-      code: '3',
-      name: 'Phường / Xã',
-    },
-  ];
 
   if (userRole !== UserRole.Admin) {
     return <div>403</div>;
@@ -46,19 +43,21 @@ export default function TransactionForm({ listProvince }: { listProvince: Addres
   } = useForm<WorkPlateNewReqType>({
     resolver: zodResolver(WorkPlateNewReq),
     defaultValues: {
-      name: '',
+      name: workPlate?.name,
       type_id: WorkPlateEnumType.Transaction,
+      address_id: workPlate?.address_id,
+      cap: workPlate.cap,
     },
   });
 
   async function onSubmit(values: WorkPlateNewReqType) {
     console.log(values);
     try {
-      await workPlateApiRequest.createWP(values).then((res) => {
+      await workPlateApiRequest.updateWP(workPlate.id, values).then((res) => {
         if (res.payload.success) {
-          toast.success('Tạo điểm giao dịch thành công');
-          router.push('/dashboard/transaction');
-          router.refresh();
+          toast.success('Cập nhật điểm giao dịch thành công');
+          // router.push('/dashboard/transaction');
+          // router.refresh();
         }
       });
     } catch (error) {
@@ -66,8 +65,8 @@ export default function TransactionForm({ listProvince }: { listProvince: Addres
     }
   }
 
-  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
-  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
+  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>(listDistrict_1);
+  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>(listWard_1);
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;
@@ -108,7 +107,7 @@ export default function TransactionForm({ listProvince }: { listProvince: Addres
               onChange={(e) => {
                 onSelectProvince(e);
               }}
-              defaultValue={'Chọn Tỉnh / TP'}
+              defaultValue={workPlate.address.provinceCode}
             >
               <option disabled>Chọn Tỉnh / TP</option>
               {listProvince.map((province) => (
@@ -125,7 +124,7 @@ export default function TransactionForm({ listProvince }: { listProvince: Addres
               onChange={(e) => {
                 onSelectDistrict(e);
               }}
-              defaultValue={'Chọn Quận/ Huyện'}
+              defaultValue={workPlate.address.districtCode}
             >
               <option disabled>Chọn Quận/ Huyện</option>
               {listDistrict.map((district) => (
@@ -137,7 +136,7 @@ export default function TransactionForm({ listProvince }: { listProvince: Addres
           </Col>
 
           <Col xs={12} md={4}>
-            <select className="form-select" defaultValue={'Chọn phường xã'} {...register('address_id')}>
+            <select className="form-select" defaultValue={workPlate.address.wardCode} {...register('address_id')}>
               <option disabled>Chọn phường xã</option>
               {listWard.map((ward) => (
                 <option key={ward.code} value={ward.code}>
@@ -149,28 +148,9 @@ export default function TransactionForm({ listProvince }: { listProvince: Addres
         </Row>
 
         <Row className="mt-2">
-          <Col xs={12} md={6}>
-            <Form.Group>
-              <Form.Label htmlFor="area">Khu vực</Form.Label>
-              {/* TODO:  */}
-              <select id="area" className="form-select" defaultValue={'Chọn khu vực'} {...register('cap')}>
-                <option key={0} disabled>
-                  Chọn khu vực
-                </option>
-                {Area.map((area) => (
-                  <option key={area.id} value={area.id}>
-                    {area.name}
-                  </option>
-                ))}
-              </select>
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Row className="mt-2">
           <div className="mt-3 btnContainer">
             <Button className="btn btnCreate" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Đang xử lý...' : 'Tạo điểm giao dịch'}
+              {isSubmitting ? 'Đang xử lý...' : 'Cập nhật điểm giao dịch'}
             </Button>
           </div>
         </Row>

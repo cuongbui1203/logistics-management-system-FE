@@ -46,6 +46,7 @@ export type LoginResType = z.TypeOf<typeof LoginRes>;
 export const AuthBody = z.object({
   token: z.string(),
   csrf_token: z.string(),
+  id: z.number(),
 });
 
 export type AuthBodyType = z.TypeOf<typeof AuthBody>;
@@ -60,33 +61,6 @@ export const UpdateUserBody = z.object({
 });
 
 export type UpdateUserBodyType = z.TypeOf<typeof UpdateUserBody>;
-
-export const UserWithoutWordplate = z.object({
-  id: z.number(),
-  name: z.string(),
-  email: z.string().email(),
-  email_verified_at: z.string().nullable(),
-  created_at: z.string().nullable(),
-  updated_at: z.string().nullable(),
-  phone: z.string(),
-  dob: z.date(),
-  username: z.string(),
-  address_id: z.string(),
-  role_id: z.number(),
-  wp_id: z.number(),
-  img_id: z.string().nullable(),
-  address: AddressSchema,
-});
-
-export type UserWithoutWordplateType = z.TypeOf<typeof UserWithoutWordplate>;
-
-export const UpdateUserRes = z.object({
-  success: z.boolean(),
-  data: UserWithoutWordplate,
-  message: z.string(),
-});
-
-export type UpdateUserResType = z.TypeOf<typeof UpdateUserRes>;
 
 export const AccountNewReq = z.object({
   name: z.string(),

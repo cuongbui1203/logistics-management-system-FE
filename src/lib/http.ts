@@ -2,6 +2,7 @@ import envConfig from '@/envConfig';
 import { normalizePath } from '@/lib/utils';
 import { LoginResType } from '@/schema/auth.schema';
 import { redirect } from 'next/navigation';
+import { toast } from 'react-toastify';
 
 type CustomOptions = Omit<RequestInit, 'method'> & {
   baseUrl?: string | undefined;
@@ -47,6 +48,7 @@ export class EntityError extends HttpError {
 
 class Token {
   private token = '';
+
   get value() {
     return this.token;
   }
@@ -113,24 +115,13 @@ const request = async <Response>(
         }
       );
     } else if (res.status === AUTHENTICATION_ERROR_STATUS) {
+      console.log('Authentication error');
+      // TODO: Xử lý token hết hạn thì logout
       if (typeof window !== 'undefined') {
-        if (!clientLogoutRequest) {
-          clientLogoutRequest = fetch('/api/auth/logout', {
-            method: 'POST',
-            body: JSON.stringify({ force: true }),
-            headers: {
-              ...baseHeaders,
-            } as any,
-          });
-
-          await clientLogoutRequest;
-          clientSessionToken.value = '';
-          clientLogoutRequest = null;
-          location.href = '/login';
-        }
+        location.href = '/';
+        toast.error('Không có quyền truy cập');
       } else {
-        const token = (options?.headers as any)?.Authorization.split('Bearer ')[1];
-        redirect(`/logout?token=${token}`);
+        redirect('/');
       }
     } else {
       throw new HttpError(data);
@@ -139,10 +130,11 @@ const request = async <Response>(
 
   // Đảm bảo logic dưới đây chỉ chạy ở phía client (browser)
   if (typeof window !== 'undefined') {
-    if (['users/login', 'users/register'].some((item) => item === normalizePath(url))) {
+    console.log('Client side', url);
+
+    if ('api/users/login' === normalizePath(url)) {
       clientSessionToken.value = (payload as LoginResType).data.token;
-      console.log('clientSessionToken', clientSessionToken.value);
-    } else if ('auth/logout' === normalizePath(url)) {
+    } else if ('api/auth/logout' === normalizePath(url)) {
       clientSessionToken.value = '';
     }
   }

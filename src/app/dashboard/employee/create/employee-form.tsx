@@ -1,8 +1,7 @@
 'use client';
-import { useEffect, useState } from 'react';
-import PopUp from '../../../../components/dashboard/popup';
-import { Container, Row, Col, Form } from 'react-bootstrap';
-import useSWR from 'swr';
+
+import { useState } from 'react';
+import { Row, Col, Form } from 'react-bootstrap';
 import { useAppContext } from '@/app/app-provider';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,7 +16,7 @@ import { handleErrorApi } from '@/lib/utils';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
-export default function EmployeeForm() {
+export default function EmployeeForm({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
   const { user } = useAppContext();
   const router = useRouter();
 
@@ -44,27 +43,13 @@ export default function EmployeeForm() {
         }
       });
     } catch (error) {
-      handleErrorApi({ error, setError });
+      handleErrorApi({ error, setError, message: 'Tạo nhân viên thất bại' });
     }
   }
 
-  const [listProvince, setListProvince] = useState<AddressDetailSchemaType[]>([]);
   const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
   const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
   const [listWp, setListWp] = useState<WorkPlateSchemaType[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await addressApiRequest.getProvinceClient().then((res) => {
-          setListProvince(res.payload.data);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;
@@ -90,8 +75,6 @@ export default function EmployeeForm() {
 
   // const [popup, setPopup] = useState(false);
 
-  if (listProvince.length == 0) return <p>Loading...</p>;
-
   return (
     <div className="formContainer">
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -104,6 +87,7 @@ export default function EmployeeForm() {
             <Form.Group>
               <Form.Label htmlFor="username">Tên đăng nhập</Form.Label>
               <Form.Control type="text" id="username" placeholder="Tên đăng nhập" {...register('username')} />
+              {errors.username && <Form.Text className="text-danger">{errors.username.message}</Form.Text>}
             </Form.Group>
           </Col>
           <Col xs={12} md={6}>
@@ -141,6 +125,7 @@ export default function EmployeeForm() {
             <Form.Group>
               <Form.Label htmlFor="email">Địa chỉ Email</Form.Label>
               <Form.Control type="email" id="email" placeholder="Địa chỉ email" {...register('email')} required />
+              {errors.email && <Form.Text className="text-danger">{errors.email.message}</Form.Text>}
             </Form.Group>
           </Col>
 

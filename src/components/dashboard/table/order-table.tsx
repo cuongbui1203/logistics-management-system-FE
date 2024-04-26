@@ -1,14 +1,15 @@
 'use client';
 
-import { OrderDetail } from '../button';
+import { OrderDetail } from '../../button';
 import Pagination from '../pagination';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { addressApiRequest } from '@/api/address';
-import { AddressDetailSchemaType } from '@/schema/common.schema';
+import { OrderSchemaType } from '@/schema/common.schema';
 import { orderStatus } from '@/config/Enum';
 import '@/css/dashboard/customTable.css';
+import { orderApiRequest } from '@/api/order';
 
 export default function OrderTable({ page, query, showFilter }: any) {
   const searchParams = useSearchParams();
@@ -17,13 +18,17 @@ export default function OrderTable({ page, query, showFilter }: any) {
   // const { dataRes: inforOrders, totalPages: totalPage, itemPerPage: itemPerPage } = getOrder(page || 1, query);
   // const userWorkingPointID = useSession()?.data?.user?.workingPointID;
 
-  let provinceData: AddressDetailSchemaType[] = [];
+  // let provinceData: AddressDetailSchemaType[] = [];
+  const [listOrder, setListOrder] = useState<OrderSchemaType[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await addressApiRequest.getProvinceClient().then((res) => {
-          provinceData = res.payload.data;
+        // await addressApiRequest.getProvinceClient().then((res) => {
+        //   provinceData = res.payload.data;
+        // });
+        await orderApiRequest.getListOrder().then((res) => {
+          setListOrder(res.payload.data.data);
         });
       } catch (error) {
         console.log(error);
@@ -50,37 +55,36 @@ export default function OrderTable({ page, query, showFilter }: any) {
   const handleTimeCreate = debounce('timeCreate');
   const handleStatus = debounce('status');
 
-  // const formatDateTime = (dateTimeString: any) => {
-  //   const options = {
-  //     year: 'numeric',
-  //     month: 'numeric',
-  //     day: 'numeric',
-  //     hour: 'numeric',
-  //     minute: 'numeric',
-  //     second: 'numeric',
-  //   };
-  //   const formattedDateTime = new Date(dateTimeString).toLocaleDateString('en-US', options);
-  //   return formattedDateTime;
-  // };
+  if (listOrder.length == 0) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="mt-2 flow-root table">
-      <div className="inline-block min-w-full ">
-        <div className="rounded-lg bg-gray-50 md:pt-0 table-responsive ">
+    <div className="mt-2 flow-root">
+      <div className="inline-block min-w-full">
+        <div className="rounded-lg bg-gray-50 md:pt-0 table-responsive">
           <table className="orderTable w-100">
             <thead>
               <tr>
-                <th scope="col">STT</th>
-                <th scope="col">Mã đơn hàng</th>
-                <th scope="col">Địa chỉ gửi</th>
-                <th scope="col">Địa chỉ nhận</th>
-                <th scope="col">Ngày tạo</th>
-                <th scope="col">Trạng thái</th>
-                <th scope="col"></th>
+                <th scope="col" className="col-sm-1">
+                  ID
+                </th>
+                <th scope="col" className="col-md-6">
+                  Địa chỉ gửi
+                </th>
+                <th scope="col" className="col-md-6">
+                  Địa chỉ nhận
+                </th>
+                <th scope="col" className="col-sm-2">
+                  Ngày tạo
+                </th>
+                <th scope="col" className="col-sm-2">
+                  Loại
+                </th>
+                <th scope="col" className="col-sm-1"></th>
               </tr>
-              {showFilter && (
+              {/* {showFilter && (
                 <tr className="filter">
-                  <th scope="col"></th>
                   <th scope="col">
                     <input placeholder="Lọc theo mã đơn hàng" onChange={(e) => handleID(e.target.value)} />
                   </th>
@@ -118,35 +122,40 @@ export default function OrderTable({ page, query, showFilter }: any) {
                       <option value={''}>Trạng thái</option>
                       {Object.keys(orderStatus).map((statusKey) => (
                         <option key={statusKey} value={statusKey}>
-                          {/* {orderStatus[statusKey].now} */}
+                          {orderStatus[statusKey].now}
                         </option>
                       ))}
                     </select>
                   </th>
                   <th scope="col"></th>
                 </tr>
-              )}
+              )} */}
             </thead>
             <tbody className="table-group-divider">
-              {/* {inforOrders?.map((data, index) => {
-                const statusInfo = orderStatus[data?.goodsStatus] || {};
-                const badgeColor = statusInfo.color || 'secondary';
+              {listOrder?.map((order) => {
+                // const statusInfo = orderStatus[order?.goodsStatus] || {};
+                // const badgeColor = statusInfo.color || 'secondary';
+                const badgeColor = 'secondary';
                 return (
-                  <tr key={data?.orderID}>
-                    <td>{index + 1}</td>
-                    <td>{data?.orderID}</td>
-                    <td>{data?.startTransactionProvince}</td>
-                    <td>{data?.endTransactionProvince}</td>
-                    <td>{formatDateTime(data?.createdAt)}</td>
+                  <tr key={order.id}>
+                    <td>{order.id}</td>
                     <td>
-                      <span className={`badge rounded-pill bg-${badgeColor} p-2`}>{statusInfo.now}</span>
+                      {order.sender_address.ward} - {order.sender_address.district} - {order.sender_address.province}
+                    </td>
+                    <td>
+                      {order.receiver_address.ward} - {order.receiver_address.district} -{' '}
+                      {order.receiver_address.province}
+                    </td>
+                    <td>{order.created_at}</td>
+                    <td>
+                      <span className={`badge rounded-pill bg-${badgeColor} p-2`}>{order.type?.name}</span>
                     </td>
                     <td className="d-flex justify-content-center">
-                      <OrderDetail id={data?.orderID} page={page} />
+                      <OrderDetail id={order.id} page={page} />
                     </td>
                   </tr>
                 );
-              })} */}
+              })}
             </tbody>
           </table>
         </div>

@@ -25,17 +25,18 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = cookies();
-  const sessionToken = cookieStore.get('token');
+  const token = cookieStore.get('token');
+  const id = cookieStore.get('id');
   let user: AccountResType['data'] | null = null;
-  if (sessionToken) {
-    const data = await accountApiRequest.me(sessionToken.value);
+  if (token && id) {
+    const data = await accountApiRequest.getInfo(token.value, id.value);
     user = data.payload.data;
   }
   return (
     <html lang="en" suppressHydrationWarning>
       {/* antialiased is tailwind class for font smoothing */}
       <body className={`${inter.className} antialiased`}>
-        <AppProvider initialSessionToken={sessionToken?.value} user={user}>
+        <AppProvider initialSessionToken={token?.value} user={user}>
           {children}
         </AppProvider>
         <ToastContainer />
