@@ -89,3 +89,37 @@ export const AddressDetailSchema = z.object({
 });
 
 export type AddressDetailSchemaType = z.TypeOf<typeof AddressDetailSchema>;
+
+export const OrderDetailSchema = z.object({
+  id: z.number(),
+  created_at: z.string(),
+  updated_at: z.string(),
+  order_id: z.number(),
+  name: z.string(),
+  mass: z.number(),
+  desc: z.string(),
+  image_id: z.string().nullable(),
+});
+
+export const OrderSchema = z.object({
+  id: z.number(),
+  sender_name: z.string(),
+  sender_phone: z.string(),
+  receiver_name: z.string(),
+  receiver_phone: z.string(),
+  created_at: z.number(),
+  updated_at: z.number(),
+  vehicle_id: z.number().nullable(),
+  type_id: z.number(),
+  mass: z.number(),
+  sender_address: AddressSchema,
+  receiver_address: AddressSchema,
+  type: z.object({
+    id: z.number(),
+    name: z.string(),
+    for: z.number(),
+  }),
+  details: z.array(OrderDetailSchema),
+});
+
+export type OrderSchemaType = z.TypeOf<typeof OrderSchema>;

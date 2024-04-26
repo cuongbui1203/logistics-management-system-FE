@@ -31,9 +31,9 @@ export default function Security() {
     try {
       const result = await accountApiRequest.changePasswordClient(values);
 
-      toast.success('Cập nhật thông tin thành công');
+      toast.success('Thay đổi mật khẩu thành công');
     } catch (error: any) {
-      handleErrorApi({ error, setError });
+      handleErrorApi({ error, setError, message: 'Thay đổi mật khẩu thất bại!' });
     }
   }
 
@@ -54,6 +54,7 @@ export default function Security() {
                 </InputGroup.Text>
                 <Form.Control type="password" placeholder="Mật khẩu cũ" {...register('old_password')} />
               </InputGroup>
+              {errors.old_password && <Form.Text className="text-danger">{errors.old_password.message}</Form.Text>}
             </Form.Group>
           </Col>
         </Row>

@@ -18,4 +18,5 @@ export const workPlateApiRequest = {
         Authorization: `Bearer ${token}`,
       },
     }),
+  updateWP: (id: number, body: WorkPlateNewReqType) => http.put<WorkPlateListResType>(`api/work-plates/${id}`, body),
 };

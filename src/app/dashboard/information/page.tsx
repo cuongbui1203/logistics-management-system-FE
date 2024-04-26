@@ -1,13 +1,10 @@
-'use client';
-
-import MainInformation from '@/components/dashboard/information/mainInfo';
 import Preview from '@/components/dashboard/information/preview';
-import Security from '@/components/dashboard/information/security';
-import { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import InformationClient from './client-page';
+import { addressApiRequest } from '@/api/address';
 
-export default function Information() {
-  const [currentPage, setCurrentPage] = useState('mainInformation');
+export default async function Information() {
+  const listProvince = await addressApiRequest.getProvinceClient();
 
   return (
     <Row>
@@ -16,26 +13,7 @@ export default function Information() {
       </Col>
 
       <Col>
-        <div>
-          <button
-            type="button"
-            className={`btn btn-outline-primary ${currentPage === 'mainInformation' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('mainInformation')}
-          >
-            Thông tin
-          </button>
-          <button
-            type="button"
-            className={`btn btn-outline-primary ms-2 ${currentPage === 'security' ? 'active' : ''}`}
-            onClick={() => setCurrentPage('security')}
-          >
-            Bảo mật
-          </button>
-        </div>
-        <div className="row mt-3">
-          {currentPage === 'mainInformation' && <MainInformation />}
-          {currentPage === 'security' && <Security />}
-        </div>
+        <InformationClient listProvince={listProvince.payload.data} />
       </Col>
     </Row>
   );

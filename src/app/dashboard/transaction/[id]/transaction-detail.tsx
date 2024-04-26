@@ -9,12 +9,24 @@ import { AddressDetailSchemaType } from '@/schema/common.schema';
 import { WorkPlateNewReq, WorkPlateNewReqType, WorkPlateResType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-export default function TransactionDetail({ workPlate }: { workPlate: WorkPlateResType }) {
+interface TransactionDetailProps {
+  workPlate: WorkPlateResType;
+  listProvince: AddressDetailSchemaType[];
+  listDistrict_1: AddressDetailSchemaType[];
+  listWard_1: AddressDetailSchemaType[];
+}
+
+export default function TransactionDetail({
+  workPlate,
+  listProvince,
+  listDistrict_1,
+  listWard_1,
+}: TransactionDetailProps) {
   const router = useRouter();
   const { user } = useAppContext();
   const userRole = user?.role?.name;
@@ -34,13 +46,14 @@ export default function TransactionDetail({ workPlate }: { workPlate: WorkPlateR
       name: workPlate?.name,
       type_id: WorkPlateEnumType.Transaction,
       address_id: workPlate?.address_id,
+      cap: workPlate.cap,
     },
   });
 
   async function onSubmit(values: WorkPlateNewReqType) {
     console.log(values);
     try {
-      await workPlateApiRequest.createWP(values).then((res) => {
+      await workPlateApiRequest.updateWP(workPlate.id, values).then((res) => {
         if (res.payload.success) {
           toast.success('Cập nhật điểm giao dịch thành công');
           // router.push('/dashboard/transaction');
@@ -52,28 +65,8 @@ export default function TransactionDetail({ workPlate }: { workPlate: WorkPlateR
     }
   }
 
-  const [listProvince, setListProvince] = useState<AddressDetailSchemaType[]>([]);
-  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
-  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await addressApiRequest.getProvinceClient().then((res) => {
-          setListProvince(res.payload.data);
-        });
-        addressApiRequest.getDistrictClient(workPlate.address.provinceCode).then((res) => {
-          setListDistrict(res.payload.data);
-        });
-        addressApiRequest.getWardClient(workPlate.address.districtCode).then((res) => {
-          setListWard(res.payload.data);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
+  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>(listDistrict_1);
+  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>(listWard_1);
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;

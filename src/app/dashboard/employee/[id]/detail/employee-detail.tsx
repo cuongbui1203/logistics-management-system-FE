@@ -14,7 +14,14 @@ import { workPlateApiRequest } from '@/api/workplate';
 import { RoleId, UserRole } from '@/config/Enum';
 import { useAppContext } from '@/app/app-provider';
 
-export default function EmployeeInformation({ employee }: { employee: UserSchemaType }) {
+interface Props {
+  employee: UserSchemaType;
+  listProvince: AddressDetailSchemaType[];
+  listDistrict_1: AddressDetailSchemaType[];
+  listWard_1: AddressDetailSchemaType[];
+}
+
+export default function EmployeeInformation({ employee, listDistrict_1, listProvince, listWard_1 }: Props) {
   const { user } = useAppContext();
 
   const userRole = user?.role?.name;
@@ -47,24 +54,14 @@ export default function EmployeeInformation({ employee }: { employee: UserSchema
     }
   }
 
-  const [listProvince, setListProvince] = useState<AddressDetailSchemaType[]>([]);
-  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
-  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
+  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>(listDistrict_1);
+  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>(listWard_1);
   const [listWp, setListWp] = useState<WorkPlateSchemaType[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await addressApiRequest.getProvinceClient().then((res) => {
-          setListProvince(res.payload.data);
-        });
-        addressApiRequest.getDistrictClient(employee.address.provinceCode).then((res) => {
-          setListDistrict(res.payload.data);
-        });
-        addressApiRequest.getWardClient(employee.address.districtCode).then((res) => {
-          setListWard(res.payload.data);
-        });
-        workPlateApiRequest.getWorkPlateSuggestClient(employee.address.wardCode).then((res) => {
+        await workPlateApiRequest.getWorkPlateSuggestClient(employee.address.wardCode).then((res) => {
           setListWp(res.payload.data);
         });
       } catch (error) {
@@ -96,7 +93,7 @@ export default function EmployeeInformation({ employee }: { employee: UserSchema
     });
   };
 
-  if (listProvince.length == 0) return <p>Loading...</p>;
+  if (listWp.length == 0) return <p>Loading...</p>;
 
   return (
     <div className="formContainer">
@@ -233,7 +230,7 @@ export default function EmployeeInformation({ employee }: { employee: UserSchema
                 <select
                   id="workplate"
                   className="form-select"
-                  defaultValue={'Địa điểm làm việc'}
+                  defaultValue={employee?.work_plate?.id}
                   {...register('wp_id')}
                 >
                   <option key={0} disabled>

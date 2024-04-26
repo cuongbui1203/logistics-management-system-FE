@@ -19,8 +19,6 @@ export default async function OrderPage(searchParams: IOrderPage) {
     ...searchParams.searchParams,
   };
   const currentPage = query.page || 1;
-  const { user } = useAppContext();
-  const userRole = user?.role.name;
 
   return (
     <div className="tableContainer">

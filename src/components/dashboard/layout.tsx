@@ -5,7 +5,6 @@ import { AnimationSequence, motion, useAnimate } from 'framer-motion';
 import SideBar from '@/components/dashboard/sidebar';
 import TopBar from '@/components/dashboard/topbar';
 import { useEffect, useState } from 'react';
-import '@/css/dashboard/dashboard.css';
 import { UserRole } from '@/config/Enum';
 import { useAppContext } from '@/app/app-provider';
 import '@/css/dashboard/dashboard.css';

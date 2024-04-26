@@ -9,15 +9,30 @@ import { AddressDetailSchemaType } from '@/schema/common.schema';
 import { WorkPlateNewReq, WorkPlateNewReqType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-export default function TransactionForm() {
+export default function TransactionForm({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
   const router = useRouter();
   const { user } = useAppContext();
   const userRole = user?.role?.name;
+
+  const Area = [
+    {
+      id: '1',
+      name: 'Tỉnh / Thành phố',
+    },
+    {
+      code: '2',
+      name: 'Quận / Huyện',
+    },
+    {
+      code: '3',
+      name: 'Phường / Xã',
+    },
+  ];
 
   if (userRole !== UserRole.Admin) {
     return <div>403</div>;
@@ -51,22 +66,8 @@ export default function TransactionForm() {
     }
   }
 
-  const [listProvince, setListProvince] = useState<AddressDetailSchemaType[]>([]);
   const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
   const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await addressApiRequest.getProvinceClient().then((res) => {
-          setListProvince(res.payload.data);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;
@@ -150,13 +151,15 @@ export default function TransactionForm() {
         <Row className="mt-2">
           <Col xs={12} md={6}>
             <Form.Group>
-              <Form.Label htmlFor="username">Khu vực</Form.Label>
+              <Form.Label htmlFor="area">Khu vực</Form.Label>
               {/* TODO:  */}
-              <select className="form-select" defaultValue={'Chọn khu vực'} {...register('address_id')}>
-                <option disabled>Chọn phường xã</option>
-                {listWard.map((ward) => (
-                  <option key={ward.code} value={ward.code}>
-                    {ward.full_name}
+              <select id="area" className="form-select" defaultValue={'Chọn khu vực'} {...register('cap')}>
+                <option key={0} disabled>
+                  Chọn khu vực
+                </option>
+                {Area.map((area) => (
+                  <option key={area.id} value={area.id}>
+                    {area.name}
                   </option>
                 ))}
               </select>

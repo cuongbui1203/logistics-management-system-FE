@@ -11,6 +11,13 @@ import { useEffect, useState } from 'react';
 import { FaTrash } from 'react-icons/fa';
 import { Row, Col, Form } from 'react-bootstrap';
 import PopUp from '../../../../components/dashboard/popup';
+import { OrderCreateReq, OrderCreateReqType } from '@/schema/order.schema';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { AddressDetailSchemaType } from '@/schema/common.schema';
+import { orderApiRequest } from '@/api/order';
+import { handleErrorApi } from '@/lib/utils';
+import { addressApiRequest } from '@/api/address';
 
 const order = {
   order: {
@@ -41,35 +48,31 @@ const order = {
   },
   goodsList: [],
 };
-export default function OrderForm() {
-  // const provinceData = getAllProvince();
+export default function OrderForm({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<OrderCreateReqType>({
+    resolver: zodResolver(OrderCreateReq),
+  });
 
-  // const [senderProvince, setsenderProvince] = useState();
-  // const districtDataSender = getDistrictByProvinceID(senderProvince);
-  // districtDataSender.unshift({
-  //   name: "Chọn Quận/ Huyện",
-  //   districtID: 0,
-  // });
-  // const [senderDistrict, setsenderDistrict] = useState();
-  // const communeDataSender = getCommuneByDistrictID(senderDistrict);
-  // communeDataSender.unshift({
-  //   name: "Chọn Xã / Phường",
-  //   districtID: 0,
-  // });
-  // const [senderCommune, setsenderCommune] = useState();
-
-  // const [receiverProvince, setreceiverProvince] = useState();
-  // const districtDataReceiver = getDistrictByProvinceID(receiverProvince);
-  // districtDataReceiver.unshift({
-  //   name: "Chọn Quận/ Huyện",
-  //   districtID: 0,
-  // });
-  // const [receiverDistrict, setreceiverDistrict] = useState();
-  // const communeDataReceiver = getCommuneByDistrictID(receiverDistrict);
-  // communeDataReceiver.unshift({
-  //   name: "Chọn Xã / Phường",
-  //   districtID: 0,
-  // });
+  async function onSubmit(values: OrderCreateReqType) {
+    console.log(values);
+    try {
+      // await orderApiRequest.createAccount(values).then((res) => {
+      //   if (res.payload.success) {
+      //     router.push('/dashboard/employee');
+      //     toast.success('Tạo nhân viên thành công');
+      //   } else {
+      //     toast.error('Tạo nhân viên thất bại');
+      //   }
+      // });
+    } catch (error) {
+      handleErrorApi({ error, setError, message: 'Tạo đơn hàng thất bại' });
+    }
+  }
   // const [receiverCommune, setreceiverCommune] = useState();
 
   // const [addGoods, setAddGoods] = useState(false);
@@ -103,20 +106,51 @@ export default function OrderForm() {
   // };
 
   const [popup, setPopup] = useState(false);
-  const [taodon, settaodon] = useState(false);
-  useEffect(() => {
-    if (taodon) console.log(123);
-  }, [taodon]);
   const [estimateCost, setEstimateCost] = useState();
   const [receiverFee, setReceiverFee] = useState({
     receiverCOD: 0,
     receiverOtherFee: 0,
   });
   const [print, setPrint] = useState(false);
+
+  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
+  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
+
+  const [listDistrict2, setListDistrict2] = useState<AddressDetailSchemaType[]>([]);
+  const [listWard2, setListWard2] = useState<AddressDetailSchemaType[]>([]);
+
+  const onSelectProvince = (e: any) => {
+    const provinceID = e.target.value;
+    addressApiRequest.getDistrictClient(provinceID).then((res) => {
+      setListDistrict(res.payload.data);
+    });
+  };
+
+  const onSelectProvince2 = (e: any) => {
+    const provinceID = e.target.value;
+    addressApiRequest.getDistrictClient(provinceID).then((res) => {
+      setListDistrict2(res.payload.data);
+    });
+  };
+
+  const onSelectDistrict = (e: any) => {
+    const districtID = e.target.value;
+    addressApiRequest.getWardClient(districtID).then((res) => {
+      setListWard(res.payload.data);
+    });
+  };
+
+  const onSelectDistrict2 = (e: any) => {
+    const districtID = e.target.value;
+    addressApiRequest.getWardClient(districtID).then((res) => {
+      setListWard2(res.payload.data);
+    });
+  };
+
   return (
     <>
       {print || (
-        <div className="conta iner">
+        <Form className="container" onSubmit={handleSubmit(onSubmit)}>
           {/* === Thông tin người gửi  ===*/}
           <div className="formContainer">
             <Row>
@@ -126,25 +160,13 @@ export default function OrderForm() {
               <Col xs={12} md={6}>
                 <Form.Group controlId="senderName">
                   <Form.Label>Họ và tên</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Họ và tên"
-                    onChange={(e) => {
-                      order.order.sender.fullname = e.target.value;
-                    }}
-                  />
+                  <Form.Control type="text" placeholder="Họ và tên" {...register('sender_name')} />
                 </Form.Group>
               </Col>
               <Col xs={12} md={6}>
                 <Form.Group controlId="senderPhoneNumber">
                   <Form.Label>Số điện thoại</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Số điện thoại"
-                    onChange={(e) => {
-                      order.order.sender.phoneNumber = e.target.value;
-                    }}
-                  />
+                  <Form.Control type="text" placeholder="Số điện thoại" {...register('sender_phone')} />
                 </Form.Group>
               </Col>
             </Row>
@@ -155,53 +177,41 @@ export default function OrderForm() {
                   <Col xs={12} md={4}>
                     <Form.Select
                       onChange={(e) => {
-                        // setsenderProvince(e.target.value);
-                        // order.order.sender.address.provinceID = e.target.value;
-                        // setsenderDistrict(0);
-                        // setsenderCommune(0);
+                        onSelectProvince(e);
                       }}
+                      defaultValue={'Chọn Tỉnh / TP'}
                     >
-                      <option>Chọn Tỉnh / TP</option>
-                      {/* {provinceData.map((province) => (
-                        <option
-                          key={province.provinceID}
-                          value={province.provinceID}
-                        >
+                      <option disabled>Chọn Tỉnh / TP</option>
+                      {listProvince.map((province) => (
+                        <option key={province.code + '1'} value={province.code}>
                           {province.name}
                         </option>
-                      ))} */}
+                      ))}
                     </Form.Select>
                   </Col>
                   <Col xs={12} md={4}>
                     <Form.Select
                       onChange={(e) => {
-                        // setsenderDistrict(e.target.value);
-                        // setsenderCommune(0);
-                        // order.order.sender.address.districtID = e.target.value;
+                        onSelectDistrict(e);
                       }}
+                      defaultValue={'Chọn Quận/ Huyện'}
                     >
-                      {/* {districtDataSender.map((district) => (
-                        <option key={district.districtID} value={district.districtID}>
-                          {district.name}
+                      <option disabled>Chọn Quận/ Huyện</option>
+                      {listDistrict.map((district) => (
+                        <option key={district.code} value={district.code}>
+                          {district.full_name}
                         </option>
-                      ))} */}
+                      ))}
                     </Form.Select>
                   </Col>
                   <Col xs={12} md={4}>
-                    <Form.Select
-                      onChange={(e) => {
-                        // setsenderCommune(e.target.value);
-                        // order.order.sender.address.communeID = e.target.value;
-                      }}
-                    >
-                      {/* {communeDataSender.map((commune) => (
-                        <option
-                          key={commune.communeID}
-                          value={commune.communeID}
-                        >
-                          {commune.name}
+                    <Form.Select defaultValue={'Chọn phường xã'} {...register('sender_address_id')}>
+                      <option disabled>Chọn phường xã</option>
+                      {listWard.map((ward) => (
+                        <option key={ward.code} value={ward.code}>
+                          {ward.full_name}
                         </option>
-                      ))} */}
+                      ))}
                     </Form.Select>
                   </Col>
                 </Row>
@@ -229,25 +239,13 @@ export default function OrderForm() {
               <Col xs={12} md={6}>
                 <Form.Group controlId="receiverName">
                   <Form.Label>Họ và tên</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Họ và tên"
-                    onChange={(e) => {
-                      order.order.receiver.fullname = e.target.value;
-                    }}
-                  />
+                  <Form.Control type="text" placeholder="Họ và tên" {...register('receiver_name')} />
                 </Form.Group>
               </Col>
               <Col xs={12} md={6}>
                 <Form.Group controlId="receiverPhoneNumber">
                   <Form.Label>Số điện thoại</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Số điện thoại"
-                    onChange={(e) => {
-                      order.order.receiver.phoneNumber = e.target.value;
-                    }}
-                  />
+                  <Form.Control type="text" placeholder="Số điện thoại" {...register('receiver_phone')} />
                 </Form.Group>
               </Col>
             </Row>
@@ -259,72 +257,49 @@ export default function OrderForm() {
                   <Col xs={12} md={4}>
                     <Form.Select
                       onChange={(e) => {
-                        // setreceiverProvince(e.target.value);
-                        // order.order.receiver.address.provinceID =
-                        //   e.target.value;
-                        // setreceiverDistrict(0);
-                        // setreceiverCommune(0);
+                        onSelectProvince2(e);
                       }}
+                      defaultValue={'Chọn Tỉnh / TP'}
                     >
-                      <option>Chọn Tỉnh / TP</option>
-                      {/* {provinceData.map((province) => (
-                        <option
-                          key={province.provinceID}
-                          value={province.provinceID}
-                        >
-                          {province.name}
+                      <option disabled>Chọn Tỉnh / TP</option>
+                      {listProvince.map((province) => (
+                        <option key={province.code} value={province.code}>
+                          {province.full_name}
                         </option>
-                      ))} */}
+                      ))}
                     </Form.Select>
                   </Col>
 
                   <Col xs={12} md={4}>
                     <Form.Select
                       onChange={(e) => {
-                        // setreceiverDistrict(e.target.value);
-                        // order.order.receiver.address.districtID =
-                        //   e.target.value;
-                        // setreceiverCommune(0);
+                        onSelectDistrict2(e);
                       }}
+                      defaultValue={'Chọn Quận/ Huyện'}
                     >
-                      {/* {districtDataReceiver.map((district) => (
-                        <option
-                          key={district.districtID}
-                          value={district.districtID}
-                        >
-                          {district.name}
+                      <option disabled>Chọn Quận/ Huyện</option>
+                      {listDistrict2.map((district) => (
+                        <option key={district.code} value={district.code}>
+                          {district.full_name}
                         </option>
-                      ))} */}
+                      ))}
                     </Form.Select>
                   </Col>
 
                   <Col xs={12} md={4}>
-                    <Form.Select
-                      onChange={(e) => {
-                        // setreceiverCommune(e.target.value);
-                        // order.order.receiver.address.communeID = e.target.value;
-                      }}
-                    >
-                      {/* {communeDataReceiver.map((commune) => (
-                        <option
-                          key={commune.communeID}
-                          value={commune.communeID}
-                        >
-                          {commune.name}
+                    <Form.Select defaultValue={'Chọn phường xã'} {...register('receiver_address_id')}>
+                      <option disabled>Chọn phường xã</option>
+                      {listWard2.map((ward) => (
+                        <option key={ward.code} value={ward.code}>
+                          {ward.full_name}
                         </option>
-                      ))} */}
+                      ))}
                     </Form.Select>
                   </Col>
                 </Row>
                 <Row className="mt-2">
                   <Col>
-                    <Form.Control
-                      type="text"
-                      placeholder="Chi tiết"
-                      onChange={(e) => {
-                        order.order.receiver.address.detail = e.target.value;
-                      }}
-                    />
+                    <Form.Control type="text" placeholder="Chi tiết" />
                   </Col>
                 </Row>
               </Form.Group>
@@ -338,12 +313,7 @@ export default function OrderForm() {
               <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label>Trường hợp vận chuyển thất bại</Form.Label>
-                  <Form.Select
-                    defaultValue={'return'}
-                    onChange={(e) => {
-                      order.order.failChoice = e.target.value;
-                    }}
-                  >
+                  <Form.Select defaultValue={'return'}>
                     <option value={'return'}>Hoàn trả</option>
                   </Form.Select>
                 </Form.Group>
@@ -351,10 +321,7 @@ export default function OrderForm() {
               <Col xs={12} md={6}>
                 <Form.Group>
                   <Form.Label>Dịch vụ đặc biệt</Form.Label>
-                  <Form.Control
-                    placeholder="Dịch vụ đặc biệt"
-                    onChange={(e) => (order.order.specialService = e.target.value)}
-                  />
+                  <Form.Control placeholder="Dịch vụ đặc biệt" />
                 </Form.Group>
               </Col>
             </Row>
@@ -636,23 +603,16 @@ export default function OrderForm() {
           </div>
           <div className="btnContainer">
             <button
-              type="button"
               className="btn btn-primary btnCreate"
               data-bs-toggle="modal"
               data-bs-target="#staticBackdrop"
-              onClick={() => {
-                // setPopup(!popup);
-                // order.goodsList = goodsList;
-                // order.goodsList.map((item) => {
-                //   delete item?.id;
-                // });
-                // console.log(order);
-              }}
+              type="submit"
+              disabled={isSubmitting}
             >
-              Tạo đơn hàng
+              {isSubmitting ? 'Đang xử lý...' : 'Tạo đơn hàng'}
             </button>
           </div>
-        </div>
+        </Form>
       )}
       {/* <PopUp
         isOpen={popup}
