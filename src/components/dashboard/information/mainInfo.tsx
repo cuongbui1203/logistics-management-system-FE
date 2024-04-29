@@ -69,7 +69,7 @@ export default function MainInformation({ listProvince }: { listProvince: Addres
       }
     };
     fetchData();
-  }, []);
+  }, [user?.address]);
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;

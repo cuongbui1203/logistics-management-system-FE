@@ -1,15 +1,16 @@
 'use client';
 import { useAppContext } from '@/app/app-provider';
+import Image from 'next/image';
 import React from 'react';
 import { Row } from 'react-bootstrap';
 
-export default async function Preview() {
+export default function Preview() {
   const { user } = useAppContext();
 
   return (
     <div className="formContainer">
       <Row className="d-flex justify-content-center align-items-center ">
-        <img alt="avatar" src="/avatar.png" className="w-75 rounded-circle" />
+        <Image alt="avatar" src="/avatar.png" width={75} height={75} className="w-75 rounded-circle" />
       </Row>
       <Row className="d-flex justify-content-center align-items-center mt-3 text-center">
         Chức vụ: {user?.role.name || 'Không xác định'}

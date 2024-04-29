@@ -41,12 +41,12 @@ export function LoginForm() {
       await authApiRequest.auth(authBody);
       // await authApiRequest.getCsrfTokenClient();
       toast.success('Đăng nhập thành công');
+      setUser(data.user);
       if (data.user.role.name === 'User' || data.user.role.name === 'Driver') {
         router.push(USER_LOGIN_REDIRECT);
         return;
       }
       router.push(ADMIN_LOGIN_REDIRECT);
-      setUser(data.user);
       // router.refresh();
     } catch (error: any) {
       handleErrorApi({ error, setError, message: 'Đăng nhập thất bại!' });

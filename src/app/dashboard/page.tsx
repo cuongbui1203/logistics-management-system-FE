@@ -1,8 +1,6 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const Overview = dynamic(() => import('@/components/dashboard/main/overview'), { ssr: false });
+import Overview from '@/components/dashboard/main/overview';
 // import Overview from '@/components/dashboard/main/overview';
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
@@ -18,27 +16,27 @@ import { UserRole } from '@/config/Enum';
 
 const roleComponents = {
   Admin: [
-    <Col xs={12} md={4}>
+    <Col xs={12} md={4} key="1">
       <Overview />
     </Col>,
-    <Col xs={12} md={4}>
+    <Col xs={12} md={4} key="2">
       <StatisticGoodsPoint />
     </Col>,
-    <Col xs={12} md={4}>
+    <Col xs={12} md={4} key="3">
       <StatisticTransPoint />
     </Col>,
-    <Col xs={12}>
+    <Col xs={12} key="4">
       <EmployeeTable showFilter={false} />
     </Col>,
   ],
   Manager: [
-    <Col xs={12} md={4}>
+    <Col xs={12} md={4} key="1">
       <Overview />
     </Col>,
     // <Col xs={12} md={4}>
     //   <StatisticPoint />
     // </Col>,
-    <Col xs={12}>
+    <Col xs={12} key="4">
       <EmployeeTable showFilter={false} />
     </Col>,
   ],

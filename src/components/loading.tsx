@@ -25,7 +25,7 @@ export default function Loading() {
       );
     };
     animateLoader();
-  }, []);
+  }, [animate, scope]);
   // const isSmallScreen = window ? window.innerWidth <= 768 : false; // Set your breakpoint as needed
   const isSmallScreen = false;
   const endX = isSmallScreen ? 100 : 300;

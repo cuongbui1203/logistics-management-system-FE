@@ -69,7 +69,7 @@ export default function EmployeeInformation({ employee, listDistrict_1, listProv
       }
     };
     fetchData();
-  }, []);
+  });
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;

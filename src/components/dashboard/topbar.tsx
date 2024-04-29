@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import BreadCrumb from './breadcrumb';
 import { FaUserCircle } from 'react-icons/fa';
@@ -22,7 +22,7 @@ const itemVariants = {
 export default function TopBar() {
   const [profile, setProfile] = useState(false);
   const profileRef = useRef(null);
-  const { user } = useAppContext();
+  const { user, setUser } = useAppContext();
   const userName = user?.name;
   const router = useRouter();
 
@@ -46,6 +46,10 @@ export default function TopBar() {
       // authApiRequest.logoutFromNextClientToNextServer(true).then((res) => {
       //   router.push(`/login?redirectFrom=${pathname}`);
       // });
+    } finally {
+      setUser(null);
+      router.refresh();
+      localStorage.removeItem('token');
     }
   };
 

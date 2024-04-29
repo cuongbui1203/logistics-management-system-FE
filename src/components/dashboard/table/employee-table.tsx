@@ -37,7 +37,7 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
     fetchData();
   }, []);
 
-  const debounce = (type: string) =>
+  const useDebounce = (type: string) =>
     useDebouncedCallback((term) => {
       const params = new URLSearchParams(searchParams);
       if (term) {
@@ -48,11 +48,11 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
       replace(`${pathname}?${params.toString()}`);
     }, 300);
 
-  const handleName = debounce('name');
-  const handleEmID = debounce('EmId');
-  const handleAddress = debounce('address');
-  const handlePhone = debounce('phone');
-  const handleStatus = debounce('status');
+  const handleName = useDebounce('name');
+  const handleEmID = useDebounce('EmId');
+  const handleAddress = useDebounce('address');
+  const handlePhone = useDebounce('phone');
+  const handleStatus = useDebounce('status');
 
   // const {
   //   dataRes: inforEmployees,

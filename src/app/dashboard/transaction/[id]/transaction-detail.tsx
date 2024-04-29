@@ -31,9 +31,8 @@ export default function TransactionDetail({
   const { user } = useAppContext();
   const userRole = user?.role?.name;
 
-  if (userRole !== UserRole.Admin) {
-    return <div>403</div>;
-  }
+  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>(listDistrict_1);
+  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>(listWard_1);
 
   const {
     register,
@@ -45,10 +44,14 @@ export default function TransactionDetail({
     defaultValues: {
       name: workPlate?.name,
       type_id: WorkPlateEnumType.Transaction,
-      address_id: workPlate?.address_id,
+      address_id: workPlate.address.wardCode,
       cap: workPlate.cap,
     },
   });
+
+  if (userRole !== UserRole.Admin) {
+    return <div>403</div>;
+  }
 
   async function onSubmit(values: WorkPlateNewReqType) {
     console.log(values);
@@ -64,9 +67,6 @@ export default function TransactionDetail({
       handleErrorApi({ error, setError });
     }
   }
-
-  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>(listDistrict_1);
-  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>(listWard_1);
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;
@@ -136,7 +136,7 @@ export default function TransactionDetail({
           </Col>
 
           <Col xs={12} md={4}>
-            <select className="form-select" defaultValue={workPlate.address.wardCode} {...register('address_id')}>
+            <select className="form-select" {...register('address_id')}>
               <option disabled>Chọn phường xã</option>
               {listWard.map((ward) => (
                 <option key={ward.code} value={ward.code}>

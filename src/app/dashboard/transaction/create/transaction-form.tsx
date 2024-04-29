@@ -18,6 +18,17 @@ export default function TransactionForm({ listProvince }: { listProvince: Addres
   const router = useRouter();
   const { user } = useAppContext();
   const userRole = user?.role?.name;
+  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
+  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<WorkPlateNewReqType>({
+    resolver: zodResolver(WorkPlateNewReq),
+  });
 
   const Area = [
     {
@@ -38,19 +49,6 @@ export default function TransactionForm({ listProvince }: { listProvince: Addres
     return <div>403</div>;
   }
 
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<WorkPlateNewReqType>({
-    resolver: zodResolver(WorkPlateNewReq),
-    defaultValues: {
-      name: '',
-      type_id: WorkPlateEnumType.Transaction,
-    },
-  });
-
   async function onSubmit(values: WorkPlateNewReqType) {
     console.log(values);
     try {
@@ -65,9 +63,6 @@ export default function TransactionForm({ listProvince }: { listProvince: Addres
       handleErrorApi({ error, setError });
     }
   }
-
-  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
-  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;

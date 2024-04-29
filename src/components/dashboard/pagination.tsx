@@ -27,7 +27,7 @@ export default function Pagination({ totalPage }: { totalPage: number }) {
           aria-label="Next"
           style={{ cursor: 'pointer' }}
         >
-          <span aria-hidden="true">&laquo;</span>
+          <span>&laquo;</span>
         </Link>
       </li>
       {allPages.map((page) => {
@@ -43,7 +43,7 @@ export default function Pagination({ totalPage }: { totalPage: number }) {
           </li>
         );
       })}
-      <li className="page-item" aria-disabled="false">
+      <li className="page-item">
         <Link
           href={currentPage < totalPage ? createPageURL(currentPage + 1) : ''}
           className="page-link"
