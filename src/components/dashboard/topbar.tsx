@@ -54,7 +54,7 @@ export default function TopBar() {
   };
 
   return (
-    <motion.nav layout className="nav topbar">
+    <motion.nav layout className="nav topBar">
       <Container className="navBar">
         <Row className="breadCrumbContainer">
           <BreadCrumb />

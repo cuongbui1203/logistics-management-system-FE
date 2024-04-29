@@ -33,7 +33,7 @@ export default function Security() {
 
       toast.success('Thay đổi mật khẩu thành công');
     } catch (error: any) {
-      handleErrorApi({ error, setError, message: 'Thay đổi mật khẩu thất bại!' });
+      handleErrorApi({ error, setError });
     }
   }
 

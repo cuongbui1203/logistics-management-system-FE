@@ -27,11 +27,11 @@ export default function MainInformation({ listProvince }: { listProvince: Addres
   } = useForm<UpdateUserBodyType>({
     resolver: zodResolver(UpdateUserBody),
     defaultValues: {
-      name: user?.name || '',
+      name: user?.name,
       dob: formatDate2(user?.dob),
-      email: user?.email || '',
-      phone: user?.phone?.toString() || '',
-      address_id: user?.address?.wardCode || '',
+      email: user?.email,
+      phone: user?.phone?.toString(),
+      address_id: user?.address?.wardCode,
     },
   });
 

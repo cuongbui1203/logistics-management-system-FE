@@ -1,9 +1,9 @@
 'use client';
 import { motion, useAnimate } from 'framer-motion';
 import { useEffect } from 'react';
-import '@/css/loading.css';
 import { FaShippingFast } from 'react-icons/fa';
 import envConfig from '@/envConfig';
+import '@/css/loading.css';
 
 export default function Loading() {
   const [scope, animate] = useAnimate();

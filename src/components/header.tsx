@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import envConfig from '@/envConfig';
-import style from '@/css/header.module.css';
 import { useAppContext } from '@/app/app-provider';
+import style from '@/css/header.module.css';
 
 export function Header() {
   const route = useRouter();

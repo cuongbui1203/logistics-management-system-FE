@@ -1,6 +1,6 @@
-.topbar {
+.topBar {
   background-color: transparent;
-  z-index: 20000 !important;
+  z-index: 200 !important;
   padding: 5px;
 }
 

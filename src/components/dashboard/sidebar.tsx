@@ -9,11 +9,6 @@ import envConfig from '@/envConfig';
 import { useAppContext } from '@/app/app-provider';
 import style from '@/css/dashboard/sidebar.module.css';
 
-export interface MenuToggleProps {
-  toggle: () => void;
-  isOpen: boolean;
-}
-
 const sidebarVariants = {
   open: {
     display: 'block',
