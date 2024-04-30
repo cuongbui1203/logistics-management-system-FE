@@ -1,3 +1,4 @@
+'use client';
 import { CreateEmployee } from '@/components/button';
 import EmployeeTable from '@/components/dashboard/table/employee-table';
 
@@ -35,7 +36,7 @@ export default function EmployeePage({ searchParams }: EmployeePageProps) {
       </div>
 
       <div className="row">
-        <EmployeeTable page={currentPage} query={query} showFilter={false}></EmployeeTable>
+        <EmployeeTable page={currentPage} query={query} showFilter={true}></EmployeeTable>
       </div>
     </div>
   );

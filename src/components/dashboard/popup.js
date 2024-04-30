@@ -1,24 +1,16 @@
-"use client";
-import "@/css/employee/popup.css";
-import { motion } from "framer-motion";
-import { createError } from "@/api/utils";
-import { useEffect, useState } from "react";
-import { setTimeout } from "timers";
-import { usePathname, useRouter } from "next/navigation";
-import Invoice from "./order/invoice";
-import { AiOutlineExclamationCircle } from "react-icons/ai";
-import { VscError } from "react-icons/vsc";
-import { GiConfirmed } from "react-icons/gi";
+'use client';
+import '@/css/dashboard/popup.css';
+import { motion } from 'framer-motion';
+import { createError } from '@/api/utils';
+import { useEffect, useState } from 'react';
+import { setTimeout } from 'timers';
+import { usePathname, useRouter } from 'next/navigation';
+import Invoice from './order/invoice';
+import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import { VscError } from 'react-icons/vsc';
+import { GiConfirmed } from 'react-icons/gi';
 
-export default function PopUp({
-  isOpen,
-  setIsOpen,
-  functionCreate,
-  dataCreate,
-  print,
-  setPrint,
-  idChange,
-}) {
+export default function PopUp({ isOpen, setIsOpen, functionCreate, dataCreate, print, setPrint, idChange }) {
   const pathname = usePathname();
   const [data, setData] = useState();
   const [confirm, setConfirm] = useState();
@@ -34,10 +26,10 @@ export default function PopUp({
       <motion.div layout className="popup" data-isOpen={isOpen}>
         {confirm || (
           <div>
-            {pathname.includes("list_ordered") && (
+            {pathname.includes('list_ordered') && (
               <div>
                 <div className="popupIcon confirm">
-                  <AiOutlineExclamationCircle size={"10em"} />
+                  <AiOutlineExclamationCircle size={'10em'} />
                 </div>
                 <div className="popupContent">
                   <h3>Xác nhận tạo đơn hàng</h3>
@@ -47,19 +39,15 @@ export default function PopUp({
                 </div>
               </div>
             )}
-            {pathname.includes("list_employee") && (
+            {pathname.includes('list_employee') && (
               <div>
                 <div className="popupIcon confirm">
-                  <AiOutlineExclamationCircle size={"10em"} />
+                  <AiOutlineExclamationCircle size={'10em'} />
                 </div>
-                {pathname.includes("detail") && (
-                  <div className="popupContent">
-                    Xác nhận sửa đổi thông tin nhân viên
-                  </div>
+                {pathname.includes('detail') && (
+                  <div className="popupContent">Xác nhận sửa đổi thông tin nhân viên</div>
                 )}
-                {pathname.includes("detail") || (
-                  <div className="popupContent">Xác nhận tạo nhân viên</div>
-                )}
+                {pathname.includes('detail') || <div className="popupContent">Xác nhận tạo nhân viên</div>}
                 <div className="popupContent">
                   <p>Một số thông tin sẽ không thể sửa sau khi tạo</p>
                 </div>
@@ -76,8 +64,8 @@ export default function PopUp({
                 }}
                 disabled={loading ? true : false}
               >
-                {loading || "Xác nhận"}
-                {loading && "Loading"}
+                {loading || 'Xác nhận'}
+                {loading && 'Loading'}
               </button>
               <button
                 className="btn btn-outline-secondary btn-popup"
@@ -93,7 +81,7 @@ export default function PopUp({
           <div>
             <div>
               <div className="popupIcon error">
-                <VscError size={"10em"} />
+                <VscError size={'10em'} />
               </div>
               {createError[data?.data?.code]}
             </div>
@@ -102,8 +90,8 @@ export default function PopUp({
         {data?.success && (
           <div>
             <div className="popupIcon success">
-              {" "}
-              <GiConfirmed size={"10em"} />
+              {' '}
+              <GiConfirmed size={'10em'} />
             </div>
             <div className="popupContent">Thành công</div>
           </div>
@@ -115,14 +103,13 @@ export default function PopUp({
                 <button
                   className="btn btn-primary btn-popup"
                   onClick={() => {
-                    if (pathname.includes("detail"))
-                      route.push("/employees/list_employee");
-                    else route.push(pathname.replace("/create", ""));
+                    if (pathname.includes('detail')) route.push('/employees/list_employee');
+                    else route.push(pathname.replace('/create', ''));
                   }}
                 >
                   Trờ về trang trước
                 </button>
-                {pathname.includes("list_ordered") && (
+                {pathname.includes('list_ordered') && (
                   <button
                     className="btn btn-primary btn-popup"
                     onClick={() => {
@@ -137,10 +124,7 @@ export default function PopUp({
               </div>
             )}
             {data?.success || (
-              <button
-                className="btn btn-primary btn-popup"
-                onClick={() => setIsOpen(!isOpen)}
-              >
+              <button className="btn btn-primary btn-popup" onClick={() => setIsOpen(!isOpen)}>
                 Tạo lại
               </button>
             )}

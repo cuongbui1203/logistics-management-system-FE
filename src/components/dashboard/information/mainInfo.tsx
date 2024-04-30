@@ -15,6 +15,7 @@ import { addressApiRequest } from '@/api/address';
 import authApiRequest from '@/api/auth';
 import { toast } from 'react-toastify';
 import { formatDate2, handleErrorApi } from '@/lib/utils';
+import useSWRImmutable from 'swr/immutable';
 
 export default function MainInformation({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
   const { user, setUser } = useAppContext();
@@ -53,39 +54,60 @@ export default function MainInformation({ listProvince }: { listProvince: Addres
   const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
   const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (user?.address !== undefined) {
-          await addressApiRequest.getDistrictClient(user.address.provinceCode).then((res) => {
-            setListDistrict(res.payload.data);
-          });
-          await addressApiRequest.getWardClient(user?.address.districtCode).then((res) => {
-            setListWard(res.payload.data);
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, [user?.address]);
+  const fetchDistrict = (provinceCode: string) => {
+    addressApiRequest.getDistrict(provinceCode).then((res) => {
+      setListDistrict(res.payload.data);
+    });
+  };
+
+  const fetchWard = (districtCode: string) => {
+    addressApiRequest.getWard(districtCode).then((res) => {
+      setListWard(res.payload.data);
+    });
+  };
+
+  const { data } = useSWRImmutable(
+    () => 'api/address/districts?code=' + user?.address.provinceCode,
+    () => fetchDistrict(user!.address.provinceCode)
+  );
+  const { data: dataWard } = useSWRImmutable(
+    () => 'api/address/wards?code=' + user?.address.districtCode,
+    () => fetchWard(user!.address.districtCode)
+  );
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       if (user?.address !== undefined) {
+  //         await addressApiRequest.getDistrict(user.address.provinceCode).then((res) => {
+  //           setListDistrict(res.payload.data);
+  //         });
+  //         await addressApiRequest.getWard(user?.address.districtCode).then((res) => {
+  //           setListWard(res.payload.data);
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [user?.address]);
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;
-    addressApiRequest.getDistrictClient(provinceID).then((res) => {
+    addressApiRequest.getDistrict(provinceID).then((res) => {
       setListDistrict(res.payload.data);
     });
   };
 
   const onSelectDistrict = (e: any) => {
     const districtID = e.target.value;
-    addressApiRequest.getWardClient(districtID).then((res) => {
+    addressApiRequest.getWard(districtID).then((res) => {
       setListWard(res.payload.data);
     });
   };
 
-  if (listWard.length == 0) return <p>Loading...</p>;
+  // if (listWard.length == 0) return <p>Loading...</p>;
 
   return (
     <Form className="formContainer" onSubmit={handleSubmit(onSubmit)}>

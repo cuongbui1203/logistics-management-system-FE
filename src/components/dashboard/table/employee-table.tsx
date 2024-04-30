@@ -8,6 +8,9 @@ import React, { useEffect, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import '@/css/dashboard/customTable.css';
+import { FaArrowDown, FaArrowUp } from 'react-icons/fa6';
+import useSWR from 'swr';
+import Loading from '@/components/loading';
 
 interface EmployeeTableProps {
   page?: number;
@@ -23,20 +26,19 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
   const [refresh, setRefresh] = useState(false);
   let totalPage = 1;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await accountApiRequest.listAccountClient().then((res) => {
-          setListEmployees(res.payload.data.data);
-          totalPage = res.payload.data.total;
-          console.log(res.payload.data.data);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
+  const fetchData = () =>
+    accountApiRequest.listAccountClient().then((res) => {
+      // return res.payload.data;
+      setListEmployees(res.payload.data.data);
+      totalPage = res.payload.data.total;
+      console.log(res.payload.data.data);
+    });
+
+  const { data, error, isLoading } = useSWR('listAccountClient', fetchData, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   const useDebounce = (type: string) =>
     useDebouncedCallback((term) => {
@@ -55,13 +57,33 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
   const handlePhone = useDebounce('phone');
   const handleStatus = useDebounce('status');
 
+  const [sort_Id, set_Sort_Id] = useState('id');
+  const [sort_Order, set_Sort_Order] = useState('asc');
+
+  const sortFunction = (f: string) => {
+    if (f === 'id') {
+      if (sort_Id === 'id') {
+        set_Sort_Order(sort_Order === 'asc' ? 'desc' : 'asc');
+      } else {
+        set_Sort_Id('id');
+        set_Sort_Order('asc');
+      }
+    }
+    const sorted = [...listEmployees].sort((a, b) => {
+      const multi = sort_Order === 'asc' ? 1 : -1;
+      return multi * (a['id'] - b['id']);
+    });
+    setListEmployees(sorted);
+  };
+
   // const {
   //   dataRes: inforEmployees,
   //   totalPage: totalPage,
   //   itemPerPage: itemPerPage,
   // } = getEmployee(page || 1, query);
 
-  if (listEmployees.length == 0) return <p>Loading...</p>;
+  if (error) return <div>Failed to load</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <div>
@@ -71,7 +93,9 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
             <table className="employeeTable w-100">
               <thead>
                 <tr>
-                  <th scope="col">ID</th>
+                  <th scope="col" onClick={() => sortFunction('id')}>
+                    ID {sort_Id === 'id' && (sort_Order === 'desc' ? <FaArrowUp /> : <FaArrowDown />)}
+                  </th>
                   <th scope="col">Họ và tên</th>
                   <th scope="col">Địa điểm làm việc</th>
                   <th scope="col">Chức vụ</th>
@@ -81,7 +105,7 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
                 {showFilter && (
                   <tr className="filter">
                     <th scope="col">
-                      <input onChange={(e) => handleEmID(e.target.value)} placeholder="Lọc theo mã nhân viên" />
+                      <input onChange={(e) => handleEmID(e.target.value)} placeholder="Lọc theo ID" />
                     </th>
                     <th scope="col">
                       <input onChange={(e) => handleName(e.target.value)} placeholder="Lọc theo tên" />
@@ -109,6 +133,8 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
                     <th scope="col">
                       <input placeholder="Lọc theo sdt" onChange={(e) => handlePhone(e.target.value)} />
                     </th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                     <th scope="col"></th>
                   </tr>
                 )}

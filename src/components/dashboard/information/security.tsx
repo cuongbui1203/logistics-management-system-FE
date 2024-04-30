@@ -93,7 +93,7 @@ export default function Security() {
           </Col>
         </Row>
 
-        <div className="mt-3 btnContainer">
+        <div className="mt-3 btnContainer d-flex justify-content-center">
           <Button type="submit" className="btn btnCreate" disabled={isSubmitting}>
             {isSubmitting ? 'Đang xử lý...' : 'Xác nhận'}
           </Button>

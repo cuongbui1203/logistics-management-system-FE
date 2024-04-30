@@ -1,7 +1,7 @@
 import { Container, Row, Col, Table, Image } from 'react-bootstrap';
 import { useRef } from 'react';
 // import ReactToPrint from 'react-to-print';
-import '@/css/employee/invoice.css';
+import '@/css/dashboard/invoice.css';
 
 let orderData: any;
 

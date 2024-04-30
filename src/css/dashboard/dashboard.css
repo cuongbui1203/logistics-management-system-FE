@@ -6,12 +6,14 @@ body {
 #layout {
   display: flex;
   width: 100%;
+  overflow: hidden;
 }
 
 #main {
   background-color: #f5faff;
   height: 100vh;
   flex-grow: 1;
+  overflow-y: auto;
 }
 
 /* dashboard */

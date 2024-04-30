@@ -70,14 +70,14 @@ export default function TransactionDetail({
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;
-    addressApiRequest.getDistrictClient(provinceID).then((res) => {
+    addressApiRequest.getDistrict(provinceID).then((res) => {
       setListDistrict(res.payload.data);
     });
   };
 
   const onSelectDistrict = (e: any) => {
     const districtID = e.target.value;
-    addressApiRequest.getWardClient(districtID).then((res) => {
+    addressApiRequest.getWard(districtID).then((res) => {
       setListWard(res.payload.data);
     });
   };

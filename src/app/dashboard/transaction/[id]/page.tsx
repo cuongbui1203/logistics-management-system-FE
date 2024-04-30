@@ -11,9 +11,9 @@ export default async function TransactionDetailPage({ params }: { params: { id: 
   const data = await workPlateApiRequest.getDetailWorkPlate(token?.value || '', id);
   const workPlate: WorkPlateResType = data.payload.data;
 
-  const listProvince = await addressApiRequest.getProvinceClient();
-  const listDistrict = await addressApiRequest.getDistrictClient(workPlate.address.provinceCode);
-  const listWard = await addressApiRequest.getWardClient(workPlate.address.districtCode);
+  const listProvince = await addressApiRequest.getProvince();
+  const listDistrict = await addressApiRequest.getDistrict(workPlate.address.provinceCode);
+  const listWard = await addressApiRequest.getWard(workPlate.address.districtCode);
 
   return (
     <TransactionDetail
