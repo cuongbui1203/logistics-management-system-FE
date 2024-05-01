@@ -11,6 +11,7 @@ import '@/css/dashboard/customTable.css';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa6';
 import useSWR from 'swr';
 import Loading from '@/components/loading';
+import { LuArrowUpDown } from 'react-icons/lu';
 
 interface EmployeeTableProps {
   page?: number;
@@ -22,23 +23,51 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const [listEmployees, setListEmployees] = useState<AccountList>([]);
+  const [sortId, setSortId] = useState(false);
+  const [sortOrder, setSortOrder] = useState('asc');
   const [refresh, setRefresh] = useState(false);
   let totalPage = 1;
 
   const fetchData = () =>
     accountApiRequest.listAccountClient().then((res) => {
-      // return res.payload.data;
-      setListEmployees(res.payload.data.data);
       totalPage = res.payload.data.total;
-      console.log(res.payload.data.data);
+      return res.payload.data.data;
     });
 
-  const { data, error, isLoading } = useSWR('listAccountClient', fetchData, {
+  const {
+    data: listEmployees,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR('listAccountClient', fetchData, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
+
+  let filerListEmployees: AccountList = listEmployees || [];
+
+  // useEffect(() => {
+  //   setRefresh(false);
+  // }, [refresh]);
+
+  if (sortId) {
+    filerListEmployees = [...filerListEmployees].sort((a, b) => {
+      const multi = sortOrder === 'asc' ? 1 : -1;
+      return multi * (a['id'] - b['id']);
+    });
+  }
+
+  const sortFunction = (f: string) => {
+    if (f === 'id') {
+      if (sortId) {
+        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      } else {
+        setSortId(true);
+        setSortOrder('asc');
+      }
+    }
+  };
 
   const useDebounce = (type: string) =>
     useDebouncedCallback((term) => {
@@ -57,31 +86,6 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
   const handlePhone = useDebounce('phone');
   const handleStatus = useDebounce('status');
 
-  const [sort_Id, set_Sort_Id] = useState('id');
-  const [sort_Order, set_Sort_Order] = useState('asc');
-
-  const sortFunction = (f: string) => {
-    if (f === 'id') {
-      if (sort_Id === 'id') {
-        set_Sort_Order(sort_Order === 'asc' ? 'desc' : 'asc');
-      } else {
-        set_Sort_Id('id');
-        set_Sort_Order('asc');
-      }
-    }
-    const sorted = [...listEmployees].sort((a, b) => {
-      const multi = sort_Order === 'asc' ? 1 : -1;
-      return multi * (a['id'] - b['id']);
-    });
-    setListEmployees(sorted);
-  };
-
-  // const {
-  //   dataRes: inforEmployees,
-  //   totalPage: totalPage,
-  //   itemPerPage: itemPerPage,
-  // } = getEmployee(page || 1, query);
-
   if (error) return <div>Failed to load</div>;
   if (isLoading) return <Loading />;
 
@@ -94,7 +98,7 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
               <thead>
                 <tr>
                   <th scope="col" onClick={() => sortFunction('id')}>
-                    ID {sort_Id === 'id' && (sort_Order === 'desc' ? <FaArrowUp /> : <FaArrowDown />)}
+                    ID {sortId ? sortOrder === 'desc' ? <FaArrowUp /> : <FaArrowDown /> : <LuArrowUpDown />}
                   </th>
                   <th scope="col">Họ và tên</th>
                   <th scope="col">Địa điểm làm việc</th>
@@ -140,7 +144,7 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
                 )}
               </thead>
               <tbody className="table-group-divider">
-                {listEmployees.map((employee) => {
+                {filerListEmployees.map((employee) => {
                   // const statusInfo = employeeStatus[employee?.status] || {};
                   // const badgeColor = statusInfo.color || "secondary";
                   const badgeColor = 'secondary';
@@ -156,7 +160,7 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
                       <td>{employee?.email || 'Không có'}</td>
                       <td className="d-flex justify-content-center gap-1">
                         <EmployeeDetail id={employee?.id} />
-                        <EmployeeDelete id={employee?.id} onRefresh={() => setRefresh(true)} />
+                        <EmployeeDelete id={employee?.id} refresh={mutate} />
                       </td>
                     </tr>
                   );

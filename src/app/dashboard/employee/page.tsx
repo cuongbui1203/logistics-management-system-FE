@@ -1,4 +1,3 @@
-'use client';
 import { CreateEmployee } from '@/components/button';
 import EmployeeTable from '@/components/dashboard/table/employee-table';
 

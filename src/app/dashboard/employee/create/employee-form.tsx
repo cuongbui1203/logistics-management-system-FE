@@ -37,6 +37,7 @@ export default function EmployeeForm({ listProvince }: { listProvince: AddressDe
       await accountApiRequest.createAccount(values).then((res) => {
         if (res.payload.success) {
           router.push('/dashboard/employee');
+          router.refresh();
           toast.success('Tạo nhân viên thành công');
         } else {
           toast.error('Tạo nhân viên thất bại');
