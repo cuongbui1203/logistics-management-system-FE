@@ -2,22 +2,22 @@
 
 import { addressApiRequest } from '@/api/address';
 import { AddressDetailSchemaType } from '@/schema/common.schema';
-import { on } from 'events';
 import { useState } from 'react';
 import { Col } from 'react-bootstrap';
 import useSWRImmutable from 'swr/immutable';
 
 interface AddressFormProps {
   listProvince: AddressDetailSchemaType[];
-  register: any;
   defaultValues?: {
     provinceCode: string;
     districtCode: string;
     wardCode: string;
   };
+  register: any;
+  fieldName: string;
 }
 
-export default function AddressForm({ listProvince, register, defaultValues }: AddressFormProps) {
+export default function AddressForm({ listProvince, register, defaultValues, fieldName }: AddressFormProps) {
   const [province, setProvince] = useState<string>(defaultValues?.provinceCode || '0');
   const [district, setDistrict] = useState<string>(defaultValues?.districtCode || '0');
   const [ward, setWard] = useState<string>(defaultValues?.wardCode || '0');
@@ -98,7 +98,7 @@ export default function AddressForm({ listProvince, register, defaultValues }: A
         <select
           className="form-select"
           value={ward}
-          {...register('address_id', {
+          {...register(fieldName, {
             onChange: (e: any) => {
               setWard(e.target.value);
             },

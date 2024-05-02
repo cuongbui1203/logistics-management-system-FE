@@ -33,7 +33,7 @@ export default async function TransactionPage({ searchParams }: TransactionPageP
   let listWorkPlates: WorkPlateResType[] = [];
   if (token) {
     const data = await workPlateApiRequest.getWorkPlate(token.value);
-    listWorkPlates = data.payload.data.filter((item) => item.type.id === 3);
+    listWorkPlates = data.payload.data.data.filter((item) => item.type.id === 3);
   }
 
   return (

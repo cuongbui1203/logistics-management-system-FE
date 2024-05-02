@@ -4,7 +4,7 @@ import accountApiRequest from '@/api/account';
 import { EmployeeDelete, EmployeeDetail } from '@/components/button';
 import Pagination from '@/components/dashboard/pagination';
 import { AccountList } from '@/schema/auth.schema';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import '@/css/dashboard/customTable.css';
@@ -12,44 +12,40 @@ import { FaArrowDown, FaArrowUp } from 'react-icons/fa6';
 import useSWR from 'swr';
 import Loading from '@/components/loading';
 import { LuArrowUpDown } from 'react-icons/lu';
+import { EMPLOYEE_PAGE_SIZE } from '@/config/constant';
 
 interface EmployeeTableProps {
-  page?: number;
+  page: number;
   query?: any;
   showFilter?: boolean;
 }
 
-export default function EmployeeTable({ page, query, showFilter }: EmployeeTableProps) {
+export default function EmployeeTable({ page, showFilter }: EmployeeTableProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
   const [sortId, setSortId] = useState(false);
   const [sortOrder, setSortOrder] = useState('asc');
-  const [refresh, setRefresh] = useState(false);
-  let totalPage = 1;
 
   const fetchData = () =>
-    accountApiRequest.listAccountClient().then((res) => {
-      totalPage = res.payload.data.total;
-      return res.payload.data.data;
+    accountApiRequest.listAccountClient(page).then((res) => {
+      return res.payload.data;
     });
 
-  const {
-    data: listEmployees,
-    error,
-    isLoading,
-    mutate,
-  } = useSWR('listAccountClient', fetchData, {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  const { data, error, isLoading, mutate } = useSWR(
+    `api/users?pageSize=${EMPLOYEE_PAGE_SIZE}&&page=${page}`,
+    fetchData,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
 
-  let filerListEmployees: AccountList = listEmployees || [];
+  let filerListEmployees: AccountList = data?.data || [];
 
-  // useEffect(() => {
-  //   setRefresh(false);
-  // }, [refresh]);
+  const total = data?.total || 1;
+  const totalPage = Math.floor(total / EMPLOYEE_PAGE_SIZE) + (total % EMPLOYEE_PAGE_SIZE === 0 ? 0 : 1);
 
   if (sortId) {
     filerListEmployees = [...filerListEmployees].sort((a, b) => {

@@ -1,13 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { Row, Col, Form } from 'react-bootstrap';
 import { useAppContext } from '@/app/app-provider';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AccountNewReq, AccountNewReqType } from '@/schema/auth.schema';
-import '@/css/dashboard/customForm.css';
-import { addressApiRequest } from '@/api/address';
 import { AddressDetailSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
 import { RoleId, UserRole } from '@/config/Enum';
 import { workPlateApiRequest } from '@/api/workplate';
@@ -15,10 +12,16 @@ import accountApiRequest from '@/api/account';
 import { handleErrorApi } from '@/lib/utils';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import AddressForm from '@/components/address-form';
+import useSWRImmutable from 'swr/immutable';
+import { useSWRConfig } from 'swr';
+import '@/css/dashboard/customForm.css';
+import { EMPLOYEE_PAGE_SIZE } from '@/config/constant';
 
 export default function EmployeeForm({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
   const { user } = useAppContext();
   const router = useRouter();
+  const { mutate } = useSWRConfig();
 
   const userRole = user?.role?.name;
 
@@ -27,6 +30,7 @@ export default function EmployeeForm({ listProvince }: { listProvince: AddressDe
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
+    watch,
   } = useForm<AccountNewReqType>({
     resolver: zodResolver(AccountNewReq),
   });
@@ -38,9 +42,8 @@ export default function EmployeeForm({ listProvince }: { listProvince: AddressDe
         if (res.payload.success) {
           router.push('/dashboard/employee');
           router.refresh();
+          // mutate(`api/users?pageSize=${EMPLOYEE_PAGE_SIZE}&&page=${1}`);
           toast.success('Tạo nhân viên thành công');
-        } else {
-          toast.error('Tạo nhân viên thất bại');
         }
       });
     } catch (error) {
@@ -48,33 +51,26 @@ export default function EmployeeForm({ listProvince }: { listProvince: AddressDe
     }
   }
 
-  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
-  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
-  const [listWp, setListWp] = useState<WorkPlateSchemaType[]>([]);
+  const watchAddress = watch('address_id');
 
-  const onSelectProvince = (e: any) => {
-    const provinceID = e.target.value;
-    addressApiRequest.getDistrict(provinceID).then((res) => {
-      setListDistrict(res.payload.data);
-    });
-  };
+  const fetchSuggestWP = (wardCode: string) =>
+    workPlateApiRequest.getWorkPlateSuggestClient(wardCode).then((res) => res.payload.data);
 
-  const onSelectDistrict = (e: any) => {
-    const districtID = e.target.value;
-    addressApiRequest.getWard(districtID).then((res) => {
-      setListWard(res.payload.data);
-    });
-  };
+  const {
+    data,
+    error: errorWp,
+    isLoading: isLoadingWp,
+  } = useSWRImmutable(
+    watchAddress === undefined || watchAddress === '0'
+      ? null
+      : `api/work-plates/suggestion-wp?address_id=${watchAddress}`,
+    () => fetchSuggestWP(watchAddress)
+  );
 
-  const onSelectWard = (e: any) => {
-    const wardID = e.target.value;
-    workPlateApiRequest.getWorkPlateSuggestClient(wardID).then((res) => {
-      setListWp(res.payload.data);
-      console.log(res.payload.data);
-    });
-  };
-
-  // const [popup, setPopup] = useState(false);
+  let listWp: WorkPlateSchemaType[] = data || [];
+  if (watchAddress === undefined || watchAddress === '0') {
+    listWp = [];
+  }
 
   return (
     <div className="formContainer">
@@ -140,57 +136,7 @@ export default function EmployeeForm({ listProvince }: { listProvince: AddressDe
 
         <Row className="mt-2">
           <Form.Group className="col-sm-12 col-form-Form.Group">Địa chỉ</Form.Group>
-          <Col xs={12} md={4}>
-            <select
-              className="form-select"
-              id="province"
-              onChange={(e) => {
-                onSelectProvince(e);
-              }}
-              defaultValue={'Chọn Tỉnh / TP'}
-            >
-              <option disabled>Chọn Tỉnh / TP</option>
-              {listProvince.map((province) => (
-                <option key={province.code} value={province.code}>
-                  {province.full_name}
-                </option>
-              ))}
-            </select>
-          </Col>
-
-          <Col xs={12} md={4}>
-            <select
-              className="form-select"
-              onChange={(e) => {
-                onSelectDistrict(e);
-              }}
-              defaultValue={'Chọn Quận/ Huyện'}
-            >
-              <option disabled>Chọn Quận/ Huyện</option>
-              {listDistrict.map((district) => (
-                <option key={district.code} value={district.code}>
-                  {district.full_name}
-                </option>
-              ))}
-            </select>
-          </Col>
-
-          <Col xs={12} md={4}>
-            <select
-              className="form-select"
-              defaultValue={'Chọn phường xã'}
-              {...register('address_id', {
-                onChange: (e) => onSelectWard(e),
-              })}
-            >
-              <option disabled>Chọn phường xã</option>
-              {listWard.map((ward) => (
-                <option key={ward.code} value={ward.code}>
-                  {ward.full_name}
-                </option>
-              ))}
-            </select>
-          </Col>
+          <AddressForm listProvince={listProvince} register={register} fieldName="address_id" />
         </Row>
 
         <Row className="mt-2">
@@ -222,16 +168,11 @@ export default function EmployeeForm({ listProvince }: { listProvince: AddressDe
             <Col>
               <Form.Group className="col-sm-12 col-form-Form.Group">
                 <Form.Label htmlFor="workplate">Địa điểm làm việc</Form.Label>
-                <select
-                  id="workplate"
-                  className="form-select"
-                  defaultValue={'Địa điểm làm việc'}
-                  {...register('wp_id')}
-                >
-                  <option key={0} disabled>
+                <select id="workplate" className="form-select" defaultValue={'0'} {...register('wp_id')}>
+                  <option key={0} disabled value={'0'}>
                     Chọn địa điểm làm việc
                   </option>
-                  {listWp.map((wp) => (
+                  {listWp?.map((wp) => (
                     <option key={wp.id} value={wp.id}>
                       {wp.name} - {wp.address.province}, {wp.address.district}, {wp.address.ward}
                     </option>

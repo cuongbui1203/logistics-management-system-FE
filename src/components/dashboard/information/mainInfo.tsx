@@ -111,7 +111,12 @@ export default function MainInformation({ listProvince }: { listProvince: Addres
 
       <Row className="mt-2">
         <Form.Label className="col-sm-12 col-form-label">Địa chỉ</Form.Label>
-        <AddressForm listProvince={listProvince} register={register} defaultValues={user?.address} />
+        <AddressForm
+          listProvince={listProvince}
+          register={register}
+          defaultValues={user?.address}
+          fieldName="address_id"
+        />
       </Row>
 
       <div className="mt-3 btnContainer d-flex justify-content-center">

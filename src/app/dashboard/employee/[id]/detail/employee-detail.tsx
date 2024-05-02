@@ -1,18 +1,18 @@
 'use client';
-import { useState, useEffect } from 'react';
+
 import { Row, Col, Form } from 'react-bootstrap';
-import useSWR from 'swr';
-import '@/css/dashboard/customForm.css';
 import { useForm } from 'react-hook-form';
 import { AccountNewReq, AccountNewReqType } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 import { formatDate2, handleErrorApi } from '@/lib/utils';
 import { AddressDetailSchemaType, UserSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
-import { addressApiRequest } from '@/api/address';
 import { workPlateApiRequest } from '@/api/workplate';
 import { RoleId, UserRole } from '@/config/Enum';
 import { useAppContext } from '@/app/app-provider';
+import useSWRImmutable from 'swr/immutable';
+import AddressForm from '@/components/address-form';
+import '@/css/dashboard/customForm.css';
 
 interface Props {
   employee: UserSchemaType;
@@ -31,6 +31,7 @@ export default function EmployeeInformation({ employee, listDistrict_1, listProv
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
+    watch,
   } = useForm<AccountNewReqType>({
     resolver: zodResolver(AccountNewReq),
     defaultValues: {
@@ -54,46 +55,26 @@ export default function EmployeeInformation({ employee, listDistrict_1, listProv
     }
   }
 
-  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>(listDistrict_1);
-  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>(listWard_1);
-  const [listWp, setListWp] = useState<WorkPlateSchemaType[]>([]);
+  const watchAddress = watch('address_id');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await workPlateApiRequest.getWorkPlateSuggestClient(employee.address.wardCode).then((res) => {
-          setListWp(res.payload.data);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  });
+  const fetchSuggestWP = (wardCode: string) =>
+    workPlateApiRequest.getWorkPlateSuggestClient(wardCode).then((res) => res.payload.data);
 
-  const onSelectProvince = (e: any) => {
-    const provinceID = e.target.value;
-    addressApiRequest.getDistrict(provinceID).then((res) => {
-      setListDistrict(res.payload.data);
-    });
-  };
+  const {
+    data,
+    error: errorWp,
+    isLoading: isLoadingWp,
+  } = useSWRImmutable(
+    watchAddress === undefined || watchAddress === '0'
+      ? null
+      : `api/work-plates/suggestion-wp?address_id=${watchAddress}`,
+    () => fetchSuggestWP(watchAddress)
+  );
 
-  const onSelectDistrict = (e: any) => {
-    const districtID = e.target.value;
-    addressApiRequest.getWard(districtID).then((res) => {
-      setListWard(res.payload.data);
-    });
-  };
-
-  const onSelectWard = (e: any) => {
-    const wardID = e.target.value;
-    workPlateApiRequest.getWorkPlateSuggestClient(wardID).then((res) => {
-      setListWp(res.payload.data);
-      console.log(res.payload.data);
-    });
-  };
-
-  if (listWp.length == 0) return <p>Loading...</p>;
+  let listWp: WorkPlateSchemaType[] = data || [];
+  if (watchAddress === undefined || watchAddress === '0') {
+    listWp = [];
+  }
 
   return (
     <div className="formContainer">
@@ -107,6 +88,7 @@ export default function EmployeeInformation({ employee, listDistrict_1, listProv
             <Form.Group>
               <Form.Label htmlFor="username">Tên đăng nhập</Form.Label>
               <Form.Control type="text" id="username" placeholder="Tên đăng nhập" {...register('username')} />
+              {errors.username && <Form.Text className="text-danger">{errors.username.message}</Form.Text>}
             </Form.Group>
           </Col>
         </Row>
@@ -132,6 +114,7 @@ export default function EmployeeInformation({ employee, listDistrict_1, listProv
             <Form.Group>
               <Form.Label htmlFor="email">Địa chỉ Email</Form.Label>
               <Form.Control type="email" id="email" placeholder="Địa chỉ email" {...register('email')} required />
+              {errors.email && <Form.Text className="text-danger">{errors.email.message}</Form.Text>}
             </Form.Group>
           </Col>
 
@@ -145,57 +128,12 @@ export default function EmployeeInformation({ employee, listDistrict_1, listProv
 
         <Row className="mt-2">
           <Form.Group className="col-sm-12 col-form-Form.Group">Địa chỉ</Form.Group>
-          <Col xs={12} md={4}>
-            <select
-              className="form-select"
-              id="province"
-              onChange={(e) => {
-                onSelectProvince(e);
-              }}
-              defaultValue={employee?.address.provinceCode}
-            >
-              <option disabled>Chọn Tỉnh / TP</option>
-              {listProvince.map((province) => (
-                <option key={province.code} value={province.code}>
-                  {province.full_name}
-                </option>
-              ))}
-            </select>
-          </Col>
-
-          <Col xs={12} md={4}>
-            <select
-              className="form-select"
-              onChange={(e) => {
-                onSelectDistrict(e);
-              }}
-              defaultValue={employee?.address.districtCode}
-            >
-              <option disabled>Chọn Quận/ Huyện</option>
-              {listDistrict.map((district) => (
-                <option key={district.code} value={district.code}>
-                  {district.full_name}
-                </option>
-              ))}
-            </select>
-          </Col>
-
-          <Col xs={12} md={4}>
-            <select
-              className="form-select"
-              defaultValue={employee?.address.wardCode}
-              {...register('address_id', {
-                onChange: (e) => onSelectWard(e),
-              })}
-            >
-              <option disabled>Chọn phường xã</option>
-              {listWard.map((ward) => (
-                <option key={ward.code} value={ward.code}>
-                  {ward.full_name}
-                </option>
-              ))}
-            </select>
-          </Col>
+          <AddressForm
+            listProvince={listProvince}
+            register={register}
+            defaultValues={employee?.address}
+            fieldName="address_id"
+          />
         </Row>
 
         <Row className="mt-2">
@@ -233,7 +171,7 @@ export default function EmployeeInformation({ employee, listDistrict_1, listProv
                   defaultValue={employee?.work_plate?.id}
                   {...register('wp_id')}
                 >
-                  <option key={0} disabled>
+                  <option key={0} value="0" disabled>
                     Chọn địa điểm làm việc
                   </option>
                   {listWp.map((wp) => (

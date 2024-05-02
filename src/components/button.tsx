@@ -127,7 +127,7 @@ export function TransactionDetail({ id }: { id: number }) {
   );
 }
 
-export function EmployeeDelete({ id, onRefresh }: { id: number; refresh: () => void }) {
+export function EmployeeDelete({ id, refresh }: { id: number; refresh: () => void }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);

@@ -27,11 +27,24 @@ export type WorkPlateResType = z.TypeOf<typeof WorkPlateRes>;
 
 export const WorkPlateListRes = z.object({
   success: z.boolean(),
-  data: z.array(WorkPlateRes),
+  data: z.object({
+    total: z.number(),
+    currentPage: z.number(),
+    pageSize: z.number(),
+    data: z.array(WorkPlateRes),
+  }),
   message: z.string(),
 });
 
 export type WorkPlateListResType = z.TypeOf<typeof WorkPlateListRes>;
+
+export const WorkPlateSuggestRes = z.object({
+  success: z.boolean(),
+  data: z.array(WorkPlateRes),
+  message: z.string(),
+});
+
+export type WorkPlateSuggestResType = z.TypeOf<typeof WorkPlateSuggestRes>;
 
 export const WorkPlateDetailRes = z.object({
   success: z.boolean(),

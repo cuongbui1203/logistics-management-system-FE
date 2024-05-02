@@ -1,11 +1,11 @@
 'use client';
+
 import { generatePagination } from '@/lib/utils';
 import { usePathname, useSearchParams } from 'next/navigation';
-import '@/css/pagination.css';
 import Link from 'next/link';
+import '@/css/pagination.css';
 
 export default function Pagination({ totalPage }: { totalPage: number }) {
-  if (!totalPage) totalPage = 1;
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -16,20 +16,16 @@ export default function Pagination({ totalPage }: { totalPage: number }) {
   };
   const currentPage = Number(searchParams.get('page')) || 1;
   const allPages = generatePagination(currentPage, totalPage);
-  const nextPage = () => {};
-  const prevPage = () => {};
+
   return (
     <ul className="pagination d-flex justify-content-center mt-4">
-      <li className="page-item">
-        <Link
-          className="page-link"
-          href={currentPage > 1 ? createPageURL(currentPage - 1) : ''}
-          aria-label="Next"
-          style={{ cursor: 'pointer' }}
-        >
-          <span>&laquo;</span>
-        </Link>
-      </li>
+      {currentPage > 1 && (
+        <li className="page-item">
+          <Link className="page-link" href={createPageURL(1)} aria-label="Previous" style={{ cursor: 'pointer' }}>
+            <span aria-hidden="true">&laquo;</span>
+          </Link>
+        </li>
+      )}
       {allPages.map((page) => {
         return (
           <li className="page-item" key={page}>
@@ -43,16 +39,18 @@ export default function Pagination({ totalPage }: { totalPage: number }) {
           </li>
         );
       })}
-      <li className="page-item">
-        <Link
-          href={currentPage < totalPage ? createPageURL(currentPage + 1) : ''}
-          className="page-link"
-          aria-label="Next"
-          style={{ cursor: 'pointer' }}
-        >
-          <span aria-hidden="true">&raquo;</span>
-        </Link>
-      </li>
+      {currentPage < totalPage && (
+        <li className="page-item">
+          <Link
+            href={createPageURL(currentPage + 1)}
+            className="page-link"
+            aria-label="Next"
+            style={{ cursor: 'pointer' }}
+          >
+            <span aria-hidden="true">&raquo;</span>
+          </Link>
+        </li>
+      )}
     </ul>
   );
 }
