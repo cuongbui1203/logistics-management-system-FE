@@ -57,8 +57,9 @@ export type WorkPlateDetailResType = z.TypeOf<typeof WorkPlateDetailRes>;
 export const WorkPlateNewReq = z.object({
   name: z.string(),
   address_id: z.string(),
+  address: z.string(),
   type_id: z.number().optional(),
-  cap: z.number(),
+  cap: z.coerce.number(),
 });
 
 export type WorkPlateNewReqType = z.TypeOf<typeof WorkPlateNewReq>;

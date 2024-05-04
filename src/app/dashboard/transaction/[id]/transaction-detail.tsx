@@ -1,15 +1,14 @@
 'use client';
 
-import { addressApiRequest } from '@/api/address';
 import { workPlateApiRequest } from '@/api/workplate';
 import { useAppContext } from '@/app/app-provider';
-import { UserRole, WorkPlateEnumType } from '@/config/Enum';
+import AddressForm from '@/components/address-form';
+import { Area, UserRole, WorkPlateEnumType } from '@/config/Enum';
 import { handleErrorApi } from '@/lib/utils';
 import { AddressDetailSchemaType } from '@/schema/common.schema';
 import { WorkPlateNewReq, WorkPlateNewReqType, WorkPlateResType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -17,22 +16,12 @@ import { toast } from 'react-toastify';
 interface TransactionDetailProps {
   workPlate: WorkPlateResType;
   listProvince: AddressDetailSchemaType[];
-  listDistrict_1: AddressDetailSchemaType[];
-  listWard_1: AddressDetailSchemaType[];
 }
 
-export default function TransactionDetail({
-  workPlate,
-  listProvince,
-  listDistrict_1,
-  listWard_1,
-}: TransactionDetailProps) {
+export default function TransactionDetail({ workPlate, listProvince }: TransactionDetailProps) {
   const router = useRouter();
   const { user } = useAppContext();
   const userRole = user?.role?.name;
-
-  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>(listDistrict_1);
-  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>(listWard_1);
 
   const {
     register,
@@ -45,6 +34,7 @@ export default function TransactionDetail({
       name: workPlate?.name,
       type_id: WorkPlateEnumType.Transaction,
       address_id: workPlate.address.wardCode,
+      address: workPlate.address.address,
       cap: workPlate.cap,
     },
   });
@@ -54,7 +44,7 @@ export default function TransactionDetail({
   }
 
   async function onSubmit(values: WorkPlateNewReqType) {
-    console.log(values);
+    values.type_id = WorkPlateEnumType.Transaction;
     try {
       await workPlateApiRequest.updateWP(workPlate.id, values).then((res) => {
         if (res.payload.success) {
@@ -67,20 +57,6 @@ export default function TransactionDetail({
       handleErrorApi({ error, setError });
     }
   }
-
-  const onSelectProvince = (e: any) => {
-    const provinceID = e.target.value;
-    addressApiRequest.getDistrict(provinceID).then((res) => {
-      setListDistrict(res.payload.data);
-    });
-  };
-
-  const onSelectDistrict = (e: any) => {
-    const districtID = e.target.value;
-    addressApiRequest.getWard(districtID).then((res) => {
-      setListWard(res.payload.data);
-    });
-  };
 
   return (
     <div className="formContainer">
@@ -100,50 +76,33 @@ export default function TransactionDetail({
 
         <Row className="mt-2">
           <Form.Group className="col-sm-12 col-form-Form.Group">Địa chỉ</Form.Group>
-          <Col xs={12} md={4}>
-            <select
-              className="form-select"
-              id="province"
-              onChange={(e) => {
-                onSelectProvince(e);
-              }}
-              defaultValue={workPlate.address.provinceCode}
-            >
-              <option disabled>Chọn Tỉnh / TP</option>
-              {listProvince.map((province) => (
-                <option key={province.code} value={province.code}>
-                  {province.full_name}
-                </option>
-              ))}
-            </select>
-          </Col>
+          <AddressForm
+            listProvince={listProvince}
+            register={register}
+            fieldName="address_id"
+            defaultValues={workPlate.address}
+          />
+          <Form.Group className="mt-2">
+            <Form.Control type="text" id="address" placeholder="Địa điểm cụ thể" {...register('address')} />
+          </Form.Group>
+        </Row>
 
-          <Col xs={12} md={4}>
-            <select
-              className="form-select"
-              onChange={(e) => {
-                onSelectDistrict(e);
-              }}
-              defaultValue={workPlate.address.districtCode}
-            >
-              <option disabled>Chọn Quận/ Huyện</option>
-              {listDistrict.map((district) => (
-                <option key={district.code} value={district.code}>
-                  {district.full_name}
+        <Row className="mt-2">
+          <Col xs={12} md={6}>
+            <Form.Group>
+              <Form.Label htmlFor="area">Khu vực</Form.Label>
+              {/* TODO:  */}
+              <select id="area" className="form-select" {...register('cap')}>
+                <option key={0} disabled>
+                  Chọn khu vực
                 </option>
-              ))}
-            </select>
-          </Col>
-
-          <Col xs={12} md={4}>
-            <select className="form-select" {...register('address_id')}>
-              <option disabled>Chọn phường xã</option>
-              {listWard.map((ward) => (
-                <option key={ward.code} value={ward.code}>
-                  {ward.full_name}
-                </option>
-              ))}
-            </select>
+                {Area.map((area) => (
+                  <option key={area.id} value={area.id}>
+                    {area.name}
+                  </option>
+                ))}
+              </select>
+            </Form.Group>
           </Col>
         </Row>
 

@@ -25,7 +25,7 @@ const roleComponents = {
       <StatisticTransPoint />
     </Col>,
     <Col xs={12} key="4">
-      <EmployeeTable showFilter={false} />
+      <EmployeeTable showFilter={false} page={1} />
     </Col>,
   ],
   Manager: [
@@ -36,7 +36,7 @@ const roleComponents = {
     //   <StatisticPoint />
     // </Col>,
     <Col xs={12} key="4">
-      <EmployeeTable showFilter={false} />
+      <EmployeeTable showFilter={false} page={1} />
     </Col>,
   ],
   Employee: [

@@ -112,13 +112,13 @@ export function EmployeeDetail({ id }: { id: number }) {
   );
 }
 
-export function TransactionDetail({ id }: { id: number }) {
+export function WorkPlateDetail({ id, url }: { id: number; url: string }) {
   const route = useRouter();
 
   return (
     <button
       onClick={() => {
-        route.push(`/dashboard/transaction/${id}`);
+        route.push(`${url}/${id}`);
       }}
       className="btn btn-outline-warning"
     >

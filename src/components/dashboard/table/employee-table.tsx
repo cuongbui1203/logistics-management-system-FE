@@ -1,6 +1,5 @@
 'use client';
 
-import accountApiRequest from '@/api/account';
 import { EmployeeDelete, EmployeeDetail } from '@/components/button';
 import Pagination from '@/components/dashboard/pagination';
 import { AccountList } from '@/schema/auth.schema';
@@ -9,10 +8,10 @@ import { useDebouncedCallback } from 'use-debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import '@/css/dashboard/customTable.css';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa6';
-import useSWR from 'swr';
 import Loading from '@/components/loading';
 import { LuArrowUpDown } from 'react-icons/lu';
 import { EMPLOYEE_PAGE_SIZE } from '@/config/constant';
+import { useEmployee } from '@/lib/custom-hook';
 
 interface EmployeeTableProps {
   page: number;
@@ -27,20 +26,7 @@ export default function EmployeeTable({ page, showFilter }: EmployeeTableProps) 
   const [sortId, setSortId] = useState(false);
   const [sortOrder, setSortOrder] = useState('asc');
 
-  const fetchData = () =>
-    accountApiRequest.listAccountClient(page).then((res) => {
-      return res.payload.data;
-    });
-
-  const { data, error, isLoading, mutate } = useSWR(
-    `api/users?pageSize=${EMPLOYEE_PAGE_SIZE}&&page=${page}`,
-    fetchData,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+  const { data, error, isLoading, mutate } = useEmployee(page);
 
   let filerListEmployees: AccountList = data?.data || [];
 

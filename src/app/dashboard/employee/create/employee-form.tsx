@@ -14,14 +14,14 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import AddressForm from '@/components/address-form';
 import useSWRImmutable from 'swr/immutable';
-import { useSWRConfig } from 'swr';
 import '@/css/dashboard/customForm.css';
 import { EMPLOYEE_PAGE_SIZE } from '@/config/constant';
+import { useEmployee } from '@/lib/custom-hook';
 
 export default function EmployeeForm({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
   const { user } = useAppContext();
   const router = useRouter();
-  const { mutate } = useSWRConfig();
+  const { mutate } = useEmployee(1);
 
   const userRole = user?.role?.name;
 
@@ -41,8 +41,7 @@ export default function EmployeeForm({ listProvince }: { listProvince: AddressDe
       await accountApiRequest.createAccount(values).then((res) => {
         if (res.payload.success) {
           router.push('/dashboard/employee');
-          router.refresh();
-          // mutate(`api/users?pageSize=${EMPLOYEE_PAGE_SIZE}&&page=${1}`);
+          mutate();
           toast.success('Tạo nhân viên thành công');
         }
       });

@@ -1,3 +1,4 @@
+import { WORK_PLATE_PAGE_SIZE } from '@/config/constant';
 import http from '@/lib/http';
 import {
   WorkPlateDetailResType,
@@ -7,7 +8,8 @@ import {
 } from '@/schema/workplate.schema';
 
 export const workPlateApiRequest = {
-  getWorkPlateClient: () => http.get<WorkPlateListResType>('api/work-plates'),
+  getWorkPlateClient: (page: number, type: number) =>
+    http.get<WorkPlateListResType>(`api/work-plates?pageSize=${WORK_PLATE_PAGE_SIZE}&&page=${page}&&type_id=${type}`),
   getWorkPlate: (token: string) =>
     http.get<WorkPlateListResType>(`api/work-plates`, {
       headers: {

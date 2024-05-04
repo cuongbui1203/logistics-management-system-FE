@@ -27,7 +27,7 @@ export default function TopBar() {
   const router = useRouter();
 
   const closeProfile = () => {
-    if (!profile) {
+    if (profile) {
       setProfile(false);
     }
   };

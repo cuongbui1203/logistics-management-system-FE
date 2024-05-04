@@ -13,6 +13,7 @@ import { ADMIN_LOGIN_REDIRECT, USER_LOGIN_REDIRECT } from '@/routes';
 import { toast } from 'react-toastify';
 import { handleErrorApi } from '@/lib/utils';
 import { useAppContext } from '@/app/app-provider';
+import { useEffect } from 'react';
 
 export function LoginForm() {
   const router = useRouter();
@@ -24,6 +25,10 @@ export function LoginForm() {
   } = useForm<LoginBodyType>({
     resolver: zodResolver(LoginBody),
   });
+
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
 
   const { setUser } = useAppContext();
 
@@ -51,6 +56,7 @@ export function LoginForm() {
       handleErrorApi({ error, setError, message: 'Đăng nhập thất bại!' });
     }
   }
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Row className="text-center text-light">

@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import TransactionDetail from './transaction-detail';
+import TransactionDetail from './transshipment-detail';
 import { workPlateApiRequest } from '@/api/workplate';
 import { addressApiRequest } from '@/api/address';
 import { WorkPlateResType } from '@/schema/workplate.schema';
