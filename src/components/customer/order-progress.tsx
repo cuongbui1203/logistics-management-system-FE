@@ -1,4 +1,3 @@
-import { orderStatus } from '@/api/utils';
 import { Container, Col } from 'react-bootstrap';
 import { TbTruckDelivery } from 'react-icons/tb';
 import { IoLocationOutline } from 'react-icons/io5';
@@ -68,7 +67,7 @@ export default function OrderProgress({ orderProcesses }: any) {
               </section>
             );
           })} */}
-          "OrderProgress"
+          OrderProgress
         </div>
       </div>
     </Container>

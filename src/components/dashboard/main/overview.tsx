@@ -1,16 +1,18 @@
 'use client';
 
-import Chart from 'react-apexcharts';
+import dynamic from 'next/dynamic';
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import { useState } from 'react';
 import { formatDate } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Button } from 'react-bootstrap';
 import Card from '@/components/dashboard/main/card';
 import { monthlyOptions, yearlyOptions } from '@/config/ChartOption';
-// import { fetchProfitStatistic } from '@/api/data';
 
 const defaultOptions = {
   chart: {
+    width: 380,
+    height: 205,
     parentHeightOffset: 0,
     toolbar: { show: false },
   },
@@ -160,7 +162,7 @@ export default function Overview() {
   return (
     <motion.div>
       <Card title={'Lợi nhuận'} extend={extend} intervalType={intervalType} onChange={handleIntervalChange}>
-        <Chart type="bar" height={chartHeight} options={options} series={[{ data: data }]} />
+        <Chart type="bar" options={options} series={[{ data: data }]} height={chartHeight} width="100%" />
         <Button
           onClick={() => {
             isExtend(!extend);

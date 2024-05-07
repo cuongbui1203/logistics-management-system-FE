@@ -1,5 +1,7 @@
-import React from 'react';
+import { addressApiRequest } from '@/api/address';
+import TransactionForm from '../../transaction/create/transaction-form';
 
-export default function Transshipment() {
-  return <div>transshipment</div>;
+export default async function CreateTransshipment() {
+  const listProvince = await addressApiRequest.getProvince();
+  return <TransactionForm listProvince={listProvince.payload.data} />;
 }

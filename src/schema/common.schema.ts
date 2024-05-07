@@ -16,6 +16,7 @@ export const AddressSchema = z.object({
   province: z.string(),
   district: z.string(),
   ward: z.string(),
+  address: z.string().optional(),
 });
 
 export const WorkPlateSchema = z.object({

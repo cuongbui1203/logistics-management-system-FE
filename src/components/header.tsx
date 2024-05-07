@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import envConfig from '@/envConfig';
-import style from '@/css/header.module.css';
 import { useAppContext } from '@/app/app-provider';
+import style from '@/css/header.module.css';
 
 export function Header() {
   const route = useRouter();
@@ -102,14 +102,14 @@ export function Header() {
                 {user.name}
               </Link>
             ) : (
-              <Nav>             
+              <Nav>
                 <Link href="/login" className="btn btn-primary" style={{ marginRight: '10px' }}>
                   Đăng nhập
                 </Link>
                 <Link href="/register" className="btn btn-primary">
                   Đăng kí
                 </Link>
-            </Nav>
+              </Nav>
             )}
           </Navbar.Collapse>
         </Container>

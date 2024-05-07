@@ -121,28 +121,28 @@ export default function OrderForm({ listProvince }: { listProvince: AddressDetai
 
   const onSelectProvince = (e: any) => {
     const provinceID = e.target.value;
-    addressApiRequest.getDistrictClient(provinceID).then((res) => {
+    addressApiRequest.getDistrict(provinceID).then((res) => {
       setListDistrict(res.payload.data);
     });
   };
 
   const onSelectProvince2 = (e: any) => {
     const provinceID = e.target.value;
-    addressApiRequest.getDistrictClient(provinceID).then((res) => {
+    addressApiRequest.getDistrict(provinceID).then((res) => {
       setListDistrict2(res.payload.data);
     });
   };
 
   const onSelectDistrict = (e: any) => {
     const districtID = e.target.value;
-    addressApiRequest.getWardClient(districtID).then((res) => {
+    addressApiRequest.getWard(districtID).then((res) => {
       setListWard(res.payload.data);
     });
   };
 
   const onSelectDistrict2 = (e: any) => {
     const districtID = e.target.value;
-    addressApiRequest.getWardClient(districtID).then((res) => {
+    addressApiRequest.getWard(districtID).then((res) => {
       setListWard2(res.payload.data);
     });
   };

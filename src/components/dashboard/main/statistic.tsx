@@ -1,5 +1,4 @@
 import { Col, Row } from 'react-bootstrap';
-import '@/css/employee/dashboard/statistic.css';
 import { useState } from 'react';
 import { formatDate } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -9,6 +8,7 @@ import { TbTruckDelivery } from 'react-icons/tb';
 import { LuPackageOpen } from 'react-icons/lu';
 import { FiPackage } from 'react-icons/fi';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
+import '@/css/dashboard/statistic.css';
 
 const StatisticItem = ({ icon, title, value, color }: any) => (
   <Col xs={12} md={6} lg={3} className="mt-2">

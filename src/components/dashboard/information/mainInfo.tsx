@@ -9,12 +9,11 @@ import { IoMdPhonePortrait } from 'react-icons/io';
 import { useForm } from 'react-hook-form';
 import { UpdateUserBody, UpdateUserBodyType } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
 import { AddressDetailSchemaType } from '@/schema/common.schema';
-import { addressApiRequest } from '@/api/address';
 import authApiRequest from '@/api/auth';
 import { toast } from 'react-toastify';
 import { formatDate2, handleErrorApi } from '@/lib/utils';
+import AddressForm from '@/components/address-form';
 
 export default function MainInformation({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
   const { user, setUser } = useAppContext();
@@ -27,11 +26,11 @@ export default function MainInformation({ listProvince }: { listProvince: Addres
   } = useForm<UpdateUserBodyType>({
     resolver: zodResolver(UpdateUserBody),
     defaultValues: {
-      name: user?.name || '',
+      name: user?.name,
       dob: formatDate2(user?.dob),
-      email: user?.email || '',
-      phone: user?.phone?.toString() || '',
-      address_id: user?.address?.wardCode || '',
+      email: user?.email,
+      phone: user?.phone?.toString(),
+      address_id: user?.address?.wardCode,
     },
   });
 
@@ -49,43 +48,6 @@ export default function MainInformation({ listProvince }: { listProvince: Addres
       handleErrorApi({ error, setError, message: 'Cập nhật thông tin thất bại!' });
     }
   }
-
-  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
-  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (user?.address !== undefined) {
-          await addressApiRequest.getDistrictClient(user.address.provinceCode).then((res) => {
-            setListDistrict(res.payload.data);
-          });
-          await addressApiRequest.getWardClient(user?.address.districtCode).then((res) => {
-            setListWard(res.payload.data);
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const onSelectProvince = (e: any) => {
-    const provinceID = e.target.value;
-    addressApiRequest.getDistrictClient(provinceID).then((res) => {
-      setListDistrict(res.payload.data);
-    });
-  };
-
-  const onSelectDistrict = (e: any) => {
-    const districtID = e.target.value;
-    addressApiRequest.getWardClient(districtID).then((res) => {
-      setListWard(res.payload.data);
-    });
-  };
-
-  if (listWard.length == 0) return <p>Loading...</p>;
 
   return (
     <Form className="formContainer" onSubmit={handleSubmit(onSubmit)}>
@@ -149,48 +111,12 @@ export default function MainInformation({ listProvince }: { listProvince: Addres
 
       <Row className="mt-2">
         <Form.Label className="col-sm-12 col-form-label">Địa chỉ</Form.Label>
-        <Col md={4}>
-          <select
-            className="form-select"
-            id="province"
-            onChange={(e) => {
-              onSelectProvince(e);
-            }}
-            defaultValue={user?.address.provinceCode}
-          >
-            {listProvince.map((province) => (
-              <option key={province.code} value={province.code}>
-                {province.full_name}
-              </option>
-            ))}
-          </select>
-        </Col>
-
-        <Col md={4}>
-          <select
-            className="form-select"
-            onChange={(e) => {
-              onSelectDistrict(e);
-            }}
-            defaultValue={user?.address.districtCode}
-          >
-            {listDistrict.map((district) => (
-              <option key={district.code} value={district.code}>
-                {district.full_name}
-              </option>
-            ))}
-          </select>
-        </Col>
-
-        <Col md={4}>
-          <select className="form-select" defaultValue={user?.address.wardCode} {...register('address_id')}>
-            {listWard.map((ward) => (
-              <option key={ward.code} value={ward.code}>
-                {ward.full_name}
-              </option>
-            ))}
-          </select>
-        </Col>
+        <AddressForm
+          listProvince={listProvince}
+          register={register}
+          defaultValues={user?.address}
+          fieldName="address_id"
+        />
       </Row>
 
       <div className="mt-3 btnContainer d-flex justify-content-center">

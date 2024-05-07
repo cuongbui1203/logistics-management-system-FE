@@ -2,24 +2,56 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Pagination from '../pagination';
-import { useDebouncedCallback } from 'use-debounce';
 import '@/css/dashboard/customTable.css';
 import { WorkPlateResType } from '@/schema/workplate.schema';
-import { TransactionDetail } from '@/components/button';
+import { WorkPlateDetail } from '@/components/button';
+import { useWorkPlate } from '@/lib/custom-hook';
+import { useState } from 'react';
+import { WORK_PLATE_PAGE_SIZE } from '@/config/constant';
+import Loading from '@/components/loading';
+import { FaArrowDown, FaArrowUp } from 'react-icons/fa6';
+import { LuArrowUpDown } from 'react-icons/lu';
 
 interface TransactionPointTableProps {
   page: any;
   query: any;
-  limit: any;
-  data: WorkPlateResType[];
+  type: number;
 }
 
-export default function TransactionPointTable({ page, query, limit, data }: TransactionPointTableProps) {
-  // const provinceData = getAllProvince();
-
+export default function TransactionPointTable({ page, query, type }: TransactionPointTableProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+
+  const [sortId, setSortId] = useState(false);
+  const [sortOrder, setSortOrder] = useState('asc');
+
+  const { data, error, isLoading, mutate } = useWorkPlate(page, type);
+
+  const url = type === 2 ? '/dashboard/transaction' : '/dashboard/transshipment';
+
+  let filerListWP: WorkPlateResType[] = data?.data || [];
+
+  const total = data?.total || 1;
+  const totalPage = Math.floor(total / WORK_PLATE_PAGE_SIZE) + (total % WORK_PLATE_PAGE_SIZE === 0 ? 0 : 1);
+
+  if (sortId) {
+    filerListWP = [...filerListWP].sort((a, b) => {
+      const multi = sortOrder === 'asc' ? 1 : -1;
+      return multi * (a['id'] - b['id']);
+    });
+  }
+
+  const sortFunction = (f: string) => {
+    if (f === 'id') {
+      if (sortId) {
+        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      } else {
+        setSortId(true);
+        setSortOrder('asc');
+      }
+    }
+  };
 
   const handleHeadName = (e: any) => {};
   const handleName = (e: any) => {};
@@ -78,21 +110,8 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
   //   replace(`${pathname}?${params.toString()}`);
   // }, 300);
 
-  // const [listWorkPlates, setListWorkPlates] = useState<WorkPlateResType[]>([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       await workPlateApiRequest.getWorkPlateClient().then((res) => {
-  //         setListWorkPlates(res.payload.data);
-  //         console.log(res.payload.message ,res.payload.data);
-  //       });
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  if (error) return <div>Failed to load</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <div>
@@ -102,8 +121,8 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
             <table className="transactionTable w-100">
               <thead>
                 <tr>
-                  <th scope="col" className="col-sm-1">
-                    STT
+                  <th scope="col" className="col-sm-1" onClick={() => sortFunction('id')}>
+                    ID {sortId ? sortOrder === 'desc' ? <FaArrowUp /> : <FaArrowDown /> : <LuArrowUpDown />}
                   </th>
                   <th scope="col" className="col-sm-2">
                     Tên điểm
@@ -156,18 +175,18 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
                 </tr> */}
               </thead>
               <tbody className="table-group-divider">
-                {data?.map((workplate, index) => (
-                  <tr key={workplate.id}>
-                    <td>{index + 1}</td>
-                    <td>{workplate.name}</td>
-                    <td>{workplate.manager?.name}</td>
+                {filerListWP?.map((workPlate) => (
+                  <tr key={workPlate.id}>
+                    <td>{workPlate.id}</td>
+                    <td>{workPlate.name}</td>
+                    <td>{workPlate.manager?.name}</td>
                     <td>
-                      {workplate.address.ward},{workplate.address.district},{workplate.address.province}
+                      {workPlate.address.ward}, {workPlate.address.district}, {workPlate.address.province}
                     </td>
-                    {/* <td>{workplate.type.name}</td>
-                    <td>{workplate.id}</td> */}
+                    {/* <td>{workPlate.type.name}</td>
+                    <td>{workPlate.id}</td> */}
                     <td className="d-flex justify-content-center gap-1">
-                      <TransactionDetail id={workplate?.id} />
+                      <WorkPlateDetail id={workPlate?.id} url={url} />
                       {/* <EmployeeDelete id={employee?.id} onRefresh={() => setRefresh(true)} /> */}
                     </td>
                   </tr>
@@ -177,7 +196,7 @@ export default function TransactionPointTable({ page, query, limit, data }: Tran
           </div>
         </div>
       </div>
-      <Pagination totalPage={1} />
+      <Pagination totalPage={totalPage} />
     </div>
   );
 }

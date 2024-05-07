@@ -13,8 +13,8 @@ import { RiUserHeartLine, RiTruckLine } from 'react-icons/ri';
 import { BsPeople } from 'react-icons/bs';
 import { PiMoneyDuotone } from 'react-icons/pi';
 import envConfig from '@/envConfig';
-import style from '@/css/home.module.css';
 import { SearchOrder } from '@/components/button';
+import style from '@/css/home.module.css';
 
 export default function HomePage() {
   const company = envConfig.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
@@ -35,7 +35,7 @@ export default function HomePage() {
               <p>Cùng bạn đến mọi miền tổ quốc</p>
             </Col>
             <Col md={7} xl={6} xxl={7} className="text-center">
-              <Image src="/hero.png" className="pt-6 pt-md-0 w-100"></Image>
+              <Image src="/hero.png" alt="hero" className="pt-6 pt-md-0 w-100"></Image>
             </Col>
           </Row>
         </Container>
@@ -91,9 +91,10 @@ export default function HomePage() {
               <h4>{company} FAST</h4>
               <GoRocket size={'5em'} />
               <p>
-                {company} Hỏa Tốc là dịch vụ chất lượng cao với chỉ tiêu thời gian toàn trình rút ngắn so với dịch vụ
-                Magic Post Chuyển Phát Nhanh, trong đó bưu gửi được ưu tiên chuyển phát đến người nhận trong khung thời
-                gian cam kết theo tuyến hành trình cụ thể.
+                {company} Hỏa Tốc là dịch vụ chất lượng cao với chỉ tiêu thời gian toàn trình rút ngắn so với dịch vụ{' '}
+                {company}
+                Chuyển Phát Nhanh, trong đó bưu gửi được ưu tiên chuyển phát đến người nhận trong khung thời gian cam
+                kết theo tuyến hành trình cụ thể.
               </p>
             </div>
           </Col>
@@ -130,7 +131,7 @@ export default function HomePage() {
 
         <Row>
           <Col xs={12} md={6}>
-            <Image src="/22.png" className="pt-6 pt-md-0 w-100"></Image>
+            <Image src="/22.png" alt="22" className="pt-6 pt-md-0 w-100"></Image>
           </Col>
           <Col className={style.aboutUsWrapperItem} xs={12} md={6}>
             <Row className={style.aboutUsItem}>

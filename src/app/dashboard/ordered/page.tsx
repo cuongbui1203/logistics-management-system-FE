@@ -1,5 +1,4 @@
 'use client';
-import { useAppContext } from '@/app/app-provider';
 import { CreateOrder } from '@/components/button';
 import OrderTable from '@/components/dashboard/table/order-table';
 
@@ -14,7 +13,7 @@ interface IOrderPage {
   };
 }
 
-export default async function OrderPage(searchParams: IOrderPage) {
+export default function OrderPage(searchParams: IOrderPage) {
   const query = {
     ...searchParams.searchParams,
   };

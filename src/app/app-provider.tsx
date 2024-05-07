@@ -1,16 +1,18 @@
 'use client';
-import { clientSessionToken } from '@/lib/http';
+
 import { AccountResType } from '@/schema/auth.schema';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 type User = AccountResType['data'];
 
 const AppContext = createContext<{
   user: User | null;
   setUser: (user: User | null) => void;
+  isAuthenticated: boolean;
 }>({
   user: null,
   setUser: () => {},
+  isAuthenticated: false,
 });
 
 export const useAppContext = () => {
@@ -18,27 +20,34 @@ export const useAppContext = () => {
   return context;
 };
 
-export default function AppProvider({
-  children,
-  initialSessionToken = '',
-  user: userProp,
-}: {
-  children: React.ReactNode;
-  initialSessionToken?: string;
-  user?: any;
-}) {
-  const [user, setUser] = useState<User | null>(userProp);
-  useState(() => {
-    if (typeof window !== 'undefined') {
-      clientSessionToken.value = initialSessionToken;
-    }
+export default function AppProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUserState] = useState<User | null>(() => {
+    // if (isClient()) {
+    //   const _user = localStorage.getItem('user')
+    //   return _user ? JSON.parse(_user) : null
+    // }
+    return null;
   });
+  const isAuthenticated = Boolean(user);
+  const setUser = useCallback(
+    (user: User | null) => {
+      setUserState(user);
+      localStorage.setItem('user', JSON.stringify(user));
+    },
+    [setUserState]
+  );
+
+  useEffect(() => {
+    const _user = localStorage.getItem('user');
+    setUserState(_user ? JSON.parse(_user) : null);
+  }, [setUserState]);
 
   return (
     <AppContext.Provider
       value={{
         user,
         setUser,
+        isAuthenticated,
       }}
     >
       {children}

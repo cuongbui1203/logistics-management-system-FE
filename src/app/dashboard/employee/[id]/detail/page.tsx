@@ -11,9 +11,9 @@ export default async function Page({ params }: { params: { id: string } }) {
   const data = await accountApiRequest.getInfo(token?.value || '', id);
   const user: UserSchemaType = data.payload.data;
 
-  const listProvince = await addressApiRequest.getProvinceClient();
-  const listDistrict = await addressApiRequest.getDistrictClient(user.address.provinceCode);
-  const listWard = await addressApiRequest.getWardClient(user.address.districtCode);
+  const listProvince = await addressApiRequest.getProvince();
+  const listDistrict = await addressApiRequest.getDistrict(user.address.provinceCode);
+  const listWard = await addressApiRequest.getWard(user.address.districtCode);
 
   return (
     <EmployeeInformation

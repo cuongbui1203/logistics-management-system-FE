@@ -37,7 +37,7 @@ export default function OrderTable({ page, query, showFilter }: any) {
     fetchData();
   }, []);
 
-  const debounce = (type: string) =>
+  const useDebounce = (type: string) =>
     useDebouncedCallback((term) => {
       const params = new URLSearchParams(searchParams);
       if (term) {
@@ -48,12 +48,12 @@ export default function OrderTable({ page, query, showFilter }: any) {
       replace(`${pathname}?${params.toString()}`);
     }, 300);
 
-  const handleID = debounce('orderID');
-  const handleStartAd = debounce('startAddress');
-  const handleEndAd = debounce('endAddress');
+  const handleID = useDebounce('orderID');
+  const handleStartAd = useDebounce('startAddress');
+  const handleEndAd = useDebounce('endAddress');
 
-  const handleTimeCreate = debounce('timeCreate');
-  const handleStatus = debounce('status');
+  const handleTimeCreate = useDebounce('timeCreate');
+  const handleStatus = useDebounce('status');
 
   if (listOrder.length == 0) {
     return <div>Loading...</div>;
