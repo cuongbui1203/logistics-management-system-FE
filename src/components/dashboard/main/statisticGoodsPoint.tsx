@@ -1,10 +1,10 @@
 import React from 'react';
 import Card from './card';
-import Chart from 'react-apexcharts';
+import dynamic from 'next/dynamic';
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 import { Button } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-// import { fetchGoodsPointsStatistic, formatDate } from '@/api/data';
 import { yearlyOptions, monthlyOptions } from '@/config/ChartOption';
 import { formatDate } from '@/lib/utils';
 
@@ -206,7 +206,7 @@ export default function StatisticGoodsPoint() {
   return (
     <motion.div>
       <Card title={'Điểm tập kết'} extend={extend} intervalType={intervalType} onChange={handleIntervalChange}>
-        <Chart type="area" options={options} series={data} height={chartHeight} />
+        <Chart type="area" options={options} series={data} height={chartHeight} width="100%" />
         <Button
           onClick={() => {
             isExtend(!extend);

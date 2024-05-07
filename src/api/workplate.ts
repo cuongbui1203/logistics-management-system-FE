@@ -1,8 +1,15 @@
+import { WORK_PLATE_PAGE_SIZE } from '@/config/constant';
 import http from '@/lib/http';
-import { WorkPlateDetailResType, WorkPlateListResType, WorkPlateNewReqType } from '@/schema/workplate.schema';
+import {
+  WorkPlateDetailResType,
+  WorkPlateListResType,
+  WorkPlateNewReqType,
+  WorkPlateSuggestResType,
+} from '@/schema/workplate.schema';
 
 export const workPlateApiRequest = {
-  getWorkPlateClient: () => http.get<WorkPlateListResType>('api/work-plates'),
+  getWorkPlateClient: (page: number, type: number) =>
+    http.get<WorkPlateListResType>(`api/work-plates?pageSize=${WORK_PLATE_PAGE_SIZE}&&page=${page}&&type_id=${type}`),
   getWorkPlate: (token: string) =>
     http.get<WorkPlateListResType>(`api/work-plates`, {
       headers: {
@@ -10,7 +17,7 @@ export const workPlateApiRequest = {
       },
     }),
   getWorkPlateSuggestClient: (address_id: string) =>
-    http.get<WorkPlateListResType>(`api/work-plates/suggestion-wp?address_id=${address_id}`),
+    http.get<WorkPlateSuggestResType>(`api/work-plates/suggestion-wp?address_id=${address_id}`),
   createWP: (body: WorkPlateNewReqType) => http.post<WorkPlateListResType>('api/work-plates', body),
   getDetailWorkPlate: (token: string, id: string) =>
     http.get<WorkPlateDetailResType>(`api/work-plates/${id}`, {

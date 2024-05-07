@@ -1,7 +1,7 @@
 import { Row, Col } from 'react-bootstrap';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import '@/css/employee/dashboard/card.css';
 import { motion, spring } from 'framer-motion';
+import '@/css/dashboard/card.css';
 
 /**
  * React component representing a card with a title, content, and options dropdown.

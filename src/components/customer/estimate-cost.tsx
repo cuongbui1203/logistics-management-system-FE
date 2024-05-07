@@ -1,4 +1,3 @@
-import { estimateFeeForCustomer } from '@/api/action';
 import { useState } from 'react';
 import { Container, Form, Row, Col, Button, Table } from 'react-bootstrap';
 import useSWR from 'swr';
@@ -86,20 +85,7 @@ export default function EstimateCost() {
           </Row>
           <Row>
             <Col>
-              <Button
-                className="submitButton"
-                onClick={async () => {
-                  if (
-                    // parseInt(estimateFetchBody.startProvinceID) != NaN &&
-                    // parseInt(estimateFetchBody.startProvinceID) != NaN &&
-                    // parseFloat(estimateFetchBody.weight) != NaN
-                    true
-                  ) {
-                    const res = await estimateFeeForCustomer(estimateFetchBody);
-                    // setEstimateCost(res);
-                  }
-                }}
-              >
+              <Button className="submitButton" onClick={async () => {}}>
                 Tra cứu
               </Button>
             </Col>

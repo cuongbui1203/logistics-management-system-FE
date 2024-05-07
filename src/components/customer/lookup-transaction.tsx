@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button, Container, Row, Col, Form } from 'react-bootstrap';
-import TransactionList from './transactionList';
 import useSWR from 'swr';
 
 /**
@@ -51,38 +50,22 @@ export default function LookUpTransaction() {
           <Col xs="12" md="6" className="mt-2">
             <Form>
               <Row>
-                <Form.Select
-                  aria-label="Chọn Tỉnh/ TP"
-                  className="selectContainer"
-                  onChange={(e) => {
-                    setSelectedProvince(e.target.value);
-                    setSelectedDistrict(0);
-                    setSelectedCommune(0);
-                  }}
-                  required
-                >
+                <Form.Select aria-label="Chọn Tỉnh/ TP" className="selectContainer" onChange={(e) => {}} required>
                   <option value={0}>Chọn Tỉnh/ TP</option>
-                  {provinceData?.map((province) => (
+                  {/* {provinceData?.map((province) => (
                     <option key={province.provinceID} value={province.provinceID}>
                       {province.name}
                     </option>
-                  ))}
+                  ))} */}
                 </Form.Select>
 
-                <Form.Select
-                  onChange={(e) => {
-                    setSelectedDistrict(e.target.value);
-                    setSelectedCommune(0);
-                  }}
-                  required
-                  className="selectContainer"
-                >
+                <Form.Select onChange={(e) => {}} required className="selectContainer">
                   <option value={0}>Chọn Quận/Huyện</option>
-                  {districtData?.map((district) => (
+                  {/* {districtData?.map((district) => (
                     <option key={district.districtID} value={district.districtID}>
                       {district.name}
                     </option>
-                  ))}
+                  ))} */}
                 </Form.Select>
 
                 <Form.Select
@@ -94,11 +77,11 @@ export default function LookUpTransaction() {
                   required
                 >
                   <option value={0}>Chọn Xã/Phường</option>
-                  {communeData?.map((commune) => (
+                  {/* {communeData?.map((commune) => (
                     <option key={commune.communeID} value={commune.communeID}>
                       {commune.name}
                     </option>
-                  ))}
+                  ))} */}
                 </Form.Select>
 
                 <Button
@@ -123,9 +106,9 @@ export default function LookUpTransaction() {
           </Col>
         </Row>
       </Container>
-      {showTransactionList && (
+      {/* {showTransactionList && (
         <TransactionList provinceID={selectedProvince} districtID={selectedDistrict} communeID={selectedCommune} />
-      )}
+      )} */}
     </div>
   );
 }

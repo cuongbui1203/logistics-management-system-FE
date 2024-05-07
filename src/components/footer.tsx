@@ -1,9 +1,8 @@
-'use client';
 import { Container, Row, Col } from 'react-bootstrap';
-import style from '@/css/footer.module.css';
 import { FaAngleRight } from 'react-icons/fa6';
 import Link from 'next/link';
 import envConfig from '@/envConfig';
+import style from '@/css/footer.module.css';
 
 export function Footer() {
   const company = envConfig.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';

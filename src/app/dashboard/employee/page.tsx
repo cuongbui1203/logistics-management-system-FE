@@ -3,23 +3,11 @@ import EmployeeTable from '@/components/dashboard/table/employee-table';
 
 interface EmployeePageProps {
   searchParams: {
-    name?: string;
-    phone?: string;
-    emID?: string;
-    status?: string;
-    address?: string;
     page?: number;
   };
 }
 
 export default function EmployeePage({ searchParams }: EmployeePageProps) {
-  const query = {
-    name: searchParams.name,
-    emID: searchParams.emID,
-    phone: searchParams.phone,
-    address: searchParams.address,
-    status: searchParams.status,
-  };
   const currentPage = searchParams.page || 1;
 
   return (
@@ -35,7 +23,7 @@ export default function EmployeePage({ searchParams }: EmployeePageProps) {
       </div>
 
       <div className="row">
-        <EmployeeTable page={currentPage} query={query} showFilter={false}></EmployeeTable>
+        <EmployeeTable page={currentPage} showFilter={true}></EmployeeTable>
       </div>
     </div>
   );

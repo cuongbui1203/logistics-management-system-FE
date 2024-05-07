@@ -3,8 +3,8 @@ import LookUpBanner from '@/components/customer/lookup-banner';
 import LookUpOrder from '@/components/customer/lookup-order';
 import { useState } from 'react';
 
-export default function Order({ searchParams: { query } }) {
-  const currentQuery = query || '';
+export default function Order({ searchParams }: { searchParams: { query: string } }) {
+  const currentQuery = searchParams.query || '';
   const [searched, isSearch] = useState(false);
 
   return (

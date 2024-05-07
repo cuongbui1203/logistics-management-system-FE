@@ -53,6 +53,21 @@ export const Role = {
   },
 };
 
+export const Area = [
+  {
+    id: 1,
+    name: 'Tỉnh / Thành phố',
+  },
+  {
+    id: 2,
+    name: 'Quận / Huyện',
+  },
+  {
+    id: 3,
+    name: 'Phường / Xã',
+  },
+];
+
 export const listUrl = {
   dashboard: {
     url: '/dashboard',

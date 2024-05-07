@@ -4,7 +4,7 @@ import InformationClient from './client-page';
 import { addressApiRequest } from '@/api/address';
 
 export default async function Information() {
-  const listProvince = await addressApiRequest.getProvinceClient();
+  const listProvince = await addressApiRequest.getProvince();
 
   return (
     <Row>

@@ -63,7 +63,7 @@ export const handleErrorApi = ({
       });
     });
   } else {
-    toast.error(message || 'Yêu cầu thất bại!', {
+    toast.error(message || error.payload.message || 'Yêu cầu thất bại!', {
       autoClose: duration || 3000,
     });
   }

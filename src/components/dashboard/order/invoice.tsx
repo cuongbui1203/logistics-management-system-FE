@@ -1,7 +1,7 @@
 import { Container, Row, Col, Table, Image } from 'react-bootstrap';
 import { useRef } from 'react';
 // import ReactToPrint from 'react-to-print';
-import '@/css/employee/invoice.css';
+import '@/css/dashboard/invoice.css';
 
 let orderData: any;
 
@@ -18,21 +18,23 @@ export default function Invoice({ data }: any) {
       minute: 'numeric',
       second: 'numeric',
     };
-    const formattedDate = new Intl.DateTimeFormat('vi-VN', options).format(new Date(dateString));
+    // const formattedDate = new Intl.DateTimeFormat('vi-VN', options).format(new Date(dateString));
+    const formattedDate = new Date(dateString).toLocaleDateString('vi-VN');
     return formattedDate;
   };
   const componentRef = useRef();
   return (
     <div id="invoice">
       <Container className="bg-white rounded shadow">
-        <div ref={componentRef} className="p-5">
+        {/* <div ref={componentRef} className="p-5"> */}
+        <div className="p-5">
           <Row className="text-center">
             <h1 className="fw-bold">MAGIC POST</h1>
           </Row>
 
           <Row className="mt-2">
             <Col xs="3" className="d-flex justify-content-center">
-              <Image src="/demoQR.png" className="w-50" />
+              <Image src="/demoQR.png" alt="demo" className="w-50" />
             </Col>
 
             <Col className="text-end d-flex flex-column justify-content-center">
@@ -69,7 +71,7 @@ export default function Invoice({ data }: any) {
                 <tr>
                   <td className="text-center">Tổng</td>
                   <td className="text-center">
-                    {orderData?.data?.goodsList.reduce((total, item) => total + item.quantity, 0)}
+                    {/* {orderData?.data?.goodsList.reduce((total, item) => total + item.quantity, 0)} */}
                   </td>
                   <td className="text-center">{orderData?.data?.goodsList[0]?.attached}</td>
                 </tr>
@@ -104,11 +106,11 @@ export default function Invoice({ data }: any) {
             <Col className="text-end">
               <h5 className="fw-bold">Khối lượng </h5>
               <p className="mb-1">
-                Khối lượng thực tế: {orderData?.data?.goodsList.reduce((total, item) => total + item.realWeight, 0)}
+                {/* Khối lượng thực tế: {orderData?.data?.goodsList.reduce((total, item) => total + item.realWeight, 0)} */}
               </p>
               <p className="mb-1">
                 Khối lượng quy đổi:{' '}
-                {orderData?.data?.goodsList.reduce((total, item) => total + item.convertedWeight, 0)}
+                {/* {orderData?.data?.goodsList.reduce((total, item) => total + item.convertedWeight, 0)} */}
               </p>
             </Col>
           </Row>

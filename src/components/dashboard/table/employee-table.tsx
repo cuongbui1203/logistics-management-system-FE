@@ -1,43 +1,57 @@
 'use client';
-import accountApiRequest from '@/api/account';
+
 import { EmployeeDelete, EmployeeDetail } from '@/components/button';
 import Pagination from '@/components/dashboard/pagination';
 import { AccountList } from '@/schema/auth.schema';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import '@/css/dashboard/customTable.css';
+import { FaArrowDown, FaArrowUp } from 'react-icons/fa6';
+import Loading from '@/components/loading';
+import { LuArrowUpDown } from 'react-icons/lu';
+import { EMPLOYEE_PAGE_SIZE } from '@/config/constant';
+import { useEmployee } from '@/lib/custom-hook';
 
 interface EmployeeTableProps {
-  page?: number;
+  page: number;
   query?: any;
   showFilter?: boolean;
 }
 
-export default function EmployeeTable({ page, query, showFilter }: EmployeeTableProps) {
+export default function EmployeeTable({ page, showFilter }: EmployeeTableProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const [listEmployees, setListEmployees] = useState<AccountList>([]);
-  const [refresh, setRefresh] = useState(false);
-  let totalPage = 1;
+  const [sortId, setSortId] = useState(false);
+  const [sortOrder, setSortOrder] = useState('asc');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await accountApiRequest.listAccountClient().then((res) => {
-          setListEmployees(res.payload.data.data);
-          totalPage = res.payload.data.total;
-          console.log(res.payload.data.data);
-        });
-      } catch (error) {
-        console.log(error);
+  const { data, error, isLoading, mutate } = useEmployee(page);
+
+  let filerListEmployees: AccountList = data?.data || [];
+
+  const total = data?.total || 1;
+  const totalPage = Math.floor(total / EMPLOYEE_PAGE_SIZE) + (total % EMPLOYEE_PAGE_SIZE === 0 ? 0 : 1);
+
+  if (sortId) {
+    filerListEmployees = [...filerListEmployees].sort((a, b) => {
+      const multi = sortOrder === 'asc' ? 1 : -1;
+      return multi * (a['id'] - b['id']);
+    });
+  }
+
+  const sortFunction = (f: string) => {
+    if (f === 'id') {
+      if (sortId) {
+        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      } else {
+        setSortId(true);
+        setSortOrder('asc');
       }
-    };
-    fetchData();
-  }, []);
+    }
+  };
 
-  const debounce = (type: string) =>
+  const useDebounce = (type: string) =>
     useDebouncedCallback((term) => {
       const params = new URLSearchParams(searchParams);
       if (term) {
@@ -48,19 +62,14 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
       replace(`${pathname}?${params.toString()}`);
     }, 300);
 
-  const handleName = debounce('name');
-  const handleEmID = debounce('EmId');
-  const handleAddress = debounce('address');
-  const handlePhone = debounce('phone');
-  const handleStatus = debounce('status');
+  const handleName = useDebounce('name');
+  const handleEmID = useDebounce('EmId');
+  const handleAddress = useDebounce('address');
+  const handlePhone = useDebounce('phone');
+  const handleStatus = useDebounce('status');
 
-  // const {
-  //   dataRes: inforEmployees,
-  //   totalPage: totalPage,
-  //   itemPerPage: itemPerPage,
-  // } = getEmployee(page || 1, query);
-
-  if (listEmployees.length == 0) return <p>Loading...</p>;
+  if (error) return <div>Failed to load</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <div>
@@ -70,7 +79,9 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
             <table className="employeeTable w-100">
               <thead>
                 <tr>
-                  <th scope="col">ID</th>
+                  <th scope="col" onClick={() => sortFunction('id')}>
+                    ID {sortId ? sortOrder === 'desc' ? <FaArrowUp /> : <FaArrowDown /> : <LuArrowUpDown />}
+                  </th>
                   <th scope="col">Họ và tên</th>
                   <th scope="col">Địa điểm làm việc</th>
                   <th scope="col">Chức vụ</th>
@@ -80,7 +91,7 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
                 {showFilter && (
                   <tr className="filter">
                     <th scope="col">
-                      <input onChange={(e) => handleEmID(e.target.value)} placeholder="Lọc theo mã nhân viên" />
+                      <input onChange={(e) => handleEmID(e.target.value)} placeholder="Lọc theo ID" />
                     </th>
                     <th scope="col">
                       <input onChange={(e) => handleName(e.target.value)} placeholder="Lọc theo tên" />
@@ -109,11 +120,13 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
                       <input placeholder="Lọc theo sdt" onChange={(e) => handlePhone(e.target.value)} />
                     </th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
                   </tr>
                 )}
               </thead>
               <tbody className="table-group-divider">
-                {listEmployees.map((employee) => {
+                {filerListEmployees.map((employee) => {
                   // const statusInfo = employeeStatus[employee?.status] || {};
                   // const badgeColor = statusInfo.color || "secondary";
                   const badgeColor = 'secondary';
@@ -129,7 +142,7 @@ export default function EmployeeTable({ page, query, showFilter }: EmployeeTable
                       <td>{employee?.email || 'Không có'}</td>
                       <td className="d-flex justify-content-center gap-1">
                         <EmployeeDetail id={employee?.id} />
-                        <EmployeeDelete id={employee?.id} onRefresh={() => setRefresh(true)} />
+                        <EmployeeDelete id={employee?.id} refresh={mutate} />
                       </td>
                     </tr>
                   );

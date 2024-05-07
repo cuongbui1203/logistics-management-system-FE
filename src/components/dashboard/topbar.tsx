@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import BreadCrumb from './breadcrumb';
 import { FaUserCircle } from 'react-icons/fa';
@@ -22,12 +22,12 @@ const itemVariants = {
 export default function TopBar() {
   const [profile, setProfile] = useState(false);
   const profileRef = useRef(null);
-  const { user } = useAppContext();
+  const { user, setUser } = useAppContext();
   const userName = user?.name;
   const router = useRouter();
 
   const closeProfile = () => {
-    if (!profile) {
+    if (profile) {
       setProfile(false);
     }
   };
@@ -46,11 +46,15 @@ export default function TopBar() {
       // authApiRequest.logoutFromNextClientToNextServer(true).then((res) => {
       //   router.push(`/login?redirectFrom=${pathname}`);
       // });
+    } finally {
+      setUser(null);
+      router.refresh();
+      localStorage.removeItem('token');
     }
   };
 
   return (
-    <motion.nav layout className="nav topbar">
+    <motion.nav layout className="nav topBar">
       <Container className="navBar">
         <Row className="breadCrumbContainer">
           <BreadCrumb />

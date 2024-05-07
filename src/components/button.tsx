@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form, InputGroup } from 'react-bootstrap';
+import { Button, Form, InputGroup, Modal } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
 import { FaRegEye } from 'react-icons/fa';
 import { FiUserPlus } from 'react-icons/fi';
@@ -8,6 +8,7 @@ import { LuPackagePlus } from 'react-icons/lu';
 import { AiOutlineUserDelete } from 'react-icons/ai';
 import accountApiRequest from '@/api/account';
 import { toast } from 'react-toastify';
+import { useState } from 'react';
 
 export function SearchOrder() {
   const route = useRouter();
@@ -111,13 +112,13 @@ export function EmployeeDetail({ id }: { id: number }) {
   );
 }
 
-export function TransactionDetail({ id }: { id: number }) {
+export function WorkPlateDetail({ id, url }: { id: number; url: string }) {
   const route = useRouter();
 
   return (
     <button
       onClick={() => {
-        route.push(`/dashboard/transaction/${id}`);
+        route.push(`${url}/${id}`);
       }}
       className="btn btn-outline-warning"
     >
@@ -126,13 +127,19 @@ export function TransactionDetail({ id }: { id: number }) {
   );
 }
 
-export function EmployeeDelete({ id, onRefresh }: { id: number; onRefresh: () => void }) {
+export function EmployeeDelete({ id, refresh }: { id: number; refresh: () => void }) {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const handleDelete = async () => {
-    console.log('delete', id);
     try {
       await accountApiRequest.deleteAccount(id).then((res) => {
         toast.success('Xóa nhân viên thành công');
-        onRefresh();
+
+        refresh();
+        setShow(false);
       });
     } catch (error) {
       toast.error('Xóa nhân viên thất bại');
@@ -140,9 +147,25 @@ export function EmployeeDelete({ id, onRefresh }: { id: number; onRefresh: () =>
   };
 
   return (
-    <button onClick={handleDelete} className="btn btn-outline-danger">
-      <AiOutlineUserDelete />
-    </button>
+    <>
+      <button className="btn btn-outline-danger" onClick={handleShow}>
+        <AiOutlineUserDelete />
+      </button>
+      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Xác nhận xóa nhân viên</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Bạn có chắc chắn muốn xóa nhân viên này không?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Huỷ
+          </Button>
+          <Button variant="primary" onClick={handleDelete}>
+            Xác nhận
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
 
