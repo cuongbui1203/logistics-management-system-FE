@@ -61,7 +61,7 @@ export const UserSchema = z.object({
   username: z.string(),
   address: AddressSchema,
   role_id: z.number(),
-  wp_id: z.string().nullable(),
+  wp_id: z.number().nullable(),
   img_id: z.string().nullable(),
   role: RoleSchema,
   work_plate: WorkPlateSchema.nullable(),

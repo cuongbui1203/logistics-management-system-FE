@@ -9,26 +9,47 @@ export default function BreadCrumb() {
   const pathname = usePathname();
   const [listItem, setListItem] = useState<string[]>(['dashboard']);
   useEffect(() => {
-    let temp: string[] = ['dashboard'];
+    const temp: string[] = ['dashboard'];
 
-    if (pathname.includes('ordered')) {
-      temp.push('manageOrders');
-      if (pathname.includes('create')) {
-        temp.push('createOrder');
-      } else if (pathname.includes('detail')) {
-        temp.push('detailOrder');
-      }
-    } else if (pathname.includes('employee')) {
-      temp.push('manageEmployees');
-      if (pathname.includes('create')) {
-        temp.push('createEmployee');
-      } else if (pathname.includes('detail')) {
-        temp.push('detailEmployee');
-      }
-    } else if (pathname.includes('transaction')) {
-      temp.push('manageTransactions');
-    } else if (pathname.includes('workspace')) {
-      temp.push('manageWorkspaces');
+    let url = pathname.split('/');
+    let pathname2 = pathname;
+    if (pathname.includes('detail')) {
+      // /dashboard/ordered/[id]/detail remove [id]
+      url.splice(3, 1);
+      pathname2 = url.join('/');
+    }
+
+    switch (pathname2) {
+      case '/dashboard/ordered':
+        temp.push('manageOrders');
+        break;
+      case '/dashboard/ordered/create':
+        temp.push('manageOrders', 'createOrder');
+        break;
+      case '/dashboard/ordered/detail':
+        temp.push('manageOrders', 'detailOrder');
+        break;
+      case '/dashboard/employee':
+        temp.push('manageEmployees');
+        break;
+      case '/dashboard/employee/create':
+        temp.push('manageEmployees', 'createEmployee');
+        break;
+      case '/dashboard/employee/detail':
+        temp.push('manageEmployees', 'detailEmployee');
+        break;
+      case '/dashboard/transaction':
+        temp.push('manageTransactions');
+        break;
+      case '/dashboard/transaction/create':
+        temp.push('manageTransactions', 'createTransaction');
+        break;
+      case '/dashboard/transaction/detail':
+        temp.push('manageTransactions', 'detailTransaction');
+        break;
+      case 'dashboard/information':
+        temp.push('information');
+        break;
     }
     setListItem(temp);
   }, [pathname]);

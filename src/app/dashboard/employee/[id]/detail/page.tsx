@@ -12,15 +12,11 @@ export default async function Page({ params }: { params: { id: string } }) {
   const user: UserSchemaType = data.payload.data;
 
   const listProvince = await addressApiRequest.getProvince();
-  const listDistrict = await addressApiRequest.getDistrict(user.address.provinceCode);
-  const listWard = await addressApiRequest.getWard(user.address.districtCode);
 
   return (
     <EmployeeInformation
       employee={user}
       listProvince={listProvince.payload.data}
-      listDistrict_1={listDistrict.payload.data}
-      listWard_1={listWard.payload.data}
     />
   );
 }

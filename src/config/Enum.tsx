@@ -30,7 +30,7 @@ export const Role = {
   Manager: {
     id: 5,
     name: 'Quản lí',
-    tabs: ['dashboard', 'manageOrders'],
+    tabs: ['dashboard', 'manageEmployees', 'manageOrders', 'createOrder'],
     left: ['manageEmployees', 'manageTransshipment', 'manageTransactions'],
   },
   Driver: {
@@ -42,7 +42,7 @@ export const Role = {
   Employee: {
     id: 4,
     name: 'Nhân viên',
-    tabs: ['dashboard', 'manageOrders'],
+    tabs: ['dashboard', 'manageOrders', 'createOrder'],
     left: ['manageTransshipment', 'manageTransactions', 'manageEmployees'],
   },
   User: {
@@ -74,6 +74,11 @@ export const listUrl = {
     name: 'Trang chính',
     icon: <MdOutlineDashboard size={'2em'} />,
   },
+  information: {
+    url: '/dashboard/information',
+    name: 'Thông tin',
+    icon: <MdOutlineDashboard size={'2em'} />,
+  },
   manageEmployees: {
     url: '/dashboard/employee',
     name: 'Nhân viên',
@@ -93,6 +98,16 @@ export const listUrl = {
     url: '/dashboard/transaction',
     name: 'Điểm giao dịch',
     icon: <RiRoadMapLine size={'2em'} />,
+  },
+  createTransaction: {
+    url: '/dashboard/transaction/create',
+    name: 'Tạo điểm giao dịch',
+    icon: <HiOutlineBuildingOffice size={'2em'} />,
+  },
+  detailTransaction: {
+    url: '/dashboard/transaction/[id]/detail',
+    name: 'Chi tiết điểm giao dịch',
+    icon: <HiOutlineBuildingOffice size={'2em'} />,
   },
   createEmployee: {
     url: '/dashboard/employee/create',

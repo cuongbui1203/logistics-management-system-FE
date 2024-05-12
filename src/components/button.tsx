@@ -9,6 +9,7 @@ import { AiOutlineUserDelete } from 'react-icons/ai';
 import accountApiRequest from '@/api/account';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { useAppContext } from '@/app/app-provider';
 
 export function SearchOrder() {
   const route = useRouter();
@@ -97,28 +98,13 @@ export function CreateOrder() {
   );
 }
 
-export function EmployeeDetail({ id }: { id: number }) {
+export function ButtonDetail({ url }: { url: string }) {
   const route = useRouter();
 
   return (
     <button
       onClick={() => {
-        route.push(`/dashboard/employee/${id}/detail`);
-      }}
-      className="btn btn-outline-warning"
-    >
-      <FaRegEye />
-    </button>
-  );
-}
-
-export function WorkPlateDetail({ id, url }: { id: number; url: string }) {
-  const route = useRouter();
-
-  return (
-    <button
-      onClick={() => {
-        route.push(`${url}/${id}`);
+        route.push(url);
       }}
       className="btn btn-outline-warning"
     >
@@ -146,11 +132,19 @@ export function EmployeeDelete({ id, refresh }: { id: number; refresh: () => voi
     }
   };
 
+  const disabled = useAppContext().user?.id === id ? true : false;
+
   return (
     <>
-      <button className="btn btn-outline-danger" onClick={handleShow}>
-        <AiOutlineUserDelete />
-      </button>
+      {disabled ? (
+        <button className="btn btn-outline-danger " disabled>
+          <AiOutlineUserDelete />
+        </button>
+      ) : (
+        <button className="btn btn-outline-danger" onClick={handleShow}>
+          <AiOutlineUserDelete />
+        </button>
+      )}
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>Xác nhận xóa nhân viên</Modal.Title>

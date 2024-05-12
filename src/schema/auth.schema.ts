@@ -1,4 +1,4 @@
-import { AccountSchema, AddressSchema, UserSchema } from '@/schema/common.schema';
+import { AccountSchema, UserSchema } from '@/schema/common.schema';
 import z from 'zod';
 
 export const RegisterBody = z
@@ -25,7 +25,7 @@ export type RegisterBodyType = z.TypeOf<typeof RegisterBody>;
 export const LoginBody = z
   .object({
     username: z.string(),
-    password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 kí tự.').max(100),
+    password: z.string().min(1, 'Mật khẩu phải có ít nhất 1 kí tự.').max(100),
   })
   .strict();
 
@@ -62,6 +62,20 @@ export const UpdateUserBody = z.object({
 
 export type UpdateUserBodyType = z.TypeOf<typeof UpdateUserBody>;
 
+export const AccountUpdateReq = z.object({
+  name: z.string(),
+  email: z.string(),
+  phone: z.string(),
+  dob: z.string().nullable(),
+  username: z.string(),
+  address_id: z.string(),
+  role_id: z.number(),
+  wp_id: z.coerce.number(),
+  img_id: z.string().optional(),
+});
+
+export type AccountUpdateReqType = z.TypeOf<typeof AccountUpdateReq>;
+
 export const AccountNewReq = z.object({
   name: z.string(),
   email: z.string(),
@@ -71,7 +85,7 @@ export const AccountNewReq = z.object({
   username: z.string(),
   address_id: z.string(),
   role_id: z.number(),
-  wp_id: z.string().nullable(),
+  wp_id: z.string().optional(),
   img_id: z.string().optional(),
 });
 

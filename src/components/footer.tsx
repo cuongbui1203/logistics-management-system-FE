@@ -21,13 +21,13 @@ export function Footer() {
             <h3>Về {company}</h3>
             <ul className={style.footerMenu}>
               <li>
-                <Link href="/customer/History">
+                <Link href="/">
                   <FaAngleRight />
                   Lịch sử hình thành
                 </Link>
               </li>
               <li>
-                <Link href="/customer/Recruit">
+                <Link href="/">
                   <FaAngleRight />
                   Tuyển dụng
                 </Link>
@@ -38,19 +38,19 @@ export function Footer() {
             <h3>Tra cứu</h3>
             <ul className={style.footerMenu}>
               <li>
-                <Link href="/customer/LockupOrders">
+                <Link href="/">
                   <FaAngleRight />
                   Tra cứu bưu gửi
                 </Link>
               </li>
               <li>
-                <Link href="/customer/LockupTransaction">
+                <Link href="/">
                   <FaAngleRight />
                   Tra cứu bưu cục
                 </Link>
               </li>
               <li>
-                <Link href="/customer/EstimateCost">
+                <Link href="/">
                   <FaAngleRight />
                   Ước tính chi phí
                 </Link>
@@ -62,19 +62,19 @@ export function Footer() {
             <h3>Dịch vụ</h3>
             <ul className={style.footerMenu}>
               <li>
-                <Link href="/customer/service/doc">
+                <Link href="/">
                   <FaAngleRight />
                   Vận chuyển tài liệu
                 </Link>
               </li>
               <li>
-                <Link href="/customer/service/goods">
+                <Link href="/">
                   <FaAngleRight />
                   Tra cứu hàng hóa
                 </Link>
               </li>
               <li>
-                <Link href="/customer/service/care">
+                <Link href="/">
                   <FaAngleRight />
                   Vận chuyển đảm bảo
                 </Link>

@@ -2,7 +2,7 @@
 
 import { Row, Col, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { AccountNewReq, AccountNewReqType } from '@/schema/auth.schema';
+import { AccountUpdateReq, AccountUpdateReqType } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 import { formatDate2, handleErrorApi } from '@/lib/utils';
@@ -13,16 +13,23 @@ import { useAppContext } from '@/app/app-provider';
 import useSWRImmutable from 'swr/immutable';
 import AddressForm from '@/components/address-form';
 import '@/css/dashboard/customForm.css';
+import authApiRequest from '@/api/auth';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEmployee } from '@/lib/custom-hook';
 
 interface Props {
   employee: UserSchemaType;
   listProvince: AddressDetailSchemaType[];
-  listDistrict_1: AddressDetailSchemaType[];
-  listWard_1: AddressDetailSchemaType[];
 }
 
-export default function EmployeeInformation({ employee, listDistrict_1, listProvince, listWard_1 }: Props) {
+export default function EmployeeInformation({ employee, listProvince }: Props) {
+  const searchParams = useSearchParams();
   const { user } = useAppContext();
+  const router = useRouter();
+
+  const page = Number(searchParams.get('fromPage'));
+
+  const { mutate } = useEmployee(page);
 
   const userRole = user?.role?.name;
 
@@ -32,8 +39,8 @@ export default function EmployeeInformation({ employee, listDistrict_1, listProv
     setError,
     formState: { errors, isSubmitting },
     watch,
-  } = useForm<AccountNewReqType>({
-    resolver: zodResolver(AccountNewReq),
+  } = useForm<AccountUpdateReqType>({
+    resolver: zodResolver(AccountUpdateReq),
     defaultValues: {
       name: employee?.name,
       email: employee?.email,
@@ -42,17 +49,26 @@ export default function EmployeeInformation({ employee, listDistrict_1, listProv
       username: employee?.username,
       address_id: employee?.address.wardCode,
       role_id: employee?.role.id,
-      wp_id: employee?.wp_id,
+      wp_id: employee?.wp_id || 0,
     },
   });
 
-  async function onSubmit(values: AccountNewReqType) {
+  async function onSubmit(values: AccountUpdateReqType) {
     console.log(values);
     try {
+      const result = await authApiRequest.updateEmployee(values, employee.id);
+
+      mutate();
+      router.push(`/dashboard/employee?page=${page}`);
+
       toast.success('Cập nhật nhân viên thành công');
     } catch (error) {
       handleErrorApi({ error, setError });
     }
+  }
+
+  function onError(err: any) {
+    console.log(err);
   }
 
   const watchAddress = watch('address_id');
@@ -78,7 +94,7 @@ export default function EmployeeInformation({ employee, listDistrict_1, listProv
 
   return (
     <div className="formContainer">
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit, onError)}>
         <Row className="mt-2">
           <h3>Thông tin nhân viên</h3>
         </Row>
@@ -165,13 +181,8 @@ export default function EmployeeInformation({ employee, listDistrict_1, listProv
             <Col>
               <Form.Group className="col-sm-12 col-form-Form.Group">
                 <Form.Label htmlFor="workplate">Địa điểm làm việc</Form.Label>
-                <select
-                  id="workplate"
-                  className="form-select"
-                  defaultValue={employee?.work_plate?.id}
-                  {...register('wp_id')}
-                >
-                  <option key={0} value="0" disabled>
+                <select id="workplate" className="form-select" value={employee?.work_plate?.id} {...register('wp_id')}>
+                  <option key={0} value={0} disabled>
                     Chọn địa điểm làm việc
                   </option>
                   {listWp.map((wp) => (

@@ -15,13 +15,10 @@ import { useRouter } from 'next/navigation';
 import AddressForm from '@/components/address-form';
 import useSWRImmutable from 'swr/immutable';
 import '@/css/dashboard/customForm.css';
-import { EMPLOYEE_PAGE_SIZE } from '@/config/constant';
-import { useEmployee } from '@/lib/custom-hook';
 
 export default function EmployeeForm({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
   const { user } = useAppContext();
   const router = useRouter();
-  const { mutate } = useEmployee(1);
 
   const userRole = user?.role?.name;
 
@@ -40,8 +37,7 @@ export default function EmployeeForm({ listProvince }: { listProvince: AddressDe
     try {
       await accountApiRequest.createAccount(values).then((res) => {
         if (res.payload.success) {
-          router.push('/dashboard/employee');
-          mutate();
+          router.push('/dashboard/employee?created=true');
           toast.success('Tạo nhân viên thành công');
         }
       });
@@ -129,6 +125,7 @@ export default function EmployeeForm({ listProvince }: { listProvince: AddressDe
             <Form.Group>
               <Form.Label htmlFor="phoneNumber">Số điện thoại</Form.Label>
               <Form.Control type="tel" id="phoneNumber" placeholder="Số điện thoại" {...register('phone')} />
+              {errors.phone && <Form.Text className="text-danger">{errors.phone.message}</Form.Text>}
             </Form.Group>
           </Col>
         </Row>

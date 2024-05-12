@@ -1,4 +1,4 @@
-import { USER_LOGIN_REDIRECT, authRoutes, ADMIN_LOGIN_REDIRECT } from '@/routes';
+import { authRoutes } from '@/routes';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export default function middleware(req: NextRequest) {

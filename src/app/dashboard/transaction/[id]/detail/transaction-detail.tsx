@@ -4,11 +4,12 @@ import { workPlateApiRequest } from '@/api/workplate';
 import { useAppContext } from '@/app/app-provider';
 import AddressForm from '@/components/address-form';
 import { Area, UserRole, WorkPlateEnumType } from '@/config/Enum';
+import { useWorkPlate } from '@/lib/custom-hook';
 import { handleErrorApi } from '@/lib/utils';
 import { AddressDetailSchemaType } from '@/schema/common.schema';
 import { WorkPlateNewReq, WorkPlateNewReqType, WorkPlateResType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -19,9 +20,13 @@ interface TransactionDetailProps {
 }
 
 export default function TransactionDetail({ workPlate, listProvince }: TransactionDetailProps) {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const { user } = useAppContext();
   const userRole = user?.role?.name;
+
+  const page = Number(searchParams.get('fromPage'));
+  const { mutate } = useWorkPlate(page, WorkPlateEnumType.Transaction);
 
   const {
     register,
@@ -48,9 +53,9 @@ export default function TransactionDetail({ workPlate, listProvince }: Transacti
     try {
       await workPlateApiRequest.updateWP(workPlate.id, values).then((res) => {
         if (res.payload.success) {
+          mutate();
           toast.success('Cập nhật điểm giao dịch thành công');
-          // router.push('/dashboard/transaction');
-          // router.refresh();
+          router.push(`/dashboard/transaction?page=${page}`);
         }
       });
     } catch (error) {
@@ -58,9 +63,13 @@ export default function TransactionDetail({ workPlate, listProvince }: Transacti
     }
   }
 
+  function onError(err: any) {
+    console.log(err);
+  }
+
   return (
     <div className="formContainer">
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit, onError)}>
         <Row className="mt-2">
           <h3>Thông tin điểm giao dịch</h3>
         </Row>

@@ -1,4 +1,10 @@
-import { AccountResType, AuthBodyType, RegisterBodyType, UpdateUserBodyType } from '@/schema/auth.schema';
+import {
+  AccountResType,
+  AccountUpdateReqType,
+  AuthBodyType,
+  RegisterBodyType,
+  UpdateUserBodyType,
+} from '@/schema/auth.schema';
 import http from '@/lib/http';
 import { LoginBodyType, LoginResType } from '@/schema/auth.schema';
 import { MessageResType } from '@/schema/common.schema';
@@ -28,6 +34,7 @@ const authApiRequest = {
       }
     ),
   updateUserClient: (body: UpdateUserBodyType, id: number) => http.put<AccountResType>(`api/users/${id}`, body),
+  updateEmployee: (body: AccountUpdateReqType, id: number) => http.put<AccountResType>(`api/users/${id}`, body),
   getCsrfTokenClient: () => http.get<null>('/sanctum/csrf-cookie'),
 };
 
