@@ -1,5 +1,5 @@
 import { CreateEmployee } from '@/components/button';
-import EmployeeTable from '@/components/dashboard/table/employee-table';
+import EmployeeTable from '@/components/dashboard/employee/employee-table';
 
 export default function EmployeePage() {
   return (

@@ -1,6 +1,6 @@
 'use client';
 import { CreateOrder } from '@/components/button';
-import OrderTable from '@/components/dashboard/table/order-table';
+import OrderTable from '@/components/dashboard/order/order-table';
 
 interface IOrderPage {
   searchParams: {

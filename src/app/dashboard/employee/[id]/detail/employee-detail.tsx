@@ -203,7 +203,6 @@ export default function EmployeeInformation({ employee, listProvince }: Props) {
           </div>
         </Row>
       </Form>
-      {/* <PopUp isOpen={popup} setIsOpen={setPopup} functionCreate={createEmployee} dataCreate={employee} /> */}
     </div>
   );
 }

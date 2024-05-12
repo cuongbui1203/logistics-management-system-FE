@@ -1,8 +1,9 @@
 import { cookies } from 'next/headers';
-import TransactionDetail from './transshipment-detail';
+import TransshipmentDetail from '@/components/dashboard/work-plate/workPlate-detail';
 import { workPlateApiRequest } from '@/api/workplate';
 import { addressApiRequest } from '@/api/address';
 import { WorkPlateResType } from '@/schema/workplate.schema';
+import { WorkPlateEnumType } from '@/config/Enum';
 
 export default async function TransactionDetailPage({ params }: { params: { id: string } }) {
   const id = params.id;
@@ -13,5 +14,11 @@ export default async function TransactionDetailPage({ params }: { params: { id: 
 
   const listProvince = await addressApiRequest.getProvince();
 
-  return <TransactionDetail workPlate={workPlate} listProvince={listProvince.payload.data} />;
+  return (
+    <TransshipmentDetail
+      workPlate={workPlate}
+      listProvince={listProvince.payload.data}
+      type={WorkPlateEnumType.Transshipment}
+    />
+  );
 }

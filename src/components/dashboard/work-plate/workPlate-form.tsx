@@ -4,29 +4,25 @@ import { workPlateApiRequest } from '@/api/workplate';
 import { useAppContext } from '@/app/app-provider';
 import AddressForm from '@/components/address-form';
 import { Area, UserRole, WorkPlateEnumType } from '@/config/Enum';
-import { useWorkPlate } from '@/lib/custom-hook';
 import { handleErrorApi } from '@/lib/utils';
 import { AddressDetailSchemaType } from '@/schema/common.schema';
-import { WorkPlateNewReq, WorkPlateNewReqType, WorkPlateResType } from '@/schema/workplate.schema';
+import { WorkPlateNewReq, WorkPlateNewReqType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-interface TransactionDetailProps {
-  workPlate: WorkPlateResType;
+export default function TransactionForm({
+  listProvince,
+  type,
+}: {
   listProvince: AddressDetailSchemaType[];
-}
-
-export default function TransactionDetail({ workPlate, listProvince }: TransactionDetailProps) {
-  const searchParams = useSearchParams();
+  type: number;
+}) {
   const router = useRouter();
   const { user } = useAppContext();
   const userRole = user?.role?.name;
-
-  const page = Number(searchParams.get('fromPage'));
-  const { mutate } = useWorkPlate(page, WorkPlateEnumType.Transaction);
 
   const {
     register,
@@ -35,13 +31,6 @@ export default function TransactionDetail({ workPlate, listProvince }: Transacti
     formState: { errors, isSubmitting },
   } = useForm<WorkPlateNewReqType>({
     resolver: zodResolver(WorkPlateNewReq),
-    defaultValues: {
-      name: workPlate?.name,
-      type_id: WorkPlateEnumType.Transaction,
-      address_id: workPlate.address.wardCode,
-      address: workPlate.address.address,
-      cap: workPlate.cap,
-    },
   });
 
   if (userRole !== UserRole.Admin) {
@@ -49,13 +38,17 @@ export default function TransactionDetail({ workPlate, listProvince }: Transacti
   }
 
   async function onSubmit(values: WorkPlateNewReqType) {
-    values.type_id = WorkPlateEnumType.Transaction;
+    values.type_id = type;
     try {
-      await workPlateApiRequest.updateWP(workPlate.id, values).then((res) => {
+      await workPlateApiRequest.createWP(values).then((res) => {
         if (res.payload.success) {
-          mutate();
-          toast.success('Cập nhật điểm giao dịch thành công');
-          router.push(`/dashboard/transaction?page=${page}`);
+          if (type === WorkPlateEnumType.Transaction) {
+            toast.success('Tạo điểm giao dịch thành công');
+            router.push('/dashboard/transaction?created=true');
+          } else {
+            toast.success('Tạo điểm trung chuyển thành công');
+            router.push('/dashboard/transshipment?created=true');
+          }
         }
       });
     } catch (error) {
@@ -63,34 +56,32 @@ export default function TransactionDetail({ workPlate, listProvince }: Transacti
     }
   }
 
-  function onError(err: any) {
-    console.log(err);
-  }
-
   return (
     <div className="formContainer">
-      <Form onSubmit={handleSubmit(onSubmit, onError)}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <Row className="mt-2">
-          <h3>Thông tin điểm giao dịch</h3>
+          <h3>{type === WorkPlateEnumType.Transaction ? 'Thông tin điểm giao dịch' : 'Thông tin điểm trung chuyển'}</h3>
         </Row>
 
         <Row className="mt-2">
           <Col xs={12} md={6}>
             <Form.Group>
-              <Form.Label htmlFor="username">Tên điểm giao dịch</Form.Label>
-              <Form.Control type="text" id="username" placeholder="Tên điểm giao dịch" {...register('name')} />
+              <Form.Label htmlFor="username">
+                {type === WorkPlateEnumType.Transaction ? 'Tên điểm giao dịch' : 'Tên điểm trung chuyển'}
+              </Form.Label>
+              <Form.Control
+                type="text"
+                id="username"
+                placeholder="Tên điểm giao dịch / trung chuyển"
+                {...register('name')}
+              />
             </Form.Group>
           </Col>
         </Row>
 
         <Row className="mt-2">
           <Form.Group className="col-sm-12 col-form-Form.Group">Địa chỉ</Form.Group>
-          <AddressForm
-            listProvince={listProvince}
-            register={register}
-            fieldName="address_id"
-            defaultValues={workPlate.address}
-          />
+          <AddressForm listProvince={listProvince} register={register} fieldName="address_id" />
           <Form.Group className="mt-2">
             <Form.Control type="text" id="address" placeholder="Địa điểm cụ thể" {...register('address')} />
           </Form.Group>
@@ -101,7 +92,7 @@ export default function TransactionDetail({ workPlate, listProvince }: Transacti
             <Form.Group>
               <Form.Label htmlFor="area">Khu vực</Form.Label>
               {/* TODO:  */}
-              <select id="area" className="form-select" {...register('cap')}>
+              <select id="area" className="form-select" defaultValue={'Chọn khu vực'} {...register('cap')}>
                 <option key={0} disabled>
                   Chọn khu vực
                 </option>
@@ -118,12 +109,15 @@ export default function TransactionDetail({ workPlate, listProvince }: Transacti
         <Row className="mt-2">
           <div className="mt-3 btnContainer">
             <Button className="btn btnCreate" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Đang xử lý...' : 'Cập nhật điểm giao dịch'}
+              {isSubmitting
+                ? 'Đang xử lý...'
+                : type === WorkPlateEnumType.Transaction
+                ? 'Tạo điểm giao dịch'
+                : 'Tạo điểm trung chuyển'}
             </Button>
           </div>
         </Row>
       </Form>
-      {/* <PopUp isOpen={popup} setIsOpen={setPopup} functionCreate={createEmployee} dataCreate={employee} /> */}
     </div>
   );
 }

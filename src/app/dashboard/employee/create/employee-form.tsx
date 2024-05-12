@@ -186,7 +186,6 @@ export default function EmployeeForm({ listProvince }: { listProvince: AddressDe
           </div>
         </Row>
       </Form>
-      {/* <PopUp isOpen={popup} setIsOpen={setPopup} functionCreate={createEmployee} dataCreate={employee} /> */}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { CreateTransshipment } from '@/components/button';
-import WorkPlateTable from '@/components/dashboard/table/workPlate-table';
+import WorkPlateTable from '@/components/dashboard/work-plate/workPlate-table';
 import { addressApiRequest } from '@/api/address';
 interface TransactionPageProps {
   searchParams: {

@@ -1,6 +1,6 @@
 import { addressApiRequest } from '@/api/address';
 import { CreateTransaction } from '@/components/button';
-import WorkPlateTable from '@/components/dashboard/table/workPlate-table';
+import WorkPlateTable from '@/components/dashboard/work-plate/workPlate-table';
 
 interface TransactionPageProps {
   searchParams: {

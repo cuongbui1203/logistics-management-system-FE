@@ -24,7 +24,7 @@ export const Role = {
   Admin: {
     id: 1,
     name: 'Quản trị viên',
-    tabs: ['dashboard', 'manageTransshipment', 'manageTransactions', 'manageEmployees', 'manageOrders', 'createOrder'],
+    tabs: ['dashboard', 'manageTransshipment', 'manageTransactions', 'manageEmployees'],
     left: ['manageOrders', 'createOrder'],
   },
   Manager: {
@@ -49,7 +49,7 @@ export const Role = {
     id: 2,
     name: 'Người dùng',
     left: ['manageTransshipment', 'manageTransactions', 'createOrder'],
-    tabs: ['dashboard', 'manageOrders', 'manageEmployees'],
+    tabs: [],
   },
 };
 

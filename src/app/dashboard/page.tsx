@@ -5,12 +5,12 @@ import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import Statistic from '@/components/dashboard/main/statistic';
-import EmployeeTable from '@/components/dashboard/table/employee-table';
+import EmployeeTable from '@/components/dashboard/employee/employee-table';
 import StatisticPoint from '@/components/dashboard/main/statistic-point';
 import { useAppContext } from '@/app/app-provider';
 import StatisticGoodsPoint from '@/components/dashboard/main/statisticGoodsPoint';
 import StatisticTransPoint from '@/components/dashboard/main/statisticTransPoint';
-import OrderTable from '@/components/dashboard/table/order-table';
+import OrderTable from '@/components/dashboard/order/order-table';
 import { UserRole } from '@/config/Enum';
 
 const roleComponents = {

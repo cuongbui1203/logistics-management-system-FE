@@ -56,7 +56,7 @@ export default function BreadCrumb() {
       case '/dashboard/transshipment/detail':
         temp.push('manageTransshipment', 'detailTransshipment');
         break;
-      case 'dashboard/information':
+      case '/dashboard/information':
         temp.push('information');
         break;
     }
