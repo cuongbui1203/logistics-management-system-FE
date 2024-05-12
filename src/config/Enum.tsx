@@ -94,6 +94,16 @@ export const listUrl = {
     name: 'Điểm trung chuyển',
     icon: <HiOutlineBuildingOffice size={'2em'} />,
   },
+  createTransshipment: {
+    url: '/dashboard/transshipment/create',
+    name: 'Tạo điểm trung chuyển',
+    icon: <HiOutlineBuildingOffice size={'2em'} />,
+  },
+  detailTransshipment: {
+    url: '/dashboard/transshipment/[id]/detail',
+    name: 'Chi tiết điểm trung chuyển',
+    icon: <HiOutlineBuildingOffice size={'2em'} />,
+  },
   manageTransactions: {
     url: '/dashboard/transaction',
     name: 'Điểm giao dịch',
