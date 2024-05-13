@@ -46,7 +46,7 @@ export default function HomePage() {
               <Form>
                 <Form.Label className="px-2">
                   <MdMyLocation size={'1em'} />
-                  Tra cứu bưu gửi
+                  Tra cứu đơn hàng
                 </Form.Label>
                 <SearchOrder />
               </Form>

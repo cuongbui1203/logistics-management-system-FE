@@ -29,7 +29,7 @@ export function SearchOrder() {
         id="inputCode"
         name="code"
         formMethod="get"
-        placeholder="Nhập mã bưu gửi"
+        placeholder="Nhập mã đơn hàng"
         className="rounded-pill"
         onChange={(e) => (orderID = e.target.value)}
       />

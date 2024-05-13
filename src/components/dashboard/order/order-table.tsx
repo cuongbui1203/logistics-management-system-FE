@@ -92,6 +92,7 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
       const index = listCheck.indexOf(order.id);
       listCheck.splice(index, 1);
     }
+    console.log(listCheck);
   }
 
   let title = 'Danh sách đơn hàng chờ gửi';

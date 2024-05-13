@@ -10,14 +10,14 @@ export function Footer() {
   return (
     <footer className={style.footer}>
       <Container className={style.container}>
-        <Row>
-          <Col xs={12} lg={5}>
+        <Row className="min-w-100">
+          <Col xs={12} lg={6}>
             <h3>TỔNG CÔNG TY CHUYỂN PHÁT {company}</h3>
             <p>Địa chỉ: Hà Nội</p>
             <p>Hotline: 0123 456 789</p>
           </Col>
 
-          <Col xs={12} lg={2}>
+          <Col xs={12} lg={3}>
             <h3>Về {company}</h3>
             <ul className={style.footerMenu}>
               <li>
@@ -34,7 +34,7 @@ export function Footer() {
               </li>
             </ul>
           </Col>
-          <Col xs={12} lg={2}>
+          <Col xs={12} lg={3}>
             <h3>Tra cứu</h3>
             <ul className={style.footerMenu}>
               <li>
@@ -53,30 +53,6 @@ export function Footer() {
                 <Link href="/">
                   <FaAngleRight />
                   Ước tính chi phí
-                </Link>
-              </li>
-            </ul>
-          </Col>
-
-          <Col xs={12} lg={2}>
-            <h3>Dịch vụ</h3>
-            <ul className={style.footerMenu}>
-              <li>
-                <Link href="/">
-                  <FaAngleRight />
-                  Vận chuyển tài liệu
-                </Link>
-              </li>
-              <li>
-                <Link href="/">
-                  <FaAngleRight />
-                  Tra cứu hàng hóa
-                </Link>
-              </li>
-              <li>
-                <Link href="/">
-                  <FaAngleRight />
-                  Vận chuyển đảm bảo
                 </Link>
               </li>
             </ul>

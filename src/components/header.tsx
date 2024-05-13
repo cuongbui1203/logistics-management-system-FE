@@ -56,45 +56,14 @@ export function Header() {
                     router.push('/');
                   }}
                 >
-                  Tra cứu bưu gửi
+                  Tra cứu đơn hàng
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => {
-                    router.push('/');
+                    router.push('/customer/lookup-transaction');
                   }}
                 >
                   Tra cứu bưu cục
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  onClick={() => {
-                    router.push('/');
-                  }}
-                >
-                  Ước tính chi phí
-                </NavDropdown.Item>
-              </NavDropdown>
-
-              <NavDropdown title="Dịch vụ" id="basic-nav-dropdown">
-                <NavDropdown.Item
-                  onClick={() => {
-                    router.push('/');
-                  }}
-                >
-                  Vận chuyển tài liệu
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  onClick={() => {
-                    router.push('/');
-                  }}
-                >
-                  Vận chuyển hàng hóa
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  onClick={() => {
-                    router.push('/');
-                  }}
-                >
-                  Vận chuyển đảm bảo
                 </NavDropdown.Item>
               </NavDropdown>
             </Nav>
