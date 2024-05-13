@@ -132,3 +132,18 @@ export const ChangePasswordReq = z
   });
 
 export type ChangePasswordReqType = z.TypeOf<typeof ChangePasswordReq>;
+
+export const ForgotPasswordReq = z.object({
+  email: z.string().email(),
+});
+
+export type ForgotPasswordReqType = z.TypeOf<typeof ForgotPasswordReq>;
+
+export const ResetPasswordReq = z.object({
+  email: z.string().email(),
+  token: z.string().optional(),
+  password: z.string().min(6, 'Mật khẩu phải có độ dài tối thiểu là 6').max(100),
+  password_confirmation: z.string().min(6, 'Mật khẩu phải có độ dài tối thiểu là 6').max(100),
+});
+
+export type ResetPasswordReqType = z.TypeOf<typeof ResetPasswordReq>;

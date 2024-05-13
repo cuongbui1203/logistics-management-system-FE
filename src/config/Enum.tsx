@@ -30,19 +30,26 @@ export const Role = {
   Manager: {
     id: 5,
     name: 'Quản lí',
-    tabs: ['dashboard', 'manageEmployees', 'manageOrders', 'createOrder'],
+    tabs: [
+      'dashboard',
+      'manageEmployees',
+      'manageWaitingOrders',
+      'manageReceivingOrders',
+      'historyOrders',
+      'createOrder',
+    ],
     left: ['manageEmployees', 'manageTransshipment', 'manageTransactions'],
   },
   Driver: {
     id: 3,
     name: 'Tài xế',
     left: ['manageTransshipment', 'manageTransactions', 'createOrder'],
-    tabs: ['dashboard', 'manageOrders', 'manageEmployees'],
+    tabs: ['dashboard', 'manageOrders'],
   },
   Employee: {
     id: 4,
     name: 'Nhân viên',
-    tabs: ['dashboard', 'manageOrders', 'createOrder'],
+    tabs: ['dashboard', 'createOrder', 'manageWaitingOrders', 'manageReceivingOrders', 'historyOrders'],
     left: ['manageTransshipment', 'manageTransactions', 'manageEmployees'],
   },
   User: {
@@ -67,7 +74,6 @@ export const Area = [
     name: 'Phường / Xã',
   },
 ];
-
 export const listUrl = {
   dashboard: {
     url: '/dashboard',
@@ -84,10 +90,15 @@ export const listUrl = {
     name: 'Nhân viên',
     icon: <IoPeopleOutline size={'2em'} />,
   },
-  manageOrders: {
-    url: '/dashboard/ordered',
-    name: 'Đơn hàng',
-    icon: <LuPackage2 size={'2em'} />,
+  detailEmployee: {
+    url: '/dashboard/employee/[id]/detail',
+    name: 'Thông tin nhân viên',
+    icon: <HiOutlineBuildingOffice size={'2em'} />,
+  },
+  createEmployee: {
+    url: '/dashboard/employee/create',
+    name: 'Tạo tài khoản nhân viên',
+    icon: <HiOutlineBuildingOffice size={'2em'} />,
   },
   manageTransshipment: {
     url: '/dashboard/transshipment',
@@ -119,24 +130,34 @@ export const listUrl = {
     name: 'Chi tiết điểm giao dịch',
     icon: <HiOutlineBuildingOffice size={'2em'} />,
   },
-  createEmployee: {
-    url: '/dashboard/employee/create',
-    name: 'Tạo tài khoản nhân viên',
-    icon: <HiOutlineBuildingOffice size={'2em'} />,
+  manageWaitingOrders: {
+    url: '/dashboard/ordered/waiting',
+    name: 'Hàng chờ nhận',
+    icon: <LuPackage2 size={'2em'} />,
   },
-  createOrder: {
-    url: '/dashboard/ordered/create',
-    name: 'Tạo đơn hàng',
-    icon: <HiOutlineBuildingOffice size={'2em'} />,
+  manageReceivingOrders: {
+    url: '/dashboard/ordered/receiving',
+    name: 'Hàng chờ nhận',
+    icon: <LuPackage2 size={'2em'} />,
   },
-  detailEmployee: {
-    url: '/dashboard/employee/[id]/detail',
-    name: 'Thông tin nhân viên',
-    icon: <HiOutlineBuildingOffice size={'2em'} />,
+  historyOrders: {
+    url: '/dashboard/ordered/history',
+    name: 'Lịch sử đơn hàng',
+    icon: <LuPackage2 size={'2em'} />,
   },
   detailOrder: {
     url: '/dashboard/ordered/[id]/detail',
     name: 'Chi tiết đơn hàng',
+    icon: <HiOutlineBuildingOffice size={'2em'} />,
+  },
+  manageOrders: {
+    url: '/dashboard/ordered',
+    name: 'Đơn hàng',
+    icon: <LuPackage2 size={'2em'} />,
+  },
+  createOrder: {
+    url: '/dashboard/ordered/create',
+    name: 'Tạo đơn hàng',
     icon: <HiOutlineBuildingOffice size={'2em'} />,
   },
 };
@@ -145,6 +166,23 @@ export const WorkPlateEnumType = {
   Warehouse: 1,
   Transaction: 2,
   Transshipment: 3,
+};
+
+export const OrderEnumType = {
+  WAIT_F_DELIVERY: 1,
+  R_DELIVERY: 2,
+  DONE: 3,
+  LEAVE_TRANSPORT_POINT: 4,
+  AT_TRANSPORT_POINT: 5,
+  AT_TRANSACTION_POINT: 13,
+  LEAVE_TRANSACTION_POINT: 14,
+  SHIPPING: 6,
+  TO_THE_TRANSPORT_POINT: 7,
+  TO_THE_TRANSACTION_POINT: 8,
+  RETURN: 9,
+  CREATE: 10,
+  COMPLETE: 11,
+  FAIL: 12,
 };
 
 export const orderStatus = {
