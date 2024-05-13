@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Pagination from '../pagination';
 import '@/css/dashboard/customTable.css';
 import { WorkPlateResType } from '@/schema/workplate.schema';
-import { ButtonDetail } from '@/components/button';
+import { ButtonDetail, WorkPlateDelete } from '@/components/button';
 import { useWorkPlate } from '@/lib/custom-hook';
 import { useState } from 'react';
 import { WORK_PLATE_PAGE_SIZE } from '@/config/constant';
@@ -188,7 +188,7 @@ export default function WorkPlateTable({ page, type, listProvince }: WorkPlateTa
                     <td>{workPlate.id}</td> */}
                     <td className="d-flex justify-content-center gap-1">
                       <ButtonDetail url={`${url}/${workPlate?.id}/detail?fromPage=${page}`} />
-                      {/* <EmployeeDelete id={employee?.id} onRefresh={() => setRefresh(true)} /> */}
+                      <WorkPlateDelete id={workPlate?.id} refresh={mutate} type={type} />
                     </td>
                   </tr>
                 ))}
