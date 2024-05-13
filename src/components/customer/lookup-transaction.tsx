@@ -1,48 +1,55 @@
+'use client';
+
+import { addressApiRequest } from '@/api/address';
+import { AddressDetailSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
 import { useState } from 'react';
 import { Button, Container, Row, Col, Form } from 'react-bootstrap';
-import useSWR from 'swr';
+import useSWRImmutable from 'swr/immutable';
+import TransactionList from './transaction-list';
+import { workPlateApiRequest } from '@/api/workplate';
 
-/**
- * React component for looking up transactions based on location.
- *
- * This component allows users to select a province, district, and commune to
- * filter and display relevant transactions. It provides a map showing the selected
- * area and triggers the display of a TransactionList component when the user clicks
- * the "TRA CỨU" (Search) button.
- *
- * @returns {JSX.Element} - The rendered React element for the LookUpTransaction component.
- */
-export default function LookUpTransaction() {
-  const { data: provinceData } = useSWR('https://magicpost-uet.onrender.com/api/administrative/province/getall', {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+export default function LookUpTransaction({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
+  const [province, setProvince] = useState<string>('0');
+  const [district, setDistrict] = useState<string>('0');
+  const [ward, setWard] = useState<string>('0');
+  const [listWp, setListWp] = useState<WorkPlateSchemaType[]>([]);
 
-  const [selectedProvince, setSelectedProvince] = useState();
-
-  const { data: districtData } = useSWR(
-    `https://magicpost-uet.onrender.com/api/administrative/district/getall/${selectedProvince}`,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
+  const fetchDistrict = (provinceCode: string) =>
+    addressApiRequest.getDistrict(provinceCode).then((res) => res.payload.data);
+  const fetchWard = (districtCode: string) => addressApiRequest.getWard(districtCode).then((res) => res.payload.data);
+  const {
+    data: listDistrict,
+    error: errorDistrict,
+    isLoading: isLoadingDistrict,
+  } = useSWRImmutable(province === '0' ? null : `api/address/districts?code=${province}`, () =>
+    fetchDistrict(province)
   );
+  const {
+    data: listWard,
+    error: errorWard,
+    isLoading: isLoadingWard,
+  } = useSWRImmutable(district === '0' ? null : `api/address/wards?code=${district}`, () => fetchWard(district));
 
-  const [selectedDistrict, setSelectedDistrict] = useState();
-  const { data: communeData } = useSWR(
-    `https://magicpost-uet.onrender.com/api/administrative/commune/getall/${selectedDistrict}`,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+  const onSelectProvince = (e: any) => {
+    setProvince(e.target.value);
+    setDistrict('0');
+    setWard('0');
+  };
 
-  const [selectedCommune, setSelectedCommune] = useState('');
+  const onSelectDistrict = (e: any) => {
+    setDistrict(e.target.value);
+    setWard('0');
+  };
 
-  const [showTransactionList, setShowTransactionList] = useState(false);
+  const fetchSuggestWP = (wardCode: string) =>
+    workPlateApiRequest.getWorkPlateSuggestClient(wardCode).then((res) => res.payload.data);
+
+  const handleClick = async () => {
+    await workPlateApiRequest.getWorkPlateSuggestClient(ward).then((res) => {
+      setListWp(res.payload.data);
+    });
+  };
+
   return (
     <div>
       <Container className="lookUpContainer">
@@ -50,46 +57,63 @@ export default function LookUpTransaction() {
           <Col xs="12" md="6" className="mt-2">
             <Form>
               <Row>
-                <Form.Select aria-label="Chọn Tỉnh/ TP" className="selectContainer" onChange={(e) => {}} required>
-                  <option value={0}>Chọn Tỉnh/ TP</option>
-                  {/* {provinceData?.map((province) => (
-                    <option key={province.provinceID} value={province.provinceID}>
-                      {province.name}
+                <Form.Select
+                  aria-label="Chọn Tỉnh/ TP"
+                  className="selectContainer"
+                  onChange={(e) => {
+                    onSelectProvince(e);
+                  }}
+                  value={province}
+                  required
+                >
+                  <option disabled key="0" value="0">
+                    Chọn Tỉnh / TP
+                  </option>
+                  {listProvince.map((province) => (
+                    <option key={province.code} value={province.code}>
+                      {province.full_name}
                     </option>
-                  ))} */}
+                  ))}
                 </Form.Select>
 
-                <Form.Select onChange={(e) => {}} required className="selectContainer">
-                  <option value={0}>Chọn Quận/Huyện</option>
-                  {/* {districtData?.map((district) => (
-                    <option key={district.districtID} value={district.districtID}>
-                      {district.name}
+                <Form.Select
+                  onChange={(e) => {
+                    onSelectDistrict(e);
+                  }}
+                  value={district}
+                  required
+                  className="selectContainer"
+                >
+                  <option disabled key="0" value="0">
+                    Chọn Quận/ Huyện
+                  </option>
+                  {listDistrict?.map((district) => (
+                    <option key={district.code} value={district.code}>
+                      {district.full_name}
                     </option>
-                  ))} */}
+                  ))}
                 </Form.Select>
 
                 <Form.Select
                   aria-label="Chọn Xã/ Phường"
                   className="selectContainer"
                   onChange={(e) => {
-                    setSelectedCommune(e.target.value);
+                    setWard(e.target.value);
                   }}
+                  value={ward}
                   required
                 >
-                  <option value={0}>Chọn Xã/Phường</option>
-                  {/* {communeData?.map((commune) => (
-                    <option key={commune.communeID} value={commune.communeID}>
-                      {commune.name}
+                  <option disabled key="0" value="0">
+                    Chọn phường xã
+                  </option>
+                  {listWard?.map((ward) => (
+                    <option key={ward.code} value={ward.code}>
+                      {ward.full_name}
                     </option>
-                  ))} */}
+                  ))}
                 </Form.Select>
 
-                <Button
-                  className="submitButton"
-                  onClick={() => {
-                    setShowTransactionList(true);
-                  }}
-                >
+                <Button className="submitButton" onClick={handleClick}>
                   TRA CỨU
                 </Button>
               </Row>
@@ -106,9 +130,7 @@ export default function LookUpTransaction() {
           </Col>
         </Row>
       </Container>
-      {/* {showTransactionList && (
-        <TransactionList provinceID={selectedProvince} districtID={selectedDistrict} communeID={selectedCommune} />
-      )} */}
+      <TransactionList listWp={listWp} />
     </div>
   );
 }

@@ -8,16 +8,6 @@ import useSWR from 'swr';
 
 let orID: string = '';
 
-/**
- * React component for order lookup functionality.
- *
- * This component allows users to search for an order using its unique ID.
- * It provides an input field for users to enter the order ID and triggers a search
- * when the user clicks the "Tra cứu" (Search) button. The search results are displayed
- * using the OrderTracking component.
- *
- * @returns {JSX.Element} - The rendered React element for the LookUpOrder component.
- */
 export default function LookUpOrder() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -47,7 +37,7 @@ export default function LookUpOrder() {
         <Row>
           <Col>
             <HiOutlineDocumentSearch size={'2rem'} />
-            <p>Nhập mã bưu gửi (VD:AEX451934145VN)</p>
+            <p>Nhập mã đơn hàng (VD:AEX451934145VN)</p>
           </Col>
         </Row>
 

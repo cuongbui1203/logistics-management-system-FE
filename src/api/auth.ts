@@ -1,4 +1,12 @@
-import { AccountResType, AuthBodyType, RegisterBodyType, UpdateUserBodyType } from '@/schema/auth.schema';
+import {
+  AccountResType,
+  AccountUpdateReqType,
+  AuthBodyType,
+  ForgotPasswordReqType,
+  RegisterBodyType,
+  ResetPasswordReqType,
+  UpdateUserBodyType,
+} from '@/schema/auth.schema';
 import http from '@/lib/http';
 import { LoginBodyType, LoginResType } from '@/schema/auth.schema';
 import { MessageResType } from '@/schema/common.schema';
@@ -28,7 +36,10 @@ const authApiRequest = {
       }
     ),
   updateUserClient: (body: UpdateUserBodyType, id: number) => http.put<AccountResType>(`api/users/${id}`, body),
+  updateEmployee: (body: AccountUpdateReqType, id: number) => http.put<AccountResType>(`api/users/${id}`, body),
   getCsrfTokenClient: () => http.get<null>('/sanctum/csrf-cookie'),
+  forgotPassword: (body: ForgotPasswordReqType) => http.post<MessageResType>('api/users/forgot-password', body),
+  resetPassword: (body: ResetPasswordReqType) => http.post<MessageResType>('api/users/reset-password', body),
 };
 
 export default authApiRequest;

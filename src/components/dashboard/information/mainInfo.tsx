@@ -49,8 +49,12 @@ export default function MainInformation({ listProvince }: { listProvince: Addres
     }
   }
 
+  function onError(err: any) {
+    console.log(err);
+  }
+
   return (
-    <Form className="formContainer" onSubmit={handleSubmit(onSubmit)}>
+    <Form className="formContainer" onSubmit={handleSubmit(onSubmit, onError)}>
       <Row>
         <h3>Thông tin nhân viên</h3>
       </Row>

@@ -25,6 +25,10 @@ export default function Security() {
     },
   });
 
+  function onError(err: any) {
+    console.log(err);
+  }
+
   async function onSubmit(values: ChangePasswordReqType) {
     console.log(values);
 
@@ -39,7 +43,7 @@ export default function Security() {
 
   return (
     <div className="formContainer">
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit, onError)}>
         <Row>
           <h3>Thay đổi mật khẩu</h3>
         </Row>

@@ -8,9 +8,10 @@ import Link from 'next/link';
 import envConfig from '@/envConfig';
 import { useAppContext } from '@/app/app-provider';
 import style from '@/css/header.module.css';
+import Username from './common/username';
 
 export function Header() {
-  const route = useRouter();
+  const router = useRouter();
   const [navBar, setNavBar] = useState(false);
   const company = envConfig.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
   const { user } = useAppContext();
@@ -36,7 +37,7 @@ export function Header() {
         <Container>
           <Navbar.Brand
             onClick={() => {
-              route.push('/');
+              router.push('/');
             }}
           >
             <FaTruckFast size={'3rem'} />
@@ -52,55 +53,22 @@ export function Header() {
               <NavDropdown title="Tra cứu" id="basic-nav-dropdown">
                 <NavDropdown.Item
                   onClick={() => {
-                    route.push('/customer/LockupOrders');
+                    router.push('/');
                   }}
                 >
-                  Tra cứu bưu gửi
+                  Tra cứu đơn hàng
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => {
-                    route.push('/customer/LockupTransaction');
+                    router.push('/customer/lookup-transaction');
                   }}
                 >
                   Tra cứu bưu cục
                 </NavDropdown.Item>
-                <NavDropdown.Item
-                  onClick={() => {
-                    route.push('/customer/EstimateCost');
-                  }}
-                >
-                  Ước tính chi phí
-                </NavDropdown.Item>
-              </NavDropdown>
-
-              <NavDropdown title="Dịch vụ" id="basic-nav-dropdown">
-                <NavDropdown.Item
-                  onClick={() => {
-                    route.push('/customer/service/doc');
-                  }}
-                >
-                  Vận chuyển tài liệu
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  onClick={() => {
-                    route.push('/customer/service/goods');
-                  }}
-                >
-                  Vận chuyển hàng hóa
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  onClick={() => {
-                    route.push('/customer/service/care');
-                  }}
-                >
-                  Vận chuyển đảm bảo
-                </NavDropdown.Item>
               </NavDropdown>
             </Nav>
             {user ? (
-              <Link href="/account" className="btn btn-light">
-                {user.name}
-              </Link>
+              <Username />
             ) : (
               <Nav>
                 <Link href="/login" className="btn btn-primary" style={{ marginRight: '10px' }}>

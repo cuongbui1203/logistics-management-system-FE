@@ -1,6 +1,6 @@
 'use client';
 
-import { EmployeeDelete, EmployeeDetail } from '@/components/button';
+import { ButtonDetail, EmployeeDelete } from '@/components/button';
 import Pagination from '@/components/dashboard/pagination';
 import { AccountList } from '@/schema/auth.schema';
 import React, { useState } from 'react';
@@ -12,33 +12,29 @@ import Loading from '@/components/loading';
 import { LuArrowUpDown } from 'react-icons/lu';
 import { EMPLOYEE_PAGE_SIZE } from '@/config/constant';
 import { useEmployee } from '@/lib/custom-hook';
+import { RoleId } from '@/config/Enum';
 
 interface EmployeeTableProps {
-  page: number;
-  query?: any;
   showFilter?: boolean;
 }
 
-export default function EmployeeTable({ page, showFilter }: EmployeeTableProps) {
+export default function EmployeeTable({ showFilter }: EmployeeTableProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
   const [sortId, setSortId] = useState(false);
   const [sortOrder, setSortOrder] = useState('asc');
 
+  const page = Number(searchParams.get('page') || 1);
+
   const { data, error, isLoading, mutate } = useEmployee(page);
 
-  let filerListEmployees: AccountList = data?.data || [];
+  if (searchParams.get('created')) {
+    mutate();
+  }
 
   const total = data?.total || 1;
   const totalPage = Math.floor(total / EMPLOYEE_PAGE_SIZE) + (total % EMPLOYEE_PAGE_SIZE === 0 ? 0 : 1);
-
-  if (sortId) {
-    filerListEmployees = [...filerListEmployees].sort((a, b) => {
-      const multi = sortOrder === 'asc' ? 1 : -1;
-      return multi * (a['id'] - b['id']);
-    });
-  }
 
   const sortFunction = (f: string) => {
     if (f === 'id') {
@@ -63,13 +59,53 @@ export default function EmployeeTable({ page, showFilter }: EmployeeTableProps) 
     }, 300);
 
   const handleName = useDebounce('name');
-  const handleEmID = useDebounce('EmId');
+  const handleID = useDebounce('id');
   const handleAddress = useDebounce('address');
-  const handlePhone = useDebounce('phone');
-  const handleStatus = useDebounce('status');
+  const handleRole = useDebounce('role');
+
+  const handleClearFilter = () => {
+    const params = new URLSearchParams(searchParams);
+    params.delete('name');
+    params.delete('id');
+    params.delete('address');
+    params.delete('role');
+    replace(`${pathname}?${params.toString()}`);
+  };
 
   if (error) return <div>Failed to load</div>;
   if (isLoading) return <Loading />;
+
+  let filerListEmployees: AccountList = data?.data || [];
+
+  const queryName = searchParams.get('name');
+  const queryId = searchParams.get('id');
+  const queryAddress = searchParams.get('address');
+  const queryRole = searchParams.get('role');
+
+  if (queryName) {
+    filerListEmployees = filerListEmployees.filter((employee) => {
+      return employee.name.toLowerCase().includes(queryName.toLowerCase());
+    });
+  }
+
+  if (queryId) {
+    filerListEmployees = filerListEmployees.filter((employee) => employee.id === parseInt(queryId));
+  }
+
+  if (queryAddress) {
+    filerListEmployees = filerListEmployees.filter((employee) => employee.work_plate.name.includes(queryAddress));
+  }
+
+  if (queryRole) {
+    filerListEmployees = filerListEmployees.filter((employee) => employee.role.id === parseInt(queryRole));
+  }
+
+  if (sortId) {
+    filerListEmployees = [...filerListEmployees].sort((a, b) => {
+      const multi = sortOrder === 'asc' ? 1 : -1;
+      return multi * (a['id'] - b['id']);
+    });
+  }
 
   return (
     <div>
@@ -91,37 +127,44 @@ export default function EmployeeTable({ page, showFilter }: EmployeeTableProps) 
                 {showFilter && (
                   <tr className="filter">
                     <th scope="col">
-                      <input onChange={(e) => handleEmID(e.target.value)} placeholder="Lọc theo ID" />
+                      <input
+                        value={queryId || ''}
+                        onChange={(e) => handleID(e.target.value)}
+                        placeholder="Lọc theo ID"
+                      />
                     </th>
                     <th scope="col">
-                      <input onChange={(e) => handleName(e.target.value)} placeholder="Lọc theo tên" />
+                      <input
+                        onChange={(e) => handleName(e.target.value)}
+                        placeholder="Lọc theo tên"
+                        value={queryName || ''}
+                      />
                     </th>
-                    {/* <th scope="col">
-                      <select onChange={(e) => handleAddress(e.target.value)}>
-                        <option value="">Chọn tỉnh/ thành phố</option>
-                        {provinceData.map((province) => (
-                          <option key={province.provinceIDnceID} value={province.provinceID}>
-                            {province.name}
+                    <th scope="col">
+                      <input
+                        placeholder="Lọc theo địa chỉ"
+                        value={queryAddress || ''}
+                        onChange={(e) => handleAddress(e.target.value)}
+                      />
+                    </th>
+                    <th scope="col">
+                      <select value={queryRole || 0} onChange={(e) => handleRole(e.target.value)}>
+                        <option value={0} disabled>
+                          Chọn chức vụ
+                        </option>
+                        {RoleId.map((role) => (
+                          <option key={role.id} value={role.id}>
+                            {role.name}
                           </option>
                         ))}
                       </select>
                     </th>
+                    <th scope="col"></th>
                     <th scope="col">
-                      <select onChange={(e) => handleStatus(e.target.value)}>
-                        <option value="">Chọn trạng thái</option>
-                        {Object.keys(employeeStatus).map((statusKey) => (
-                          <option key={statusKey} value={statusKey}>
-                            {employeeStatus[statusKey].name}
-                          </option>
-                        ))}
-                      </select>
-                    </th> */}
-                    <th scope="col">
-                      <input placeholder="Lọc theo sdt" onChange={(e) => handlePhone(e.target.value)} />
+                      <button type="button" className="btn btn-secondary" onClick={handleClearFilter}>
+                        Clear all
+                      </button>
                     </th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
                   </tr>
                 )}
               </thead>
@@ -141,13 +184,18 @@ export default function EmployeeTable({ page, showFilter }: EmployeeTableProps) 
                       </td>
                       <td>{employee?.email || 'Không có'}</td>
                       <td className="d-flex justify-content-center gap-1">
-                        <EmployeeDetail id={employee?.id} />
+                        <ButtonDetail url={`/dashboard/employee/${employee?.id}/detail?fromPage=${page}`} />
                         <EmployeeDelete id={employee?.id} refresh={mutate} />
                       </td>
                     </tr>
                   );
                 })}
               </tbody>
+              {filerListEmployees.length > 0 ? (
+                <caption className="mt-2">Tổng số nhân viên: {total}</caption>
+              ) : (
+                <caption>Không có nhân viên nào.</caption>
+              )}
             </table>
           </div>
         </div>

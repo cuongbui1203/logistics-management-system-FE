@@ -1,39 +1,7 @@
-'use client';
-import { CreateOrder } from '@/components/button';
-import OrderTable from '@/components/dashboard/table/order-table';
+import OrderTable from '@/components/dashboard/order/order-table';
+import { OrderStatusEnum } from '@/config/Enum';
+import React from 'react';
 
-interface IOrderPage {
-  searchParams: {
-    page: number;
-    orderID: string;
-    startAddress: string;
-    endAddress: string;
-    status: string;
-    timeCreate: string;
-  };
-}
-
-export default function OrderPage(searchParams: IOrderPage) {
-  const query = {
-    ...searchParams.searchParams,
-  };
-  const currentPage = query.page || 1;
-
-  return (
-    <div className="tableContainer">
-      <div className="row">
-        <div className="col">
-          <h3>Danh sách đơn hàng</h3>
-        </div>
-
-        <div className="col btnContainer">
-          <CreateOrder />
-        </div>
-      </div>
-
-      <div className="row">
-        <OrderTable page={currentPage} query={query} showFilter={true}></OrderTable>
-      </div>
-    </div>
-  );
+export default function Ordered() {
+  return <OrderTable showFilter={true} status={OrderStatusEnum.CREATE}></OrderTable>;
 }

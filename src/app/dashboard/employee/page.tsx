@@ -1,15 +1,7 @@
 import { CreateEmployee } from '@/components/button';
-import EmployeeTable from '@/components/dashboard/table/employee-table';
+import EmployeeTable from '@/components/dashboard/employee/employee-table';
 
-interface EmployeePageProps {
-  searchParams: {
-    page?: number;
-  };
-}
-
-export default function EmployeePage({ searchParams }: EmployeePageProps) {
-  const currentPage = searchParams.page || 1;
-
+export default function EmployeePage() {
   return (
     <div className="tableContainer">
       <div className="row">
@@ -23,7 +15,7 @@ export default function EmployeePage({ searchParams }: EmployeePageProps) {
       </div>
 
       <div className="row">
-        <EmployeeTable page={currentPage} showFilter={true}></EmployeeTable>
+        <EmployeeTable showFilter={true}></EmployeeTable>
       </div>
     </div>
   );

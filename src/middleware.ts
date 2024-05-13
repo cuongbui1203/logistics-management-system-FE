@@ -1,4 +1,4 @@
-import { USER_LOGIN_REDIRECT, authRoutes, ADMIN_LOGIN_REDIRECT } from '@/routes';
+import { authRoutes } from '@/routes';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export default function middleware(req: NextRequest) {
@@ -9,7 +9,8 @@ export default function middleware(req: NextRequest) {
 
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-  const isPrivateRoute = nextUrl.pathname.startsWith('/dashboard') || nextUrl.pathname.startsWith('/customer');
+  // const isPrivateRoute = nextUrl.pathname.startsWith('/dashboard') || nextUrl.pathname.startsWith('/customer');
+  const isPrivateRoute = nextUrl.pathname.startsWith('/dashboard');
 
   if (isPrivateRoute) {
     if (!token) {
@@ -26,6 +27,7 @@ export default function middleware(req: NextRequest) {
 
     return NextResponse.next();
   }
+  return;
 }
 
 // Optionally, don't invoke Middleware on some paths

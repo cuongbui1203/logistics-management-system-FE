@@ -2,6 +2,7 @@ import accountApiRequest from '@/api/account';
 import useSWR from 'swr';
 import { EMPLOYEE_PAGE_SIZE, WORK_PLATE_PAGE_SIZE } from '@/config/constant';
 import { workPlateApiRequest } from '@/api/workplate';
+import { orderApiRequest } from '@/api/order';
 
 // Custom hook, just use on client side
 // first argument is the key not url, second is the function to fetch data
@@ -29,5 +30,31 @@ export const useWorkPlate = (page: number, type: number) => {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+  });
+};
+
+const fetchOrder = (status: number, page: number) =>
+  orderApiRequest.getListOrder(status, page).then((res) => {
+    return res.payload.data;
+  });
+
+export const useOrder = (status: number, page: number) => {
+  return useSWR(['api/orders', status, page], () => fetchOrder(status, page), {
+    // revalidateIfStale: false,
+    // revalidateOnFocus: false,
+    // revalidateOnReconnect: false,
+  });
+};
+
+const fetchOrderDetail = (id: string) =>
+  orderApiRequest.getOrderDetail(id).then((res) => {
+    return res.payload.data;
+  });
+
+export const useOrderDetail = (id: string) => {
+  return useSWR(['api/orders', id], () => fetchOrderDetail(id), {
+    // revalidateIfStale: false,
+    // revalidateOnFocus: false,
+    // revalidateOnReconnect: false,
   });
 };

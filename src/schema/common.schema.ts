@@ -61,7 +61,7 @@ export const UserSchema = z.object({
   username: z.string(),
   address: AddressSchema,
   role_id: z.number(),
-  wp_id: z.string().nullable(),
+  wp_id: z.number().nullable(),
   img_id: z.string().nullable(),
   role: RoleSchema,
   work_plate: WorkPlateSchema.nullable(),
@@ -112,14 +112,29 @@ export const OrderSchema = z.object({
   updated_at: z.number(),
   vehicle_id: z.number().nullable(),
   type_id: z.number(),
+  status_id: z.number(),
   mass: z.number(),
   sender_address: AddressSchema,
   receiver_address: AddressSchema,
   type: z.object({
     id: z.number(),
     name: z.string(),
-    for: z.number(),
+    for: z.number().optional(),
   }),
+  notifications: z.array(
+    z.object({
+      id: z.number(),
+      order_id: z.number(),
+      from_id: z.number(),
+      to_id: z.number(),
+      status_id: z.number(),
+      description: z.string(),
+      created_at: z.string(),
+      updated_at: z.string(),
+      from_address: AddressSchema,
+      to_address: AddressSchema,
+    })
+  ),
   details: z.array(OrderDetailSchema),
 });
 
