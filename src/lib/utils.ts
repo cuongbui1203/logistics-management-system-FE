@@ -75,3 +75,13 @@ export const formatDate2 = (date: Date | null | undefined) => {
   }
   return dayjs(date).format('YYYY-MM-DD');
 };
+
+export function timestampToDate(timestamp: number) {
+  const date = new Date(timestamp * 1000);
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+}
+
+export function timestampToDateTime(timestamp: number) {
+  const date = new Date(timestamp * 1000);
+  return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+}

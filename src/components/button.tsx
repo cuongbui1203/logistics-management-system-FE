@@ -228,18 +228,3 @@ export function WorkPlateDelete({ id, refresh, type }: { id: number; refresh: ()
     </>
   );
 }
-
-export function OrderDetail({ id, page }: any) {
-  const route = useRouter();
-
-  return (
-    <button
-      onClick={() => {
-        route.push(`/dashboard/ordered/${id}/detail?page=${page}`);
-      }}
-      className="btn btn-outline-warning"
-    >
-      <FaRegEye />
-    </button>
-  );
-}

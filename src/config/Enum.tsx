@@ -1,8 +1,9 @@
-import { MdOutlineDashboard } from 'react-icons/md';
+import { MdOutlineDashboard, MdOutlineEmojiTransportation } from 'react-icons/md';
 import { IoPeopleOutline } from 'react-icons/io5';
-import { LuPackage2 } from 'react-icons/lu';
-import { RiRoadMapLine } from 'react-icons/ri';
+import { LuPackage2, LuPackageCheck, LuPackagePlus } from 'react-icons/lu';
 import { HiOutlineBuildingOffice } from 'react-icons/hi2';
+import { GoPackageDependencies, GoPackageDependents } from 'react-icons/go';
+import { BsBuildingAdd } from 'react-icons/bs';
 
 export const UserRole = {
   Admin: 'Admin',
@@ -103,7 +104,7 @@ export const listUrl = {
   manageTransshipment: {
     url: '/dashboard/transshipment',
     name: 'Điểm trung chuyển',
-    icon: <HiOutlineBuildingOffice size={'2em'} />,
+    icon: <MdOutlineEmojiTransportation size={'2em'} />,
   },
   createTransshipment: {
     url: '/dashboard/transshipment/create',
@@ -118,7 +119,7 @@ export const listUrl = {
   manageTransactions: {
     url: '/dashboard/transaction',
     name: 'Điểm giao dịch',
-    icon: <RiRoadMapLine size={'2em'} />,
+    icon: <BsBuildingAdd size={'2em'} />,
   },
   createTransaction: {
     url: '/dashboard/transaction/create',
@@ -132,18 +133,18 @@ export const listUrl = {
   },
   manageWaitingOrders: {
     url: '/dashboard/ordered/waiting',
-    name: 'Hàng chờ nhận',
-    icon: <LuPackage2 size={'2em'} />,
+    name: 'Hàng chờ gửi',
+    icon: <GoPackageDependents size={'2em'} />,
   },
   manageReceivingOrders: {
     url: '/dashboard/ordered/receiving',
     name: 'Hàng chờ nhận',
-    icon: <LuPackage2 size={'2em'} />,
+    icon: <GoPackageDependencies size={'2em'} />,
   },
   historyOrders: {
     url: '/dashboard/ordered/history',
     name: 'Lịch sử đơn hàng',
-    icon: <LuPackage2 size={'2em'} />,
+    icon: <LuPackageCheck size={'2em'} />,
   },
   detailOrder: {
     url: '/dashboard/ordered/[id]/detail',
@@ -158,7 +159,7 @@ export const listUrl = {
   createOrder: {
     url: '/dashboard/ordered/create',
     name: 'Tạo đơn hàng',
-    icon: <HiOutlineBuildingOffice size={'2em'} />,
+    icon: <LuPackagePlus size={'2em'} />,
   },
 };
 
@@ -168,7 +169,7 @@ export const WorkPlateEnumType = {
   Transshipment: 3,
 };
 
-export const OrderEnumType = {
+export const OrderStatusEnum = {
   WAIT_F_DELIVERY: 1,
   R_DELIVERY: 2,
   DONE: 3,
@@ -183,6 +184,65 @@ export const OrderEnumType = {
   CREATE: 10,
   COMPLETE: 11,
   FAIL: 12,
+};
+
+export const OrderStatus = {
+  1: {
+    name: 'Chờ gửi',
+    color: 'warning',
+  },
+  2: {
+    name: 'Chờ nhận',
+    color: 'info',
+  },
+  3: {
+    name: 'Hoàn thành',
+    color: 'success',
+  },
+  4: {
+    name: 'Rời đi điểm trung chuyển',
+    color: 'info',
+  },
+  5: {
+    name: 'Tại điểm trung chuyển',
+    color: 'info',
+  },
+  13: {
+    name: 'Tại điểm giao dịch',
+    color: 'info',
+  },
+  14: {
+    name: 'Rời đi điểm giao dịch',
+    color: 'info',
+  },
+  6: {
+    name: 'Đang vận chuyển',
+    color: 'info',
+  },
+  7: {
+    name: 'Đến điểm trung chuyển',
+    color: 'info',
+  },
+  8: {
+    name: 'Đến điểm giao dịch',
+    color: 'info',
+  },
+  9: {
+    name: 'Hoàn trả',
+    color: 'info',
+  },
+  10: {
+    name: 'Tạo mới',
+    color: 'info',
+  },
+  11: {
+    name: 'Hoàn thành',
+    color: 'success',
+  },
+  12: {
+    name: 'Thất bại',
+    color: 'danger',
+  },
 };
 
 export const orderStatus = {

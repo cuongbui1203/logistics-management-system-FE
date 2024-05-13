@@ -191,15 +191,15 @@ export default function EmployeeTable({ showFilter }: EmployeeTableProps) {
                   );
                 })}
               </tbody>
+              {filerListEmployees.length > 0 ? (
+                <caption className="mt-2">Tổng số nhân viên: {total}</caption>
+              ) : (
+                <caption>Không có nhân viên nào.</caption>
+              )}
             </table>
           </div>
         </div>
       </div>
-      {filerListEmployees.length > 0 ? (
-        <div className="mt-2">Tổng số nhân viên: {total}</div>
-      ) : (
-        <div>Không có nhân viên nào.</div>
-      )}
       <Pagination totalPage={totalPage} />
     </div>
   );
