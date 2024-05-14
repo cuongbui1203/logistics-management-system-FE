@@ -19,6 +19,17 @@ export const OrderCreateReq = z.object({
   receiver_name: z.string(),
   receiver_phone: z.string(),
   receiver_address_id: z.string(),
+  sender_address: z.string().optional(),
+  receiver_address: z.string().optional(),
+  type_id: z.number(),
 });
 
 export type OrderCreateReqType = z.TypeOf<typeof OrderCreateReq>;
+
+export const OrderDetailRes = z.object({
+  success: z.boolean(),
+  data: OrderSchema,
+  message: z.string(),
+});
+
+export type OrderDetailResType = z.TypeOf<typeof OrderDetailRes>;

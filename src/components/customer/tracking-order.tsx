@@ -2,17 +2,6 @@ import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import OrderProgress from './order-progress';
 
-/**
- * React component for displaying order tracking information.
- *
- * This component renders order details, including order ID, sender and receiver addresses,
- * weight, and order status. It also includes the OrderProgress component to display the
- * timeline of order processes.
- *
- * @param {Object} props - The component properties.
- * @param {Object} props.data - The order tracking data.
- * @returns {JSX.Element} - The rendered React element for the OrderTracking component.
- */
 export default function OrderTracking({ data }: any) {
   console.log(data);
   if (!data) {

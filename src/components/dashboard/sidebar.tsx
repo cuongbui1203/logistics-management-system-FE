@@ -38,11 +38,10 @@ export default function SideBar() {
   const role = user?.role.name;
   console.log('role', role);
 
-  const keyRole = role as keyof typeof Role;
-  const listTabs = Role[keyRole]?.tabs;
+  const listTabs = Role[role as keyof typeof Role]?.tabs;
   const listTabView = [];
-  for (var i in listTabs) {
-    let key = listTabs[i] as keyof typeof listUrl;
+  for (const i in listTabs) {
+    const key = listTabs[i] as keyof typeof listUrl;
     listTabView.push(listUrl[key]);
   }
   const company = envConfig.NEXT_PUBLIC_COMPANY_NAME;

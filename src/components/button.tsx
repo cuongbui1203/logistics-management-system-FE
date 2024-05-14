@@ -9,6 +9,9 @@ import { AiOutlineUserDelete } from 'react-icons/ai';
 import accountApiRequest from '@/api/account';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { useAppContext } from '@/app/app-provider';
+import { workPlateApiRequest } from '@/api/workplate';
+import { WorkPlateEnumType } from '@/config/Enum';
 
 export function SearchOrder() {
   const route = useRouter();
@@ -26,7 +29,7 @@ export function SearchOrder() {
         id="inputCode"
         name="code"
         formMethod="get"
-        placeholder="Nhập mã bưu gửi"
+        placeholder="Nhập mã đơn hàng"
         className="rounded-pill"
         onChange={(e) => (orderID = e.target.value)}
       />
@@ -97,28 +100,13 @@ export function CreateOrder() {
   );
 }
 
-export function EmployeeDetail({ id }: { id: number }) {
+export function ButtonDetail({ url }: { url: string }) {
   const route = useRouter();
 
   return (
     <button
       onClick={() => {
-        route.push(`/dashboard/employee/${id}/detail`);
-      }}
-      className="btn btn-outline-warning"
-    >
-      <FaRegEye />
-    </button>
-  );
-}
-
-export function WorkPlateDetail({ id, url }: { id: number; url: string }) {
-  const route = useRouter();
-
-  return (
-    <button
-      onClick={() => {
-        route.push(`${url}/${id}`);
+        route.push(url);
       }}
       className="btn btn-outline-warning"
     >
@@ -146,11 +134,19 @@ export function EmployeeDelete({ id, refresh }: { id: number; refresh: () => voi
     }
   };
 
+  const disabled = useAppContext().user?.id === id ? true : false;
+
   return (
     <>
-      <button className="btn btn-outline-danger" onClick={handleShow}>
-        <AiOutlineUserDelete />
-      </button>
+      {disabled ? (
+        <button className="btn btn-outline-danger " disabled>
+          <AiOutlineUserDelete />
+        </button>
+      ) : (
+        <button className="btn btn-outline-danger" onClick={handleShow}>
+          <AiOutlineUserDelete />
+        </button>
+      )}
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>Xác nhận xóa nhân viên</Modal.Title>
@@ -169,17 +165,66 @@ export function EmployeeDelete({ id, refresh }: { id: number; refresh: () => voi
   );
 }
 
-export function OrderDetail({ id, page }: any) {
-  const route = useRouter();
+export function WorkPlateDelete({ id, refresh, type }: { id: number; refresh: () => void; type: number }) {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleDelete = async () => {
+    try {
+      await workPlateApiRequest.deleteWP(id).then((res) => {
+        if (type === WorkPlateEnumType.Transaction) {
+          toast.success('Xóa điểm giao dịch thành công');
+        } else {
+          toast.success('Xóa điểm trung chuyển thành công');
+        }
+
+        refresh();
+        setShow(false);
+      });
+    } catch (error) {
+      if (type === WorkPlateEnumType.Transaction) {
+        toast.error('Xóa điểm giao dịch thất bại');
+      } else {
+        toast.error('Xóa điểm trung chuyển thất bại');
+      }
+    }
+  };
+
+  const disabled = useAppContext().user?.id === id ? true : false;
 
   return (
-    <button
-      onClick={() => {
-        route.push(`/dashboard/ordered/${id}/detail?page=${page}`);
-      }}
-      className="btn btn-outline-warning"
-    >
-      <FaRegEye />
-    </button>
+    <>
+      {disabled ? (
+        <button className="btn btn-outline-danger " disabled>
+          <AiOutlineUserDelete />
+        </button>
+      ) : (
+        <button className="btn btn-outline-danger" onClick={handleShow}>
+          <AiOutlineUserDelete />
+        </button>
+      )}
+      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {type === WorkPlateEnumType.Transaction ? 'Xác nhận xoá điểm giao dịch' : 'Xác nhận xoá điểm trung chuyển'}{' '}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {type === WorkPlateEnumType.Transaction
+            ? 'Bạn có chắc chắn muốn xóa điểm giao dịch này không?'
+            : 'Bạn có chắc chắn muốn xóa điểm trung chuyển này không?'}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Huỷ
+          </Button>
+          <Button variant="primary" onClick={handleDelete}>
+            Xác nhận
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }

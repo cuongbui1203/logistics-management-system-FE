@@ -26,4 +26,5 @@ export const workPlateApiRequest = {
       },
     }),
   updateWP: (id: number, body: WorkPlateNewReqType) => http.put<WorkPlateListResType>(`api/work-plates/${id}`, body),
+  deleteWP: (id: number) => http.delete<WorkPlateListResType>(`api/work-plates/${id}`),
 };

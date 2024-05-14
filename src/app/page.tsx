@@ -19,8 +19,6 @@ import style from '@/css/home.module.css';
 export default function HomePage() {
   const company = envConfig.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
 
-  console.log('Render HomePage');
-
   return (
     <div className={style.homePageContainer}>
       {/* === Section 1: Banner === */}
@@ -48,19 +46,19 @@ export default function HomePage() {
               <Form>
                 <Form.Label className="px-2">
                   <MdMyLocation size={'1em'} />
-                  Tra cứu bưu gửi
+                  Tra cứu đơn hàng
                 </Form.Label>
                 <SearchOrder />
               </Form>
             </Col>
             <Col xs={6} md={2} className={`${style.lookupItem} text-center mt-3 mt-md-0`}>
-              <Link href={'/customer/LockupTransaction'}>
+              <Link href={'/'}>
                 <LiaMapMarkedAltSolid size={'4em'} />
                 <p>Tìm kiếm bưu cục</p>
               </Link>
             </Col>
             <Col xs={6} md={2} className={`${style.lookupItem} text-center mt-3 mt-md-0`}>
-              <Link href={'/customer/EstimateCost'}>
+              <Link href={'/'}>
                 <PiMoneyDuotone size={'4em'} />
                 <p>Ước tính phí</p>
               </Link>

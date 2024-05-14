@@ -18,6 +18,8 @@ import { AddressDetailSchemaType } from '@/schema/common.schema';
 import { orderApiRequest } from '@/api/order';
 import { handleErrorApi } from '@/lib/utils';
 import { addressApiRequest } from '@/api/address';
+import { toast } from 'react-toastify';
+import AddressForm from '@/components/address-form';
 
 const order = {
   order: {
@@ -61,12 +63,10 @@ export default function OrderForm({ listProvince }: { listProvince: AddressDetai
   async function onSubmit(values: OrderCreateReqType) {
     console.log(values);
     try {
-      // await orderApiRequest.createAccount(values).then((res) => {
+      // await orderApiRequest.createOrder(values).then((res) => {
       //   if (res.payload.success) {
-      //     router.push('/dashboard/employee');
-      //     toast.success('Tạo nhân viên thành công');
-      //   } else {
-      //     toast.error('Tạo nhân viên thất bại');
+      //     toast.success('Tạo đơn hàng thành công');
+      //     // router.push('/dashboard/employee?created=true');
       //   }
       // });
     } catch (error) {
@@ -113,40 +113,6 @@ export default function OrderForm({ listProvince }: { listProvince: AddressDetai
   });
   const [print, setPrint] = useState(false);
 
-  const [listDistrict, setListDistrict] = useState<AddressDetailSchemaType[]>([]);
-  const [listWard, setListWard] = useState<AddressDetailSchemaType[]>([]);
-
-  const [listDistrict2, setListDistrict2] = useState<AddressDetailSchemaType[]>([]);
-  const [listWard2, setListWard2] = useState<AddressDetailSchemaType[]>([]);
-
-  const onSelectProvince = (e: any) => {
-    const provinceID = e.target.value;
-    addressApiRequest.getDistrict(provinceID).then((res) => {
-      setListDistrict(res.payload.data);
-    });
-  };
-
-  const onSelectProvince2 = (e: any) => {
-    const provinceID = e.target.value;
-    addressApiRequest.getDistrict(provinceID).then((res) => {
-      setListDistrict2(res.payload.data);
-    });
-  };
-
-  const onSelectDistrict = (e: any) => {
-    const districtID = e.target.value;
-    addressApiRequest.getWard(districtID).then((res) => {
-      setListWard(res.payload.data);
-    });
-  };
-
-  const onSelectDistrict2 = (e: any) => {
-    const districtID = e.target.value;
-    addressApiRequest.getWard(districtID).then((res) => {
-      setListWard2(res.payload.data);
-    });
-  };
-
   return (
     <>
       {print || (
@@ -174,56 +140,11 @@ export default function OrderForm({ listProvince }: { listProvince: AddressDetai
               <Form.Group controlId="senderAddress">
                 <Form.Label>Địa chỉ</Form.Label>
                 <Row>
-                  <Col xs={12} md={4}>
-                    <Form.Select
-                      onChange={(e) => {
-                        onSelectProvince(e);
-                      }}
-                      defaultValue={'Chọn Tỉnh / TP'}
-                    >
-                      <option disabled>Chọn Tỉnh / TP</option>
-                      {listProvince.map((province) => (
-                        <option key={province.code + '1'} value={province.code}>
-                          {province.name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
-                  <Col xs={12} md={4}>
-                    <Form.Select
-                      onChange={(e) => {
-                        onSelectDistrict(e);
-                      }}
-                      defaultValue={'Chọn Quận/ Huyện'}
-                    >
-                      <option disabled>Chọn Quận/ Huyện</option>
-                      {listDistrict.map((district) => (
-                        <option key={district.code} value={district.code}>
-                          {district.full_name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
-                  <Col xs={12} md={4}>
-                    <Form.Select defaultValue={'Chọn phường xã'} {...register('sender_address_id')}>
-                      <option disabled>Chọn phường xã</option>
-                      {listWard.map((ward) => (
-                        <option key={ward.code} value={ward.code}>
-                          {ward.full_name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
+                  <AddressForm listProvince={listProvince} register={register} fieldName="sender_address_id" />
                 </Row>
                 <Row className="mt-2">
                   <Col>
-                    <Form.Control
-                      type="text"
-                      placeholder="Chi tiết"
-                      onChange={(e) => {
-                        order.order.sender.address.detail = e.target.value;
-                      }}
-                    />
+                    <Form.Control type="text" placeholder="Chi tiết" {...register('sender_address')} />
                   </Col>
                 </Row>
               </Form.Group>
@@ -254,52 +175,11 @@ export default function OrderForm({ listProvince }: { listProvince: AddressDetai
               <Form.Group controlId="receiverAddress">
                 <Form.Label>Địa chỉ</Form.Label>
                 <Row>
-                  <Col xs={12} md={4}>
-                    <Form.Select
-                      onChange={(e) => {
-                        onSelectProvince2(e);
-                      }}
-                      defaultValue={'Chọn Tỉnh / TP'}
-                    >
-                      <option disabled>Chọn Tỉnh / TP</option>
-                      {listProvince.map((province) => (
-                        <option key={province.code} value={province.code}>
-                          {province.full_name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
-
-                  <Col xs={12} md={4}>
-                    <Form.Select
-                      onChange={(e) => {
-                        onSelectDistrict2(e);
-                      }}
-                      defaultValue={'Chọn Quận/ Huyện'}
-                    >
-                      <option disabled>Chọn Quận/ Huyện</option>
-                      {listDistrict2.map((district) => (
-                        <option key={district.code} value={district.code}>
-                          {district.full_name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
-
-                  <Col xs={12} md={4}>
-                    <Form.Select defaultValue={'Chọn phường xã'} {...register('receiver_address_id')}>
-                      <option disabled>Chọn phường xã</option>
-                      {listWard2.map((ward) => (
-                        <option key={ward.code} value={ward.code}>
-                          {ward.full_name}
-                        </option>
-                      ))}
-                    </Form.Select>
-                  </Col>
+                  <AddressForm listProvince={listProvince} register={register} fieldName="receiver_address_id" />
                 </Row>
                 <Row className="mt-2">
                   <Col>
-                    <Form.Control type="text" placeholder="Chi tiết" />
+                    <Form.Control type="text" placeholder="Chi tiết" {...register('receiver_address')} />
                   </Col>
                 </Row>
               </Form.Group>

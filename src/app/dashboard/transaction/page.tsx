@@ -1,5 +1,6 @@
+import { addressApiRequest } from '@/api/address';
 import { CreateTransaction } from '@/components/button';
-import TransactionPointTable from '@/components/dashboard/table/transactionPoint-table';
+import WorkPlateTable from '@/components/dashboard/work-plate/workPlate-table';
 
 interface TransactionPageProps {
   searchParams: {
@@ -11,6 +12,8 @@ export default async function TransactionPage({ searchParams }: TransactionPageP
   const query = {
     page: searchParams.page || 1,
   };
+
+  const listProvince = await addressApiRequest.getProvince();
 
   return (
     <div className="tableContainer">
@@ -24,7 +27,7 @@ export default async function TransactionPage({ searchParams }: TransactionPageP
         </div>
       </div>
       <div className="row mt-2">
-        <TransactionPointTable page={query.page} query={query} type={2} />
+        <WorkPlateTable page={query.page} type={2} listProvince={listProvince.payload.data} />
       </div>
     </div>
   );

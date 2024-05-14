@@ -9,7 +9,7 @@ export default function Order({ searchParams }: { searchParams: { query: string 
 
   return (
     <div>
-      <LookUpBanner title={'TRA CỨU BƯU GỬI'} />
+      <LookUpBanner title={'TRA CỨU ĐƠN HÀNG'} />
       <LookUpOrder />
     </div>
   );

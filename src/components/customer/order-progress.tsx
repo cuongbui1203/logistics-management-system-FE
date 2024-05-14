@@ -3,16 +3,6 @@ import { TbTruckDelivery } from 'react-icons/tb';
 import { IoLocationOutline } from 'react-icons/io5';
 import '@/css/customer/timeline.css';
 
-/**
- * React component for displaying the timeline of order processes.
- *
- * This component renders a timeline with order processes, including icons, details,
- * and status badges.
- *
- * @param {Object} props - The component properties.
- * @param {Array} props.orderProcesses - An array of order processes.
- * @returns {JSX.Element} - The rendered React element for the OrderProgress component.
- */
 export default function OrderProgress({ orderProcesses }: any) {
   const data = orderProcesses.processes;
 
