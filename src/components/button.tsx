@@ -12,6 +12,8 @@ import { useState } from 'react';
 import { useAppContext } from '@/app/app-provider';
 import { workPlateApiRequest } from '@/api/workplate';
 import { WorkPlateEnumType } from '@/config/Enum';
+import { OrderSchemaType } from '@/schema/common.schema';
+import { RiSendPlaneFill } from 'react-icons/ri';
 
 export function SearchOrder() {
   const route = useRouter();
@@ -221,6 +223,43 @@ export function WorkPlateDelete({ id, refresh, type }: { id: number; refresh: ()
             Huỷ
           </Button>
           <Button variant="primary" onClick={handleDelete}>
+            Xác nhận
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
+export function SendOrder({ listOrder }: { listOrder: OrderSchemaType[] }) {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => {
+    setShow(true);
+  };
+
+  const handleSend = async () => {
+    try {
+    } catch (error) {}
+  };
+
+  return (
+    <>
+      <Button onClick={handleShow} className="btnCreate">
+        <RiSendPlaneFill size={'2em'} />
+        Gửi hàng
+      </Button>
+      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Gửi hàng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Bạn có chắc chắn muốn gửi hàng không? {listOrder.length}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Huỷ
+          </Button>
+          <Button variant="primary" onClick={handleSend}>
             Xác nhận
           </Button>
         </Modal.Footer>

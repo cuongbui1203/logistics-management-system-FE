@@ -1,6 +1,21 @@
 import z from 'zod';
 import { OrderSchema } from './common.schema';
 
+export const GoodSchema = z.object({
+  type_id: z.coerce.number().refine((v) => [9, 10, 11, 12].includes(v)),
+  name: z.string(),
+  mass: z.coerce.number().min(1),
+  desc: z.string(),
+});
+
+export type GoodSchemaType = z.TypeOf<typeof GoodSchema>;
+
+export const GoodListReq = z.object({
+  data: z.array(GoodSchema),
+});
+
+export type GoodListReqType = z.TypeOf<typeof GoodListReq>;
+
 export const OrderListRes = z.object({
   success: z.boolean(),
   data: z.object({
@@ -21,7 +36,7 @@ export const OrderCreateReq = z.object({
   receiver_address_id: z.string(),
   sender_address: z.string().optional(),
   receiver_address: z.string().optional(),
-  type_id: z.number(),
+  type_id: z.coerce.number(),
 });
 
 export type OrderCreateReqType = z.TypeOf<typeof OrderCreateReq>;

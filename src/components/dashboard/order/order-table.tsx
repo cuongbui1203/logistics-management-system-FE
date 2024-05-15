@@ -1,6 +1,6 @@
 'use client';
 
-import { ButtonDetail } from '../../button';
+import { ButtonDetail, SendOrder } from '../../button';
 import Pagination from '../pagination';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
@@ -10,9 +10,10 @@ import { useOrder } from '@/lib/custom-hook';
 import { ORDER_PAGE_SIZE } from '@/config/constant';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa6';
 import { LuArrowUpDown } from 'react-icons/lu';
-import style from '@/css/dashboard/table/ordered.module.css';
+// import style from '@/css/dashboard/table/ordered.module.css';
 import { timestampToDate } from '@/lib/utils';
 import { OrderStatusEnum } from '@/config/Enum';
+import '@/css/dashboard/customTable.css';
 
 interface OrderTableProps {
   showFilter: boolean;
@@ -25,6 +26,8 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
   const { replace } = useRouter();
   const [sortId, setSortId] = useState(false);
   const [sortOrder, setSortOrder] = useState('asc');
+  const [isCheckAll, setIsCheckAll] = useState(false);
+  const [isCheck, setIsCheck] = useState<OrderSchemaType[]>([]);
 
   const page = Number(searchParams.get('page') || 1);
 
@@ -95,6 +98,28 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
     console.log(listCheck);
   }
 
+  const handleSelectAll = () => {
+    setIsCheckAll(!isCheckAll);
+    if (isCheckAll) {
+      setIsCheck([]);
+    } else {
+      setIsCheck([...filerListOrder]);
+    }
+  };
+
+  const handleClick = (e: any, order: OrderSchemaType) => {
+    const { checked } = e.target;
+
+    // setIsCheck([...isCheck, id]);
+    if (!checked) {
+      setIsCheck(isCheck.filter((item) => item !== order));
+    } else {
+      setIsCheck([...isCheck, order]);
+    }
+  };
+
+  console.log(isCheck.length);
+
   let title = 'Danh sách đơn hàng chờ gửi';
 
   switch (status) {
@@ -113,7 +138,9 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
           <h3>{title}</h3>
         </div>
 
-        <div className="col btnContainer">{/* <CreateOrder /> */}</div>
+        <div className={`col btnContainer`}>
+          <SendOrder listOrder={isCheck} />
+        </div>
       </div>
 
       <div className="row mt-2">
@@ -124,7 +151,12 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
                 <thead>
                   <tr>
                     <th scope="col">
-                      <input className="form-check-input" type="checkbox" value="" />
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        checked={isCheckAll}
+                        onChange={handleSelectAll}
+                      />
                     </th>
                     <th scope="col" onClick={() => sortFunction('id')}>
                       ID {sortId ? sortOrder === 'desc' ? <FaArrowUp /> : <FaArrowDown /> : <LuArrowUpDown />}
@@ -194,8 +226,10 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
                           <input
                             className="form-check-input"
                             type="checkbox"
-                            value=""
-                            onChange={(e) => handleCheckBox(e, order)}
+                            checked={isCheck.includes(order)}
+                            onChange={(e) => {
+                              handleClick(e, order);
+                            }}
                           />
                         </td>
                         <td>{order.id}</td>
@@ -204,8 +238,8 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
                           {order.sender_address.province}
                         </td>
                         <td>
-                          {/* {order.receiver_address.ward} - {order.receiver_address.district} -{' '}
-                      {order.receiver_address.province} */}
+                          {order.receiver_address.ward} - {order.receiver_address.district} -{' '}
+                          {order.receiver_address.province}
                         </td>
                         <td>{timestampToDate(order.created_at)}</td>
                         <td>
