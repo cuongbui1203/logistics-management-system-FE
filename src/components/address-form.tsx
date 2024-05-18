@@ -15,9 +15,16 @@ interface AddressFormProps {
   };
   register: any;
   fieldName: string;
+  disabledProvince?: boolean;
 }
 
-export default function AddressForm({ listProvince, register, defaultValues, fieldName }: AddressFormProps) {
+export default function AddressForm({
+  listProvince,
+  register,
+  defaultValues,
+  fieldName,
+  disabledProvince,
+}: AddressFormProps) {
   const [province, setProvince] = useState<string>(defaultValues?.provinceCode || '0');
   const [district, setDistrict] = useState<string>(defaultValues?.districtCode || '0');
   const [ward, setWard] = useState<string>(defaultValues?.wardCode || '0');
@@ -63,6 +70,7 @@ export default function AddressForm({ listProvince, register, defaultValues, fie
             onSelectProvince(e);
           }}
           value={province}
+          disabled={disabledProvince}
         >
           <option disabled key="0" value="0">
             Chọn Tỉnh / TP

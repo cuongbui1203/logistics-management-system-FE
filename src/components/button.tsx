@@ -12,14 +12,16 @@ import { useState } from 'react';
 import { useAppContext } from '@/app/app-provider';
 import { workPlateApiRequest } from '@/api/workplate';
 import { WorkPlateEnumType } from '@/config/Enum';
+import { OrderSchemaType } from '@/schema/common.schema';
+import { RiSendPlaneFill } from 'react-icons/ri';
 
 export function SearchOrder() {
-  const route = useRouter();
+  const router = useRouter();
   let orderID: string = '';
   const handleSearch = () => {
     if (orderID.trim() !== '') {
       console.log('orderID', orderID);
-      // router.push(`/customer/LockupOrders?query=${orderID}`);
+      router.push(`/customer/lookup-order?query=${orderID}`);
     }
   };
   return (
@@ -208,7 +210,7 @@ export function WorkPlateDelete({ id, refresh, type }: { id: number; refresh: ()
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>
-            {type === WorkPlateEnumType.Transaction ? 'Xác nhận xoá điểm giao dịch' : 'Xác nhận xoá điểm trung chuyển'}{' '}
+            {type === WorkPlateEnumType.Transaction ? 'Xác nhận xoá điểm giao dịch' : 'Xác nhận xoá điểm trung chuyển'}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

@@ -53,7 +53,7 @@ export function Header() {
               <NavDropdown title="Tra cứu" id="basic-nav-dropdown">
                 <NavDropdown.Item
                   onClick={() => {
-                    router.push('/');
+                    router.push('/customer/lookup-order');
                   }}
                 >
                   Tra cứu đơn hàng

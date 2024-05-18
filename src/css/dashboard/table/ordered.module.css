@@ -2,3 +2,9 @@
 .formCheckInput {
   /* font-size: 110%; */
 }
+
+.btnContainer {
+  display: flex;
+  justify-content: end;
+  margin-top: 20px;
+}

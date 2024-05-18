@@ -76,6 +76,13 @@ export const formatDate2 = (date: Date | null | undefined) => {
   return dayjs(date).format('YYYY-MM-DD');
 };
 
+export const formatDateTime = (date: Date | null | undefined) => {
+  if (!date) {
+    return '';
+  }
+  return dayjs(date).format('HH:mm DD-MM-YYYY');
+};
+
 export function timestampToDate(timestamp: number) {
   const date = new Date(timestamp * 1000);
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;

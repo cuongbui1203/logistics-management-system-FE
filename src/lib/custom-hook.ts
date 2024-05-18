@@ -46,7 +46,7 @@ export const useOrder = (status: number, page: number) => {
   });
 };
 
-const fetchOrderDetail = (id: string) =>
+export const fetchOrderDetail = (id: string) =>
   orderApiRequest.getOrderDetail(id).then((res) => {
     return res.payload.data;
   });

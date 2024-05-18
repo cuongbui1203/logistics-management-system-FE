@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Button, Container, Row, Col, Form } from 'react-bootstrap';
 import { HiOutlineDocumentSearch } from 'react-icons/hi';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-// import { useDebouncedCallback } from "use-debounce";
 import OrderTracking from './tracking-order';
 import useSWR from 'swr';
+import { fetchOrderDetail } from '@/lib/custom-hook';
 
 let orID: string = '';
 
@@ -14,21 +14,20 @@ export default function LookUpOrder() {
   const { replace } = useRouter();
 
   const [orderID, setOrderID] = useState(searchParams.get('query') || '');
-  const { data: data, error: error } = useSWR(`https://magicpost-uet.onrender.com/api/order/customerget/${orderID}`);
-  // Debounced search callback to avoid rapid API calls while typing.
-  // const handleSearch = useDebouncedCallback((term) => {
-  //   const params = new URLSearchParams(searchParams);
-  //   if (term) {
-  //     params.set("query", term);
-  //   } else {
-  //     params.delete("query");
-  //   }
-  //   replace(`${pathname}?${params.toString()}`);
-  //   setOrderID(term);
-  // });
 
-  const handleSearch = (term: any) => {
-    console.log(term);
+  const { data, error, isLoading } = useSWR(orderID === '' ? null : ['api/orders', orderID], () =>
+    fetchOrderDetail(orderID)
+  );
+
+  const handleSearch = async (term: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (term) {
+      params.set('query', term);
+      replace(`${pathname}?${params.toString()}`);
+    } else {
+      params.delete('query');
+    }
+    setOrderID(term);
   };
 
   return (
@@ -37,7 +36,7 @@ export default function LookUpOrder() {
         <Row>
           <Col>
             <HiOutlineDocumentSearch size={'2rem'} />
-            <p>Nhập mã đơn hàng (VD:AEX451934145VN)</p>
+            <p>Nhập mã đơn hàng</p>
           </Col>
         </Row>
 
@@ -49,8 +48,10 @@ export default function LookUpOrder() {
                   <Form.Control
                     className="rounded border"
                     required
+                    name="query"
+                    type="text"
                     onChange={(e) => (orID = e.target.value)}
-                    // defaultValue={searchParams.get("query")}
+                    defaultValue={searchParams.get('query') || ''}
                   />
                 </Col>
 
@@ -61,13 +62,13 @@ export default function LookUpOrder() {
                 </Col>
               </Row>
 
-              <Row>{data?.error && <p className="text-danger  m-0">Không tìm thấy bưu gửi</p>}</Row>
+              <Row>{orderID !== '' && !data && <p className="text-danger m-0">Không tìm thấy bưu gửi</p>}</Row>
             </Form>
           </Container>
         </Row>
       </Container>
 
-      {data && <OrderTracking data={data.order} />}
+      {data && <OrderTracking data={data} />}
     </>
   );
 }

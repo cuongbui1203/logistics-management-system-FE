@@ -1,7 +1,7 @@
 import { addressApiRequest } from '@/api/address';
-import OrderForm from './order-form';
+import OrderStepper from './order-stepper';
 
 export default async function Page() {
   const listProvince = await addressApiRequest.getProvince();
-  return <OrderForm listProvince={listProvince.payload.data} />;
+  return <OrderStepper listProvince={listProvince.payload.data} />;
 }
