@@ -6,15 +6,12 @@ import ReactToPrint from 'react-to-print';
 import '@/css/dashboard/invoice.css';
 import envConfig from '@/envConfig';
 import { timestampToDateTime } from '@/lib/utils';
+import { useOrderDetail } from '@/lib/custom-hook';
+import { OrderSchemaType } from '@/schema/common.schema';
 
-export default function Invoice({ data }: any) {
+export default function Invoice({ order: orderData }: { order: OrderSchemaType }) {
   const company = envConfig.NEXT_PUBLIC_COMPANY_NAME || 'Next.js App';
-  let orderData: any;
-  if (data) {
-    orderData = data;
-  } else {
-    orderData = tempData;
-  }
+
   const componentRef = useRef<HTMLDivElement>(null);
   return (
     <div id="invoice">
@@ -32,7 +29,7 @@ export default function Invoice({ data }: any) {
 
               <Col className="text-end d-flex flex-column justify-content-center">
                 <p className="fw-bold m-0">Mã đơn hàng: {orderData?.id}</p>
-                <p className="fw-bold m-0">Ngày đơn hàng: {timestampToDateTime(orderData?.created_at)}</p>
+                <p className="fw-bold m-0">Ngày đơn hàng: {timestampToDateTime(orderData?.created_at || 0)}</p>
               </Col>
             </Row>
 
@@ -57,7 +54,7 @@ export default function Invoice({ data }: any) {
 
             <Row className="mt-2">
               <h5 className="fw-bold">Loại hàng gửi</h5>
-              <p>{orderData?.data?.goodsList[0]?.goodsType === 'goods' ? 'Hàng hóa' : 'Giấy tờ'}</p>
+              <p>{orderData?.type.name}</p>
               <Table striped bordered>
                 <thead>
                   <tr>
@@ -67,21 +64,18 @@ export default function Invoice({ data }: any) {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>{orderData?.details[0]?.name}</td>
-                    <td className="text-center">{orderData?.details[0].mass}</td>
-                    <td className="text-center">{orderData?.details[0].desc}</td>
-                  </tr>
+                  {orderData?.details.map((detail, index) => (
+                    <tr key={index}>
+                      <td>{detail.name}</td>
+                      <td className="text-center">{detail.mass}</td>
+                      <td className="text-center">{detail.desc}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </Table>
             </Row>
 
-            <Row className="mt-2">
-              <h5 className="fw-bold">Chỉ dẫn của người gửi khi không phát được bưu gửi</h5>
-              <p>{orderData?.data?.order?.failChoice === 'return' ? 'Hoàn trả' : 'Khác'}</p>
-            </Row>
-
-            <Row className="mt-2">
+            {/* <Row className="mt-2">
               <Col>
                 <h5 className="fw-bold">Cước</h5>
                 <p className="mb-1">Cước chính: {orderData?.data?.order?.mainPostage}</p>
@@ -103,11 +97,11 @@ export default function Invoice({ data }: any) {
               <Col className="text-end">
                 <h5 className="fw-bold">Khối lượng </h5>
                 <p className="mb-1">
-                  {/* Khối lượng thực tế: {orderData?.data?.goodsList.reduce((total, item) => total + item.realWeight, 0)} */}
+                  {/* Khối lượng thực tế: {orderData?.data?.goodsList.reduce((total, item) => total + item.realWeight, 0)} 
                 </p>
                 <p className="mb-1">
                   Khối lượng quy đổi:{' '}
-                  {/* {orderData?.data?.goodsList.reduce((total, item) => total + item.convertedWeight, 0)} */}
+                  {/* {orderData?.data?.goodsList.reduce((total, item) => total + item.convertedWeight, 0)} 
                 </p>
               </Col>
             </Row>
@@ -124,7 +118,7 @@ export default function Invoice({ data }: any) {
               <Col className="text-end">
                 <h5 className="fw-bold">Chữ kí của người gửi</h5>
               </Col>
-            </Row>
+            </Row> */}
 
             <Row className="text-center mt-5">
               <h5>Hotline: 302131</h5>
@@ -144,81 +138,3 @@ export default function Invoice({ data }: any) {
     </div>
   );
 }
-
-const tempData = {
-  id: 1,
-  sender_name: 'Hazel Stoltenberg',
-  sender_phone: '(609) 718-2517',
-  receiver_name: 'Mrs. Nettie Swift MD',
-  receiver_phone: '+1-562-924-4269',
-  created_at: 1715595292,
-  updated_at: 1715595292,
-  vehicle_id: null,
-  type_id: 10,
-  status_id: 10,
-  mass: 105455951,
-  sender_address: {
-    provinceCode: '25',
-    districtCode: '232',
-    wardCode: '08164',
-    province: 'Tỉnh Phú Thọ',
-    district: 'Huyện Thanh Ba',
-    ward: 'Xã Hanh Cù',
-    address: 'hn',
-  },
-  receiver_address: {
-    provinceCode: '25',
-    districtCode: '232',
-    wardCode: '08164',
-    province: 'Tỉnh Phú Thọ',
-    district: 'Huyện Thanh Ba',
-    ward: 'Xã Hanh Cù',
-    address: 'hn',
-  },
-  type: {
-    id: 10,
-    name: 'normal',
-  },
-  notifications: [
-    {
-      id: 1,
-      order_id: 1,
-      from_id: 1,
-      to_id: 1,
-      status_id: 10,
-      description: 'tét',
-      created_at: '2024-05-13T10:14:52.000000Z',
-      updated_at: '2024-05-13T10:14:52.000000Z',
-      from_address: {
-        provinceCode: '25',
-        districtCode: '232',
-        wardCode: '08164',
-        province: 'Tỉnh Phú Thọ',
-        district: 'Huyện Thanh Ba',
-        ward: 'Xã Hanh Cù',
-        address: 'hn',
-      },
-      to_address: {
-        provinceCode: '25',
-        districtCode: '232',
-        wardCode: '08164',
-        province: 'Tỉnh Phú Thọ',
-        district: 'Huyện Thanh Ba',
-        ward: 'Xã Hanh Cù',
-        address: 'hn',
-      },
-    },
-  ],
-  details: [
-    {
-      id: 1,
-      created_at: '2024-05-13T10:14:52.000000Z',
-      updated_at: '2024-05-13T10:14:52.000000Z',
-      order_id: 1,
-      name: 'Nicola Goyette DDS',
-      mass: 9704555,
-      desc: 'Quas dicta quia dolores reiciendis qui dolorem. Delectus ipsa nemo cupiditate tenetur repudiandae sunt. Totam sint et aut esse alias doloribus corporis. Assumenda vitae maiores ut.',
-      image_id: null,
-    },
-  ],
-};

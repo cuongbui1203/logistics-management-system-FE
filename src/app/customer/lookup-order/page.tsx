@@ -5,7 +5,6 @@ import { useState } from 'react';
 
 export default function Order({ searchParams }: { searchParams: { query: string } }) {
   const currentQuery = searchParams.query || '';
-  const [searched, isSearch] = useState(false);
 
   return (
     <div>

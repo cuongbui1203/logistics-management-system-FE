@@ -2,38 +2,20 @@ import { Container, Col } from 'react-bootstrap';
 import { TbTruckDelivery } from 'react-icons/tb';
 import { IoLocationOutline } from 'react-icons/io5';
 import '@/css/customer/timeline.css';
+import { OrderSchemaType } from '@/schema/common.schema';
+import { OrderStatus } from '@/config/Enum';
+import { formatDateTime, timestampToDateTime } from '@/lib/utils';
 
-export default function OrderProgress({ orderProcesses }: any) {
-  const data = orderProcesses.processes;
-
-  function formatDateTime(isoDateString: string) {
-    const dateObject = new Date(isoDateString);
-
-    const hours = dateObject.getHours();
-    const minutes = dateObject.getMinutes();
-    const seconds = dateObject.getSeconds();
-    const day = dateObject.getDate();
-    const month = dateObject.getMonth() + 1;
-    const year = dateObject.getFullYear();
-
-    const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds
-      .toString()
-      .padStart(2, '0')}`;
-    const formattedDate = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
-    return {
-      formattedTime,
-      formattedDate,
-    };
-  }
+export default function OrderProgress({ orderProcesses }: { orderProcesses: OrderSchemaType }) {
+  const data = orderProcesses.notifications;
 
   return (
     <Container>
       <div className="wrapper">
         <div className="center-line"></div>
         <div className="row">
-          {/* {data.map((process, index) => {
-            const status = orderStatus[process.status] || {};
-            const { formattedTime, formattedDate } = formatDateTime(process.arrivedTime);
+          {data.map((process, index) => {
+            const status = OrderStatus[process.status_id as keyof typeof OrderStatus] || {};
             return (
               <section key={index}>
                 <TbTruckDelivery className="icon" />
@@ -42,22 +24,26 @@ export default function OrderProgress({ orderProcesses }: any) {
                     <span className="title">
                       {' '}
                       <IoLocationOutline size={'2em'} />
-                      {process.routingPointAddress}
+                      {process?.from_address.address}, {process?.from_address.ward}, {process?.from_address.district},{' '}
+                      {process?.from_address.province}
                     </span>
                   </Col>
                   <Col>
-                    <span className="time">
-                      {formattedDate} {formattedTime}
-                    </span>
+                    <span className="time">{formatDateTime(new Date(process.created_at))}</span>
                   </Col>
                 </div>
                 <p>
-                  <span className={`badge rounded-pill bg-${status.color} p-2`}>{status.now}</span>
+                  <span
+                    className={`badge rounded-pill bg-${
+                      OrderStatus[process?.status_id as keyof typeof OrderStatus].color
+                    } p-2`}
+                  >
+                    {OrderStatus[process?.status_id as keyof typeof OrderStatus].name}
+                  </span>{' '}
                 </p>
               </section>
             );
-          })} */}
-          OrderProgress
+          })}
         </div>
       </div>
     </Container>

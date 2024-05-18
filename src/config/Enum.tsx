@@ -245,6 +245,25 @@ export const OrderStatus = {
   },
 };
 
+export const GoodsType = {
+  NORMAL: {
+    name: 'Bình thường',
+    value: 10,
+  },
+  fragile: {
+    name: 'Dễ vỡ',
+    value: 9,
+  },
+  oversized: {
+    name: 'Quá khổ',
+    value: 11,
+  },
+  hazardous: {
+    name: 'Nguy hiểm',
+    value: 12,
+  },
+};
+
 export const orderStatus = {
   forwarded: {
     name: 'forwarded',
