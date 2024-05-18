@@ -26,6 +26,9 @@ export default function AddDetailOrder({
     formState: { errors, isSubmitting },
   } = useForm<GoodListReqType>({
     resolver: zodResolver(GoodListReq),
+    defaultValues: {
+      data: [{ type_id: 10, name: '', mass: 0, desc: '' }],
+    },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -51,12 +54,7 @@ export default function AddDetailOrder({
   }
 
   const addRow = () => {
-    append({ type_id: 10, name: '', mass: 0, desc: '' });
-  };
-
-  const removeRow = (id: any) => {
-    // const updatedGoodsList = goodsList.filter((row) => row.id !== id);
-    // setGoodsList(updatedGoodsList);
+    append({ type_id: 10, name: '', mass: 0, desc: '', freight: 1 });
   };
 
   return (
@@ -125,69 +123,6 @@ export default function AddDetailOrder({
                     </td>
                   </tr>
                 ))}
-
-                {/* {goodsList.map((goods, index) => (
-                  <tr key={goods.id}>
-                    <td scope="col">{index + 1}</td>
-                    <td scope="col">
-                      <select
-                        onChange={(e) => {
-                          const updatedGoodsList = [...goodsList];
-                          updatedGoodsList[index].type_id = Number(e.target.value);
-                          setGoodsList(updatedGoodsList);
-                        }}
-                        // {...register('type_id')}
-                      >
-                        {Object.keys(GoodsType).map((key) => {
-                          const type = GoodsType[key as keyof typeof GoodsType];
-                          return (
-                            <option key={type.value} value={type.value}>
-                              {type.name}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </td>
-                    <td scope="col">
-                      <input
-                        type="text"
-                        value={goods.name}
-                        onChange={(e) => {
-                          const updatedGoodsList = [...goodsList];
-                          updatedGoodsList[index].name = e.target.value;
-                          setGoodsList(updatedGoodsList);
-                        }}
-                      />
-                    </td>
-                    <td scope="col">
-                      <input
-                        type="number"
-                        value={goods.mass}
-                        onChange={(e) => {
-                          const updatedGoodsList = [...goodsList];
-                          updatedGoodsList[index].mass = e.target.value;
-                          setGoodsList(updatedGoodsList);
-                        }}
-                      />
-                    </td>{' '}
-                    <td scope="col">
-                      <input
-                        type="number"
-                        value={goods.desc}
-                        onChange={(e) => {
-                          const updatedGoodsList = [...goodsList];
-                          updatedGoodsList[index].desc = e.target.value;
-                          setGoodsList(updatedGoodsList);
-                        }}
-                      />
-                    </td>
-                    <td scope="col">
-                      <button onClick={() => removeRow(goods.id)} className="btn">
-                        <FaTrash className="text-danger" />
-                      </button>
-                    </td>
-                  </tr>
-                ))} */}
               </tbody>
             </table>
           </div>

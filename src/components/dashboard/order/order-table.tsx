@@ -1,6 +1,6 @@
 'use client';
 
-import { ButtonDetail, SendOrder } from '../../button';
+import { ButtonDetail } from '../../button';
 import Pagination from '../pagination';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useDebouncedCallback } from 'use-debounce';
@@ -14,6 +14,8 @@ import { LuArrowUpDown } from 'react-icons/lu';
 import { timestampToDate } from '@/lib/utils';
 import { OrderStatusEnum } from '@/config/Enum';
 import '@/css/dashboard/customTable.css';
+import { SendOrderButton } from './send-order-button';
+import { OrderDeleteButton } from './delete-order-button';
 
 interface OrderTableProps {
   showFilter: boolean;
@@ -123,8 +125,8 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
   let title = 'Danh sách đơn hàng chờ gửi';
 
   switch (status) {
-    case OrderStatusEnum.WAIT_F_DELIVERY:
-      title = 'Danh sách đơn hàng chờ gửi';
+    case OrderStatusEnum.TO_THE_TRANSACTION_POINT:
+      title = 'Danh sách đơn hàng chờ nhận';
       break;
     case OrderStatusEnum.R_DELIVERY || OrderStatusEnum.DONE:
       title = 'Lịch sử đơn hàng';
@@ -139,7 +141,7 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
         </div>
 
         <div className={`col btnContainer`}>
-          <SendOrder listOrder={isCheck} />
+          <SendOrderButton listOrder={isCheck} mutate={mutate} />
         </div>
       </div>
 
@@ -245,8 +247,9 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
                         <td>
                           <span className={`badge rounded-pill bg-${badgeColor} p-2`}>{order.type?.name}</span>
                         </td>
-                        <td className="d-flex justify-content-center">
+                        <td className="d-flex justify-content-center gap-1">
                           <ButtonDetail url={`/dashboard/ordered/${order.id}/detail`} />
+                          <OrderDeleteButton id={order.id} refresh={mutate} />
                         </td>
                       </tr>
                     );

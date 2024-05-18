@@ -90,11 +90,11 @@ export default function TransactionForm({
         <Row className="mt-2">
           <Col xs={12} md={6}>
             <Form.Group>
-              <Form.Label htmlFor="area">Khu vực</Form.Label>
+              <Form.Label htmlFor="area">Khu vực quản lý</Form.Label>
               {/* TODO:  */}
               <select id="area" className="form-select" defaultValue={'Chọn khu vực'} {...register('cap')}>
                 <option key={0} disabled>
-                  Chọn khu vực
+                  Chọn khu vực quản lý
                 </option>
                 {Area.map((area) => (
                   <option key={area.id} value={area.id}>

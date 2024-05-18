@@ -9,6 +9,7 @@ import AddressForm from '@/components/address-form';
 import { AddressDetailSchemaType } from '@/schema/common.schema';
 import { GoodsType } from '@/config/Enum';
 import { orderApiRequest } from '@/api/order';
+import { useAppContext } from '@/app/app-provider';
 
 export default function CreateOrderForm({
   listProvince,
@@ -17,6 +18,12 @@ export default function CreateOrderForm({
   listProvince: AddressDetailSchemaType[];
   onSubmit: (orderId: number) => void;
 }) {
+  const { user } = useAppContext();
+  const defaultValues = {
+    provinceCode: user?.address?.provinceCode || '0',
+    districtCode: user?.address?.districtCode || '0',
+    wardCode: user?.address?.wardCode || '0',
+  };
   const {
     register,
     handleSubmit,
@@ -24,6 +31,10 @@ export default function CreateOrderForm({
     formState: { errors, isSubmitting },
   } = useForm<OrderCreateReqType>({
     resolver: zodResolver(OrderCreateReq),
+    defaultValues: {
+      sender_address_id: user?.address?.wardCode,
+      type_id: 10,
+    },
   });
 
   async function onSubmit(values: OrderCreateReqType) {
@@ -68,7 +79,13 @@ export default function CreateOrderForm({
           <Form.Group controlId="senderAddress">
             <Form.Label>Địa chỉ</Form.Label>
             <Row>
-              <AddressForm listProvince={listProvince} register={register} fieldName="sender_address_id" />
+              <AddressForm
+                listProvince={listProvince}
+                register={register}
+                fieldName="sender_address_id"
+                defaultValues={defaultValues}
+                disabledProvince
+              />
             </Row>
             <Row className="mt-2">
               <Col>

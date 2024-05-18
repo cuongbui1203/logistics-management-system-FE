@@ -1,21 +1,15 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import OrderProgress from './order-progress';
+import { OrderSchemaType } from '@/schema/common.schema';
+import { OrderStatus } from '@/config/Enum';
 
-export default function OrderTracking({ data }: any) {
+export default function OrderTracking({ data }: { data: OrderSchemaType }) {
   console.log(data);
   if (!data) {
     return null;
   }
 
-  const formatDate = (dateTimeString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'numeric', day: 'numeric' };
-    return new Date(dateTimeString).toLocaleDateString('en-US', options);
-  };
-
-  // const status = goodStatus[data.status] || {};
-
-  const status = {};
   return (
     <Container className="lookUpContainer">
       <Row className="d-flex justify-content-between">
@@ -24,7 +18,7 @@ export default function OrderTracking({ data }: any) {
             <strong>Số hiệu bưu gửi</strong>{' '}
           </Row>
           <Row>
-            <p className="m-0">{data.orderID}</p>
+            <p className="m-0">{data.id}</p>
           </Row>
         </Col>
 
@@ -33,7 +27,7 @@ export default function OrderTracking({ data }: any) {
             <strong>Địa chỉ gửi</strong>{' '}
           </Row>
           <Row>
-            <p className="m-0">{data.sender?.provinceName}</p>
+            <p className="m-0">{data.sender_address.province}</p>
           </Row>
         </Col>
 
@@ -42,7 +36,7 @@ export default function OrderTracking({ data }: any) {
             <strong>Địa chỉ nhận</strong>{' '}
           </Row>
           <Row>
-            <p className="m-0">{data.receiver?.provinceName}</p>
+            <p className="m-0">{data.receiver_address.province}</p>
           </Row>
         </Col>
 
@@ -51,16 +45,22 @@ export default function OrderTracking({ data }: any) {
             <strong>Khối lượng</strong>{' '}
           </Row>
           <Row>
-            <p className="m-0">{data.weight}g</p>
+            <p className="m-0">{data.mass}g</p>
           </Row>
         </Col>
 
         <Col className="text-center  mt-3" xs="6" md="auto">
           <Row>
-            <strong>Trạng thái</strong>{' '}
+            <strong>Trạng thái</strong>
           </Row>
           <Row>
-            <p>{/* <span className={`badge rounded-pill bg-${status.color} p-2`}>{status.now}</span> */}</p>
+            <p>
+              <span
+                className={`badge rounded-pill bg-${OrderStatus[data.status_id as keyof typeof OrderStatus].color} p-2`}
+              >
+                {OrderStatus[data.status_id as keyof typeof OrderStatus].name}
+              </span>
+            </p>
           </Row>
         </Col>
       </Row>

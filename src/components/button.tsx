@@ -16,12 +16,12 @@ import { OrderSchemaType } from '@/schema/common.schema';
 import { RiSendPlaneFill } from 'react-icons/ri';
 
 export function SearchOrder() {
-  const route = useRouter();
+  const router = useRouter();
   let orderID: string = '';
   const handleSearch = () => {
     if (orderID.trim() !== '') {
       console.log('orderID', orderID);
-      // router.push(`/customer/LockupOrders?query=${orderID}`);
+      router.push(`/customer/lookup-order?query=${orderID}`);
     }
   };
   return (
@@ -210,7 +210,7 @@ export function WorkPlateDelete({ id, refresh, type }: { id: number; refresh: ()
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>
-            {type === WorkPlateEnumType.Transaction ? 'Xác nhận xoá điểm giao dịch' : 'Xác nhận xoá điểm trung chuyển'}{' '}
+            {type === WorkPlateEnumType.Transaction ? 'Xác nhận xoá điểm giao dịch' : 'Xác nhận xoá điểm trung chuyển'}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -223,43 +223,6 @@ export function WorkPlateDelete({ id, refresh, type }: { id: number; refresh: ()
             Huỷ
           </Button>
           <Button variant="primary" onClick={handleDelete}>
-            Xác nhận
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
-
-export function SendOrder({ listOrder }: { listOrder: OrderSchemaType[] }) {
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => {
-    setShow(true);
-  };
-
-  const handleSend = async () => {
-    try {
-    } catch (error) {}
-  };
-
-  return (
-    <>
-      <Button onClick={handleShow} className="btnCreate">
-        <RiSendPlaneFill size={'2em'} />
-        Gửi hàng
-      </Button>
-      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Gửi hàng</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Bạn có chắc chắn muốn gửi hàng không? {listOrder.length}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Huỷ
-          </Button>
-          <Button variant="primary" onClick={handleSend}>
             Xác nhận
           </Button>
         </Modal.Footer>
