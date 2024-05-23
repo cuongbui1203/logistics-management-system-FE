@@ -3,16 +3,15 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Pagination from '../pagination';
 import '@/css/dashboard/customTable.css';
-import { WorkPlateResType } from '@/schema/workplate.schema';
 import { ButtonDetail, WorkPlateDelete } from '@/components/button';
 import { useWorkPlate } from '@/lib/custom-hook';
 import { useState } from 'react';
 import { WORK_PLATE_PAGE_SIZE } from '@/config/constant';
-import Loading from '@/components/loading';
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa6';
 import { LuArrowUpDown } from 'react-icons/lu';
 import { useDebouncedCallback } from 'use-debounce';
-import { AddressDetailSchemaType } from '@/schema/common.schema';
+import { AddressDetailSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
+import Spinning from '@/components/common/spinning';
 
 interface WorkPlateTableProps {
   page: any;
@@ -76,9 +75,9 @@ export default function WorkPlateTable({ page, type, listProvince }: WorkPlateTa
   };
 
   if (error) return <div>Failed to load</div>;
-  if (isLoading) return <Loading />;
+  if (isLoading) return <Spinning />;
 
-  let filerListWP: WorkPlateResType[] = data?.data || [];
+  let filerListWP: WorkPlateSchemaType[] = data?.data || [];
 
   const queryName = searchParams.get('name');
   const queryId = searchParams.get('id');

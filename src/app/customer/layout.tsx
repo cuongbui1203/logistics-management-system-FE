@@ -1,7 +1,5 @@
-'use client';
 import { Container } from 'react-bootstrap';
 import '@/css/customer/lookUp.css';
-import { SWRConfig } from 'swr';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 

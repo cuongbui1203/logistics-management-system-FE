@@ -17,8 +17,6 @@ export default function OrderTable2({ listOrder }: { listOrder: OrderSchemaType[
       </thead>
       <tbody className="table-group-divider">
         {listOrder?.map((order) => {
-          // const statusInfo = orderStatus[order?.goodsStatus] || {};
-          // const badgeColor = statusInfo.color || 'secondary';
           const badgeColor = 'secondary';
           return (
             <tr key={order.id}>

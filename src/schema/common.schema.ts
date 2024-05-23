@@ -9,6 +9,7 @@ export const MessageRes = z
 
 export type MessageResType = z.TypeOf<typeof MessageRes>;
 
+// In user, work_plate payload
 export const AddressSchema = z.object({
   provinceCode: z.string(),
   districtCode: z.string(),
@@ -19,11 +20,23 @@ export const AddressSchema = z.object({
   address: z.string().optional(),
 });
 
+export const AddressDetailSchema = z.object({
+  code: z.string(),
+  name: z.string(),
+  name_en: z.string(),
+  full_name: z.string(),
+  full_name_en: z.string(),
+  code_name: z.string(),
+});
+
+export type AddressDetailSchemaType = z.TypeOf<typeof AddressDetailSchema>;
+
 export const WorkPlateSchema = z.object({
   id: z.number(),
   name: z.string(),
   address_id: z.string(),
   type_id: z.number(),
+  cap: z.number(),
   created_at: z.string(),
   updated_at: z.string(),
   address: AddressSchema,
@@ -37,6 +50,7 @@ export const WorkPlateSchema = z.object({
     name: z.string(),
     for: z.number(),
   }),
+  detail: z.null(),
 });
 
 export type WorkPlateSchemaType = z.TypeOf<typeof WorkPlateSchema>;
@@ -68,30 +82,9 @@ export const UserSchema = z.object({
   img: z.string().nullable(),
 });
 
-export const AccountSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  email: z.string(),
-  role_id: z.number(),
-  wp_id: z.number(),
-  role: RoleSchema,
-  work_plate: WorkPlateSchema,
-});
-
 export type UserSchemaType = z.TypeOf<typeof UserSchema>;
 
-export const AddressDetailSchema = z.object({
-  code: z.string(),
-  name: z.string(),
-  name_en: z.string(),
-  full_name: z.string(),
-  full_name_en: z.string(),
-  code_name: z.string(),
-});
-
-export type AddressDetailSchemaType = z.TypeOf<typeof AddressDetailSchema>;
-
-export const OrderDetailSchema = z.object({
+export const GoodSchema = z.object({
   id: z.number(),
   created_at: z.string(),
   updated_at: z.string(),
@@ -99,7 +92,7 @@ export const OrderDetailSchema = z.object({
   name: z.string(),
   mass: z.number(),
   desc: z.string(),
-  image_id: z.string().nullable(),
+  image_link: z.string().nullable(),
 });
 
 export const OrderSchema = z.object({
@@ -135,7 +128,20 @@ export const OrderSchema = z.object({
       to_address: AddressSchema,
     })
   ),
-  details: z.array(OrderDetailSchema),
+  details: z.array(GoodSchema),
+  created_by: z.object({
+    id: z.number(),
+    name: z.string(),
+  }),
 });
 
 export type OrderSchemaType = z.TypeOf<typeof OrderSchema>;
+
+export const StatisticSchema = z.object({
+  success: z.boolean(),
+  data: z.object({
+    total: z.number(),
+  }),
+});
+
+export type StatisticSchemaType = z.TypeOf<typeof StatisticSchema>;

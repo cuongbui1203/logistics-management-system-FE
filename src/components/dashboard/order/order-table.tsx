@@ -2,8 +2,7 @@
 
 import { ButtonDetail } from '../../button';
 import Pagination from '../pagination';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { useDebouncedCallback } from 'use-debounce';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { OrderSchemaType } from '@/schema/common.schema';
 import { useOrder } from '@/lib/custom-hook';
@@ -12,28 +11,32 @@ import { FaArrowDown, FaArrowUp } from 'react-icons/fa6';
 import { LuArrowUpDown } from 'react-icons/lu';
 // import style from '@/css/dashboard/table/ordered.module.css';
 import { timestampToDate } from '@/lib/utils';
-import { OrderStatusEnum } from '@/config/Enum';
+import { OrderStatus, OrderStatusEnum, OrderTableType, UserRole } from '@/config/Enum';
 import '@/css/dashboard/customTable.css';
 import { SendOrderButton } from './send-order-button';
 import { OrderDeleteButton } from './delete-order-button';
+import { ReceiveOrderButton } from './receive-order-button';
+import { useAppContext } from '@/app/app-provider';
+import { LeaveOrderButton } from './leave-order-button';
 
 interface OrderTableProps {
   showFilter: boolean;
-  status: number;
+  type: OrderTableType;
 }
 
-export default function OrderTable({ showFilter, status }: OrderTableProps) {
+export default function OrderTable({ type }: OrderTableProps) {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
   const [sortId, setSortId] = useState(false);
   const [sortOrder, setSortOrder] = useState('asc');
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [isCheck, setIsCheck] = useState<OrderSchemaType[]>([]);
 
+  const { user } = useAppContext();
+  const role = user?.role.name;
+
   const page = Number(searchParams.get('page') || 1);
 
-  const { data, error, isLoading, mutate } = useOrder(status, page);
+  const { data, error, isLoading, mutate } = useOrder(type, page);
 
   const total = data?.total || 1;
   const totalPage = Math.floor(total / ORDER_PAGE_SIZE) + (total % ORDER_PAGE_SIZE === 0 ? 0 : 1);
@@ -49,33 +52,6 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
     }
   };
 
-  const useDebounce = (type: string) =>
-    useDebouncedCallback((term) => {
-      const params = new URLSearchParams(searchParams);
-      if (term) {
-        params.set(type, term);
-      } else {
-        params.delete(type);
-      }
-      replace(`${pathname}?${params.toString()}`);
-    }, 300);
-
-  const handleID = useDebounce('orderID');
-  const handleStartAd = useDebounce('startAddress');
-  const handleEndAd = useDebounce('endAddress');
-
-  const handleTimeCreate = useDebounce('timeCreate');
-  const handleStatus = useDebounce('status');
-
-  const handleClearFilter = () => {
-    const params = new URLSearchParams(searchParams);
-    params.delete('name');
-    params.delete('id');
-    params.delete('address');
-    params.delete('role');
-    replace(`${pathname}?${params.toString()}`);
-  };
-
   if (error) return <div>Failed to load</div>;
   if (isLoading) return <div>Loading...</div>;
 
@@ -86,18 +62,6 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
       const multi = sortOrder === 'asc' ? 1 : -1;
       return multi * (a['id'] - b['id']);
     });
-  }
-
-  const listCheck: any = [];
-
-  function handleCheckBox(e: any, order: any) {
-    if (e.target.checked) {
-      listCheck.push(order.id);
-    } else if (!e.target.checked && listCheck.length > 0) {
-      const index = listCheck.indexOf(order.id);
-      listCheck.splice(index, 1);
-    }
-    console.log(listCheck);
   }
 
   const handleSelectAll = () => {
@@ -122,13 +86,23 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
 
   console.log(isCheck.length);
 
-  let title = 'Danh sách đơn hàng chờ gửi';
+  let title = '';
+  let button = null;
 
-  switch (status) {
-    case OrderStatusEnum.TO_THE_TRANSACTION_POINT:
-      title = 'Danh sách đơn hàng chờ nhận';
+  switch (type) {
+    case OrderTableType.Waiting:
+      title = 'Danh sách đơn hàng chờ gửi';
+      button = <SendOrderButton listOrder={isCheck} mutate={mutate} />;
       break;
-    case OrderStatusEnum.R_DELIVERY || OrderStatusEnum.DONE:
+    case OrderTableType.Receiving:
+      title = 'Danh sách đơn hàng chờ nhận';
+      button = <ReceiveOrderButton listOrder={isCheck} mutate={mutate} />;
+      break;
+    case OrderTableType.Leave:
+      title = 'Danh sách đơn hàng chuyển đi';
+      button = role === UserRole.Driver ? <LeaveOrderButton listOrder={isCheck} mutate={mutate} /> : null;
+      break;
+    case OrderTableType.History:
       title = 'Lịch sử đơn hàng';
       break;
   }
@@ -140,9 +114,7 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
           <h3>{title}</h3>
         </div>
 
-        <div className={`col btnContainer`}>
-          <SendOrderButton listOrder={isCheck} mutate={mutate} />
-        </div>
+        <div className={`col btnContainer`}>{button}</div>
       </div>
 
       <div className="row mt-2">
@@ -167,60 +139,14 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
                     <th scope="col">Địa chỉ nhận</th>
                     <th scope="col">Ngày tạo</th>
                     <th scope="col">Loại</th>
+                    <th scope="col">Trạng thái</th>
                     <th scope="col"></th>
                   </tr>
-                  {/* {showFilter && (
-                <tr className="filter">
-                  <th scope="col">
-                    <input placeholder="Lọc theo mã đơn hàng" onChange={(e) => handleID(e.target.value)} />
-                  </th>
-                  <th scope="col">
-                    <select defaultValue={query?.startAddress} onChange={(e) => handleStartAd(e.target.value)}>
-                      <option disabled>Chọn tỉnh/ thành phố</option>
-                      {provinceData.map((province) => (
-                        <option key={province.code} value={province.code}>
-                          {province.name}
-                        </option>
-                      ))}
-                    </select>
-                  </th>
-                  <th scope="col">
-                    <select defaultValue={query?.endAddress} onChange={(e) => handleEndAd(e.target.value)}>
-                      <option value={''}>Chọn tỉnh/ thành phố</option>
-                      {provinceData.map((province) => (
-                        <option key={province.code} value={province.code}>
-                          {province.name}
-                        </option>
-                      ))}
-                    </select>
-                  </th>
-                  <th scope="col">
-                    <input
-                      type="date"
-                      onChange={(e) => {
-                        const date = String(e.target.value).replaceAll('-', '');
-                        handleTimeCreate(date);
-                      }}
-                    />
-                  </th>
-                  <th scope="col">
-                    <select defaultValue={query?.status} onChange={(e) => handleStatus(e.target.value)}>
-                      <option value={''}>Trạng thái</option>
-                      {Object.keys(orderStatus).map((statusKey) => (
-                        <option key={statusKey} value={statusKey}>
-                          {orderStatus[statusKey].now}
-                        </option>
-                      ))}
-                    </select>
-                  </th>
-                  <th scope="col"></th>
-                </tr>
-              )} */}
                 </thead>
                 <tbody className="table-group-divider">
                   {filerListOrder?.map((order) => {
-                    // const statusInfo = orderStatus[order?.goodsStatus] || {};
-                    // const badgeColor = statusInfo.color || 'secondary';
+                    const statusId = order.notifications[order.notifications.length - 1].status_id;
+                    const statusColor = OrderStatus[statusId as keyof typeof OrderStatus].color;
                     const badgeColor = 'secondary';
                     return (
                       <tr key={order.id}>
@@ -246,6 +172,11 @@ export default function OrderTable({ showFilter, status }: OrderTableProps) {
                         <td>{timestampToDate(order.created_at)}</td>
                         <td>
                           <span className={`badge rounded-pill bg-${badgeColor} p-2`}>{order.type?.name}</span>
+                        </td>
+                        <td>
+                          <span className={`badge rounded-pill bg-${statusColor} p-2`}>
+                            {OrderStatus[statusId as keyof typeof OrderStatus].name}
+                          </span>
                         </td>
                         <td className="d-flex justify-content-center gap-1">
                           <ButtonDetail url={`/dashboard/ordered/${order.id}/detail`} />

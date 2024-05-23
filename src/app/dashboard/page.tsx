@@ -1,40 +1,38 @@
 'use client';
 
-import Overview from '@/components/dashboard/main/overview';
+import Profit from '@/components/dashboard/statistic/profit';
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
-import { motion } from 'framer-motion';
-import Statistic from '@/components/dashboard/main/statistic';
+import Statistic from '@/components/dashboard/statistic/statistic';
 import EmployeeTable from '@/components/dashboard/employee/employee-table';
-import StatisticPoint from '@/components/dashboard/main/statistic-point';
 import { useAppContext } from '@/app/app-provider';
-import StatisticGoodsPoint from '@/components/dashboard/main/statisticGoodsPoint';
-import StatisticTransPoint from '@/components/dashboard/main/statisticTransPoint';
+import StatisticTransshipment from '@/components/dashboard/statistic/statisticTransshipment';
+import StatisticTransaction from '@/components/dashboard/statistic/statisticTransaction';
+import { OrderTableType, UserRole, WorkPlateEnumType } from '@/config/Enum';
 import OrderTable from '@/components/dashboard/order/order-table';
-import { UserRole } from '@/config/Enum';
 
 const roleComponents = {
   Admin: [
     <Col xs={12} md={4} key="1">
-      <Overview />
+      <Profit />
     </Col>,
     <Col xs={12} md={4} key="2">
-      <StatisticGoodsPoint />
+      <StatisticTransshipment />
     </Col>,
     <Col xs={12} md={4} key="3">
-      <StatisticTransPoint />
+      <StatisticTransaction />
     </Col>,
     <Col xs={12} key="4">
       <EmployeeTable showFilter={false} />
     </Col>,
   ],
   Manager: [
-    <Col xs={12} md={4} key="1">
-      <Overview />
+    <Col xs={12} md={4} key="2">
+      <StatisticTransshipment />
     </Col>,
-    // <Col xs={12} md={4}>
-    //   <StatisticPoint />
-    // </Col>,
+    <Col xs={12} md={4} key="3">
+      <StatisticTransaction />
+    </Col>,
     <Col xs={12} key="4">
       <EmployeeTable showFilter={false} />
     </Col>,
@@ -43,9 +41,9 @@ const roleComponents = {
     // <Col xs={12} md={4}>
     //   <StatisticPoint />
     // </Col>,
-    // <Col xs={12}>
-    //   <OrderTable showFilter={false} />
-    // </Col>,
+    <Col xs={12}>
+      <OrderTable type={OrderTableType.Waiting} showFilter={false} />
+    </Col>,
   ],
 };
 
@@ -53,17 +51,29 @@ export default function Dashboard() {
   const { user } = useAppContext();
   const role = user?.role.name;
 
-  if (role === UserRole.User || role === UserRole.Driver) {
+  if (role === UserRole.User || !role) {
     return <div>Không có quyền truy cập</div>;
   }
 
   const userRole = role as keyof typeof roleComponents;
 
   return (
-    <motion.div layout>
+    <div>
+      {user?.role.name === UserRole.Admin ? (
+        <Row>
+          <Col xs={12}>
+            <h2>Chào mừng quản trị viên {user.name}</h2>
+          </Col>
+        </Row>
+      ) : user?.work_plate?.type_id === WorkPlateEnumType.Transshipment ? (
+        <h2>Điểm trung chuyển {user?.work_plate?.name}</h2>
+      ) : (
+        <h2>Điểm giao dịch {user?.work_plate?.name}</h2>
+      )}
+
       <Row>
         <Col xs={12}>
-          <Statistic />
+          <Statistic role={role} />
         </Col>
       </Row>
 
@@ -72,6 +82,6 @@ export default function Dashboard() {
           <React.Fragment key={index}>{component}</React.Fragment>
         ))}
       </Row>
-    </motion.div>
+    </div>
   );
 }

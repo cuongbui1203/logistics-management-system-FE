@@ -1,29 +1,5 @@
 import z from 'zod';
-import { AddressSchema } from './common.schema';
-
-export const WorkPlateRes = z.object({
-  id: z.number(),
-  name: z.string(),
-  address_id: z.string(),
-  created_at: z.string(),
-  updated_at: z.string(),
-  type_id: z.number(),
-  cap: z.number(),
-  address: AddressSchema,
-  manager: z.object({
-    id: z.number(),
-    name: z.string(),
-    address: z.null(),
-  }),
-  type: z.object({
-    id: z.number(),
-    name: z.string(),
-    for: z.number(),
-  }),
-  detail: z.null(),
-});
-
-export type WorkPlateResType = z.TypeOf<typeof WorkPlateRes>;
+import { WorkPlateSchema } from './common.schema';
 
 export const WorkPlateListRes = z.object({
   success: z.boolean(),
@@ -31,7 +7,7 @@ export const WorkPlateListRes = z.object({
     total: z.number(),
     currentPage: z.number(),
     pageSize: z.number(),
-    data: z.array(WorkPlateRes),
+    data: z.array(WorkPlateSchema),
   }),
   message: z.string(),
 });
@@ -40,7 +16,7 @@ export type WorkPlateListResType = z.TypeOf<typeof WorkPlateListRes>;
 
 export const WorkPlateSuggestRes = z.object({
   success: z.boolean(),
-  data: z.array(WorkPlateRes),
+  data: z.array(WorkPlateSchema),
   message: z.string(),
 });
 
@@ -48,7 +24,7 @@ export type WorkPlateSuggestResType = z.TypeOf<typeof WorkPlateSuggestRes>;
 
 export const WorkPlateDetailRes = z.object({
   success: z.boolean(),
-  data: WorkPlateRes,
+  data: WorkPlateSchema,
   message: z.string(),
 });
 

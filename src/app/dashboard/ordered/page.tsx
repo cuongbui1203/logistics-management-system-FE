@@ -1,7 +1,7 @@
 import OrderTable from '@/components/dashboard/order/order-table';
-import { OrderStatusEnum } from '@/config/Enum';
+import { OrderTableType } from '@/config/Enum';
 import React from 'react';
 
 export default function Ordered() {
-  return <OrderTable showFilter={true} status={OrderStatusEnum.CREATE}></OrderTable>;
+  return <OrderTable showFilter={true} type={OrderTableType.All}></OrderTable>;
 }

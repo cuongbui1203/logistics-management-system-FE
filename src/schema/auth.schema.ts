@@ -1,4 +1,4 @@
-import { AccountSchema, UserSchema } from '@/schema/common.schema';
+import { UserSchema } from '@/schema/common.schema';
 import z from 'zod';
 
 export const RegisterBody = z
@@ -105,7 +105,7 @@ export const AccountListRes = z.object({
     total: z.number(),
     currentPage: z.number(),
     pageSize: z.number(),
-    data: z.array(AccountSchema),
+    data: z.array(UserSchema),
   }),
   message: z.string(),
 });

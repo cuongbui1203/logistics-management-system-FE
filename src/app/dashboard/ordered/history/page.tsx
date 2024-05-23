@@ -1,6 +1,6 @@
 import OrderTable from '@/components/dashboard/order/order-table';
-import { OrderStatusEnum } from '@/config/Enum';
+import { OrderStatusEnum, OrderTableType } from '@/config/Enum';
 
 export default function HistoryOrderPage() {
-  return <OrderTable showFilter={true} status={OrderStatusEnum.R_DELIVERY}></OrderTable>;
+  return <OrderTable showFilter={true} type={OrderTableType.History}></OrderTable>;
 }
