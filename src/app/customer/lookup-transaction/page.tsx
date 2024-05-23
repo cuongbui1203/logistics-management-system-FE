@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-async-client-component */
 'use client';
 import { addressApiRequest } from '@/api/address';
 import LookUpBanner from '@/components/customer/lookup-banner';

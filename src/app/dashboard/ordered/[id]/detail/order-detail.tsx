@@ -2,14 +2,13 @@
 
 import React from 'react';
 import { Container, Row, Col, Form, Button, Table } from 'react-bootstrap';
-import { OrderStatus, orderStatus } from '@/config/Enum';
-import { mutate } from 'swr';
+import { OrderStatus } from '@/config/Enum';
 import { useRouter, useSearchParams } from 'next/navigation';
-// import { useSession } from "next-auth/react";
 import '@/css/dashboard/customTable.css';
 import '@/css/dashboard/customForm.css';
 import { useOrderDetail } from '@/lib/custom-hook';
 import { timestampToDateTime } from '@/lib/utils';
+import Spinning from '@/components/common/spinning';
 
 export default function OrderDetail({ id }: { id: string }) {
   const page = useSearchParams().get('page');
@@ -21,7 +20,7 @@ export default function OrderDetail({ id }: { id: string }) {
     return <div>Error: {error.message}</div>;
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Spinning />;
   }
 
   return (
@@ -49,11 +48,7 @@ export default function OrderDetail({ id }: { id: string }) {
           <Col xs={12} md={6}>
             <Form.Group controlId="creator">
               <Form.Label>Nhân viên tạo đơn</Form.Label>
-              <Form.Control
-                type="text"
-                // value={order?.order?.creator?.fullName}
-                disabled
-              />
+              <Form.Control type="text" value={order?.created_by.name} disabled />
             </Form.Group>
           </Col>
           <Col xs={12} md={6}>

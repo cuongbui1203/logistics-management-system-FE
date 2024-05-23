@@ -48,7 +48,7 @@ const extendOptions = {
   ...defaultOptions,
 };
 
-export default function StatisticGoodsPoint() {
+export default function StatisticTransshipment() {
   const [extend, isExtend] = useState(false);
   const chartHeight = extend ? 440 : 205;
 
@@ -205,7 +205,7 @@ export default function StatisticGoodsPoint() {
   ];
   return (
     <motion.div>
-      <Card title={'Điểm tập kết'} extend={extend} intervalType={intervalType} onChange={handleIntervalChange}>
+      <Card title={'Điểm trung chuyển'} extend={extend} intervalType={intervalType} onChange={handleIntervalChange}>
         <Chart type="area" options={options} series={data} height={chartHeight} width="100%" />
         <Button
           onClick={() => {

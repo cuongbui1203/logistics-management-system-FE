@@ -60,7 +60,7 @@ const extendOptions = {
   },
 };
 
-export default function StatisticTransPoint() {
+export default function StatisticTransaction() {
   const [extend, isExtend] = useState(false);
   const chartHeight = extend ? 440 : 205;
 

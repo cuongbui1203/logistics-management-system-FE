@@ -1,9 +1,9 @@
 'use client';
 
-import { AccountResType } from '@/schema/auth.schema';
+import { UserSchemaType } from '@/schema/common.schema';
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-type User = AccountResType['data'];
+type User = UserSchemaType;
 
 const AppContext = createContext<{
   user: User | null;
@@ -21,13 +21,7 @@ export const useAppContext = () => {
 };
 
 export default function AppProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUserState] = useState<User | null>(() => {
-    // if (isClient()) {
-    //   const _user = localStorage.getItem('user')
-    //   return _user ? JSON.parse(_user) : null
-    // }
-    return null;
-  });
+  const [user, setUserState] = useState<User | null>(null);
   const isAuthenticated = Boolean(user);
   const setUser = useCallback(
     (user: User | null) => {

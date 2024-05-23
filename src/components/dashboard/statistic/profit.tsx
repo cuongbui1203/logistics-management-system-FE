@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { formatDate } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Button } from 'react-bootstrap';
-import Card from '@/components/dashboard/main/card';
+import Card from '@/components/dashboard/statistic/card';
 import { monthlyOptions, yearlyOptions } from '@/config/ChartOption';
 
 const defaultOptions = {
@@ -64,7 +64,7 @@ const defaultOptions = {
   },
 };
 
-export default function Overview() {
+export default function Profit() {
   const [intervalType, setIntervalType] = useState('year');
   const [extend, isExtend] = useState(false);
 

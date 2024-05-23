@@ -1,7 +1,7 @@
 import z from 'zod';
 import { OrderSchema, WorkPlateSchema } from './common.schema';
 
-export const GoodSchema = z.object({
+export const GoodCreateSchema = z.object({
   type_id: z.coerce.number().refine((v) => [9, 10, 11, 12].includes(v)),
   name: z.string(),
   mass: z.coerce.number().min(1),
@@ -9,10 +9,10 @@ export const GoodSchema = z.object({
   freight: z.coerce.number().default(1),
 });
 
-export type GoodSchemaType = z.TypeOf<typeof GoodSchema>;
+export type GoodSchemaType = z.TypeOf<typeof GoodCreateSchema>;
 
 export const GoodListReq = z.object({
-  data: z.array(GoodSchema),
+  data: z.array(GoodCreateSchema),
 });
 
 export type GoodListReqType = z.TypeOf<typeof GoodListReq>;
@@ -60,3 +60,20 @@ export const OrderMultiSendReq = z.object({
 });
 
 export type OrderMultiSendReqType = z.TypeOf<typeof OrderMultiSendReq>;
+
+export const OrderMultiReceiveReq = z.object({
+  data: z.array(
+    z.object({
+      id: z.number(),
+      distance: z.number().default(12),
+    })
+  ),
+});
+
+export type OrderMultiReceiveReqType = z.TypeOf<typeof OrderMultiReceiveReq>;
+
+export const OrderMultiLeaveReq = z.object({
+  data: z.array(z.number()),
+});
+
+export type OrderMultiLeaveReqType = z.TypeOf<typeof OrderMultiLeaveReq>;

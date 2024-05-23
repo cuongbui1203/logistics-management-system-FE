@@ -13,6 +13,7 @@ import { LuArrowUpDown } from 'react-icons/lu';
 import { EMPLOYEE_PAGE_SIZE } from '@/config/constant';
 import { useEmployee } from '@/lib/custom-hook';
 import { RoleId } from '@/config/Enum';
+import Spinning from '@/components/common/spinning';
 
 interface EmployeeTableProps {
   showFilter?: boolean;
@@ -73,7 +74,7 @@ export default function EmployeeTable({ showFilter }: EmployeeTableProps) {
   };
 
   if (error) return <div>Failed to load</div>;
-  if (isLoading) return <Loading />;
+  if (isLoading) return <Spinning />;
 
   let filerListEmployees: AccountList = data?.data || [];
 
@@ -93,7 +94,7 @@ export default function EmployeeTable({ showFilter }: EmployeeTableProps) {
   }
 
   if (queryAddress) {
-    filerListEmployees = filerListEmployees.filter((employee) => employee.work_plate.name.includes(queryAddress));
+    filerListEmployees = filerListEmployees.filter((employee) => employee.address.province.includes(queryAddress));
   }
 
   if (queryRole) {

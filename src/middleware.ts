@@ -1,5 +1,6 @@
-import { authRoutes } from '@/routes';
 import { NextResponse, type NextRequest } from 'next/server';
+
+export const authRoutes = ['/login', '/auth/register', '/auth/forgot-password'];
 
 export default function middleware(req: NextRequest) {
   const { nextUrl } = req;

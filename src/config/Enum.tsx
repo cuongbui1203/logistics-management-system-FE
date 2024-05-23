@@ -11,14 +11,16 @@ export const UserRole = {
   Driver: 'Driver',
   Employee: 'Employee',
   Manager: 'Manager',
+  Shipper: 'Shipper',
 };
 
 export const RoleId = [
   { id: 1, name: 'Admin' },
-  { id: 2, name: 'User' },
+  // { id: 2, name: 'User' },
   { id: 3, name: 'Driver' },
   { id: 4, name: 'Employee' },
   { id: 5, name: 'Manager' },
+  { id: 6, name: 'Shipper' },
 ];
 
 export const Role = {
@@ -26,7 +28,6 @@ export const Role = {
     id: 1,
     name: 'Quản trị viên',
     tabs: ['dashboard', 'manageTransshipment', 'manageTransactions', 'manageEmployees'],
-    left: ['manageOrders', 'createOrder'],
   },
   Manager: {
     id: 5,
@@ -39,25 +40,21 @@ export const Role = {
       'historyOrders',
       'createOrder',
     ],
-    left: ['manageEmployees', 'manageTransshipment', 'manageTransactions'],
   },
   Driver: {
     id: 3,
     name: 'Tài xế',
-    left: ['manageTransshipment', 'manageTransactions', 'createOrder'],
-    tabs: ['dashboard', 'manageOrders'],
+    tabs: ['dashboard', 'leavingOrders'],
   },
   Employee: {
     id: 4,
     name: 'Nhân viên',
     tabs: ['dashboard', 'createOrder', 'manageWaitingOrders', 'manageReceivingOrders', 'historyOrders'],
-    left: ['manageTransshipment', 'manageTransactions', 'manageEmployees'],
   },
-  User: {
-    id: 2,
-    name: 'Người dùng',
-    left: ['manageTransshipment', 'manageTransactions', 'createOrder'],
-    tabs: [],
+  Shipper: {
+    id: 6,
+    name: 'Shipper',
+    tabs: ['dashboard', 'manageOrders'],
   },
 };
 
@@ -75,6 +72,7 @@ export const Area = [
     name: 'Phường / Xã',
   },
 ];
+
 export const listUrl = {
   dashboard: {
     url: '/dashboard',
@@ -146,6 +144,11 @@ export const listUrl = {
     name: 'Lịch sử đơn hàng',
     icon: <LuPackageCheck size={'2em'} />,
   },
+  leavingOrders: {
+    url: '/dashboard/ordered/leave',
+    name: 'Hàng chờ chuyển đi',
+    icon: <GoPackageDependents size={'2em'} />,
+  },
   detailOrder: {
     url: '/dashboard/ordered/[id]/detail',
     name: 'Chi tiết đơn hàng',
@@ -192,7 +195,7 @@ export const OrderStatus = {
     color: 'warning',
   },
   2: {
-    name: 'Chờ nhận',
+    name: 'Đang vận chuyển',
     color: 'info',
   },
   3: {
@@ -233,7 +236,7 @@ export const OrderStatus = {
   },
   10: {
     name: 'Tạo mới',
-    color: 'info',
+    color: 'primary',
   },
   11: {
     name: 'Hoàn thành',
@@ -264,50 +267,10 @@ export const GoodsType = {
   },
 };
 
-export const orderStatus = {
-  forwarded: {
-    name: 'forwarded',
-    now: 'Đã vận chuyển',
-    next: [
-      {
-        code: 'customer_sent',
-        name: 'Xác nhận người nhận đã nhận được hàng',
-      },
-      {
-        code: 'customer_returned',
-        name: 'Xác nhận hàng bị hoàn trả',
-      },
-    ],
-    color: 'success',
-  },
-  arriving: {
-    name: 'arriving',
-    now: 'Đang vận chuyển đến',
-    next: {
-      name: 'Xác nhận đã đến',
-      code: 'on_stock',
-    },
-    color: 'warning',
-  },
-  on_stock: {
-    name: 'on_stock',
-    now: 'Trong kho',
-    next: {
-      name: 'Xác nhận chuyển tiếp',
-      code: 'forwarded',
-    },
-    color: 'danger',
-  },
-  customer_sent: {
-    name: 'customer_sent',
-    now: 'Người nhận đã nhận được hàng',
-    next: null,
-    color: 'primary',
-  },
-  customer_returned: {
-    name: 'customer_returned',
-    now: 'Hàng bị hoàn trả',
-    next: null,
-    color: 'dark',
-  },
-};
+export enum OrderTableType {
+  Waiting = 'waiting',
+  Receiving = 'receiving',
+  History = 'history',
+  Leave = 'leave',
+  All = 'all',
+}

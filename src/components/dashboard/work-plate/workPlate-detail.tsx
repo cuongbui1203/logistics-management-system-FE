@@ -6,8 +6,8 @@ import AddressForm from '@/components/address-form';
 import { Area, UserRole, WorkPlateEnumType } from '@/config/Enum';
 import { useWorkPlate } from '@/lib/custom-hook';
 import { handleErrorApi } from '@/lib/utils';
-import { AddressDetailSchemaType } from '@/schema/common.schema';
-import { WorkPlateNewReq, WorkPlateNewReqType, WorkPlateResType } from '@/schema/workplate.schema';
+import { AddressDetailSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
+import { WorkPlateNewReq, WorkPlateNewReqType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Row, Col, Form, Button } from 'react-bootstrap';
@@ -15,7 +15,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 interface WorkPlateDetailProps {
-  workPlate: WorkPlateResType;
+  workPlate: WorkPlateSchemaType;
   listProvince: AddressDetailSchemaType[];
   type: number;
 }
@@ -138,7 +138,6 @@ export default function WorkPlateDetail({ workPlate, listProvince, type }: WorkP
           </div>
         </Row>
       </Form>
-      {/* <PopUp isOpen={popup} setIsOpen={setPopup} functionCreate={createEmployee} dataCreate={employee} /> */}
     </div>
   );
 }

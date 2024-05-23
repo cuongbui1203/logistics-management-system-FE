@@ -46,7 +46,7 @@ export default function LoginForm() {
       // await authApiRequest.getCsrfTokenClient();
       toast.success('Đăng nhập thành công');
       setUser(data.user);
-      if (data.user.role.name === 'User' || data.user.role.name === 'Driver') {
+      if (data.user.role.name === 'User') {
         router.push(USER_LOGIN_REDIRECT);
         return;
       }

@@ -1,7 +1,7 @@
 import { orderApiRequest } from '@/api/order';
 import { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import { AiOutlineUserDelete } from 'react-icons/ai';
+import { AiFillDelete } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 
 export function OrderDeleteButton({ id, refresh }: { id: number; refresh: () => void }) {
@@ -24,7 +24,7 @@ export function OrderDeleteButton({ id, refresh }: { id: number; refresh: () => 
   return (
     <>
       <button className="btn btn-outline-danger" onClick={handleShow}>
-        <AiOutlineUserDelete />
+        <AiFillDelete />
       </button>
       <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
