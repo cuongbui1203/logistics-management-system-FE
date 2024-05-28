@@ -15,6 +15,7 @@ const roleComponents = {
   Admin: [
     // <Col xs={12} md={4} key="1">
     //   <Profit />
+    //   {/* <Profit /> */}
     // </Col>,
     // <Col xs={12} md={4} key="2">
     //   <StatisticTransshipment />
@@ -41,6 +42,7 @@ const roleComponents = {
     // <Col xs={12} md={4}>
     //   <StatisticPoint />
     // </Col>,
+
     <Col xs={12} key="5">
       <OrderTable type={OrderTableType.Waiting} showFilter={false} />
     </Col>,

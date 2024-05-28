@@ -57,7 +57,7 @@ export const useOrder = (type: OrderTableType, page: number) => {
       statuses.push(OrderStatusEnum.TO_THE_TRANSPORT_POINT);
       break;
     case OrderTableType.History:
-      // statuses.push(OrderStatusEnum.Done);
+      statuses.push(OrderStatusEnum.DONE);
       // statuses.push(OrderStatusEnum.Cancel);
       break;
     default:
