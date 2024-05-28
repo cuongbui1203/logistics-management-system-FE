@@ -1,4 +1,3 @@
-'use client';
 import { addressApiRequest } from '@/api/address';
 import LookUpBanner from '@/components/customer/lookup-banner';
 import LookUpTransaction from '@/components/customer/lookup-transaction';

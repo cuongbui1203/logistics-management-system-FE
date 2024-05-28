@@ -15,7 +15,7 @@ export default function EmployeePage() {
       </div>
 
       <div className="row">
-        <EmployeeTable showFilter={true}></EmployeeTable>
+        <EmployeeTable showFilter={false}></EmployeeTable>
       </div>
     </div>
   );

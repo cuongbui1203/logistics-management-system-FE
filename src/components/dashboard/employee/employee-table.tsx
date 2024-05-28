@@ -171,9 +171,7 @@ export default function EmployeeTable({ showFilter }: EmployeeTableProps) {
               </thead>
               <tbody className="table-group-divider">
                 {filerListEmployees.map((employee) => {
-                  // const statusInfo = employeeStatus[employee?.status] || {};
-                  // const badgeColor = statusInfo.color || "secondary";
-                  const badgeColor = 'secondary';
+                  const badgeColor = RoleId.find((role) => role.id === employee?.role.id)?.color || 'secondary';
 
                   return (
                     <tr key={employee?.id}>

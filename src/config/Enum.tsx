@@ -15,12 +15,12 @@ export const UserRole = {
 };
 
 export const RoleId = [
-  { id: 1, name: 'Admin' },
+  { id: 1, name: 'Admin', color: 'primary' },
   // { id: 2, name: 'User' },
-  { id: 3, name: 'Driver' },
-  { id: 4, name: 'Employee' },
-  { id: 5, name: 'Manager' },
-  { id: 6, name: 'Shipper' },
+  { id: 3, name: 'Driver', color: 'secondary' },
+  { id: 4, name: 'Employee', color: 'warning' },
+  { id: 5, name: 'Manager', color: 'info' },
+  { id: 6, name: 'Shipper', color: 'secondary' },
 ];
 
 export const Role = {
