@@ -13,7 +13,7 @@ import { WorkPlateSuggestResType } from '@/schema/workplate.schema';
 
 export const orderApiRequest = {
   getListOrder: (status: number[], page: number) =>
-    http.get<OrderListResType>(`api/orders?statuses=[${status}]&page=${page}`),
+    http.get<OrderListResType>(`api/orders?statuses=[${status}]&page=-1`),
   createOrder: (body: OrderCreateReqType) => http.post<OrderDetailResType>('api/orders', body),
   getOrderDetail: (id: string) => http.get<OrderDetailResType>(`api/orders/${id}`),
   addGoodOrder: (id: number, body: GoodListReqType) => http.post<OrderDetailResType>(`api/orders/${id}/multi`, body),
