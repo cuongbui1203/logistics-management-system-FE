@@ -48,6 +48,7 @@ export class EntityError extends HttpError {
 }
 
 export const isClient = () => typeof window !== 'undefined';
+
 let clientLogoutRequest: null | Promise<any> = null;
 
 const request = async <Response>(
@@ -78,10 +79,10 @@ const request = async <Response>(
 
   // Nếu không truyền baseUrl (hoặc baseUrl = undefined) thì lấy từ envConfig.NEXT_PUBLIC_API_ENDPOINT
   // Nếu truyền baseUrl thì lấy giá trị truyền vào, truyền vào '' thì đồng nghĩa với việc chúng ta gọi API đến Next.js Server
-  const baseUrl = options?.baseUrl === undefined ? envConfig.NEXT_PUBLIC_API_ENDPOINT : options.baseUrl;
+  const baseUrl = url === 'api/address/provinces' ? envConfig.NEXT_PUBLIC_API_ENDPOINT_BUILD : options?.baseUrl === undefined ? envConfig.NEXT_PUBLIC_API_ENDPOINT : options.baseUrl;
 
   const fullUrl = url.startsWith('/') ? `${baseUrl}${url}` : `${baseUrl}/${url}`;
-
+  console.log('build:: ',fullUrl);
   const res = await fetch(fullUrl, {
     ...options,
     // credentials: 'include',
@@ -169,5 +170,6 @@ const http = {
     return request<Response>('DELETE', url, { ...options });
   },
 };
+
 
 export default http;
