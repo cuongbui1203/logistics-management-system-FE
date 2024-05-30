@@ -12,11 +12,12 @@ export default async function Page({ params }: { params: { id: string } }) {
   const user: UserSchemaType = data.payload.data;
 
   const listProvince = await addressApiRequest.getProvince();
+  const listProvinceOptions = listProvince.payload.data.map((province) => {
+    return {
+      value: province.code,
+      label: province.full_name,
+    };
+  });
 
-  return (
-    <EmployeeInformation
-      employee={user}
-      listProvince={listProvince.payload.data}
-    />
-  );
+  return <EmployeeInformation employee={user} listProvince={listProvinceOptions} />;
 }

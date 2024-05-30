@@ -9,13 +9,13 @@ import { IoMdPhonePortrait } from 'react-icons/io';
 import { useForm } from 'react-hook-form';
 import { UpdateUserBody, UpdateUserBodyType } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AddressDetailSchemaType } from '@/schema/common.schema';
+import { SelectOptionsPropsString } from '@/schema/common.schema';
 import authApiRequest from '@/api/auth';
 import { toast } from 'react-toastify';
 import { formatDate2, handleErrorApi } from '@/lib/utils';
 import AddressForm from '@/components/address-form';
 
-export default function MainInformation({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
+export default function MainInformation({ listProvince }: { listProvince: SelectOptionsPropsString[] }) {
   const { user, setUser } = useAppContext();
 
   const {

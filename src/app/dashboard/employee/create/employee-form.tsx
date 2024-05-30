@@ -5,7 +5,7 @@ import { useAppContext } from '@/app/app-provider';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AccountNewReq, AccountNewReqType } from '@/schema/auth.schema';
-import { AddressDetailSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
+import { SelectOptionsPropsString, WorkPlateSchemaType } from '@/schema/common.schema';
 import { RoleId, UserRole } from '@/config/Enum';
 import { workPlateApiRequest } from '@/api/workplate';
 import accountApiRequest from '@/api/account';
@@ -16,7 +16,7 @@ import AddressForm from '@/components/address-form';
 import useSWRImmutable from 'swr/immutable';
 import '@/css/dashboard/customForm.css';
 
-export default function EmployeeForm({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
+export default function EmployeeForm({ listProvince }: { listProvince: SelectOptionsPropsString[] }) {
   const { user } = useAppContext();
   const router = useRouter();
 

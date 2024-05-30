@@ -6,7 +6,7 @@ import { OrderCreateReq, OrderCreateReqType } from '@/schema/order.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { handleErrorApi } from '@/lib/utils';
 import AddressForm from '@/components/address-form';
-import { AddressDetailSchemaType } from '@/schema/common.schema';
+import { AddressSchemaType, SelectOptionsPropsString } from '@/schema/common.schema';
 import { GoodsType } from '@/config/Enum';
 import { orderApiRequest } from '@/api/order';
 import { useAppContext } from '@/app/app-provider';
@@ -15,15 +15,11 @@ export default function CreateOrderForm({
   listProvince,
   onSubmit: nextStep,
 }: {
-  listProvince: AddressDetailSchemaType[];
+  listProvince: SelectOptionsPropsString[];
   onSubmit: (orderId: number) => void;
 }) {
   const { user } = useAppContext();
-  const defaultValues = {
-    provinceCode: user?.address?.provinceCode || '0',
-    districtCode: user?.address?.districtCode || '0',
-    wardCode: user?.address?.wardCode || '0',
-  };
+  const defaultValues = user?.address || undefined;
   const {
     register,
     handleSubmit,

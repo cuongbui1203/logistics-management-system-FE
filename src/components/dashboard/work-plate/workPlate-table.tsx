@@ -20,6 +20,7 @@ interface WorkPlateTableProps {
 }
 
 export default function WorkPlateTable({ page, type, listProvince }: WorkPlateTableProps) {
+  const showFilter = false;
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -130,49 +131,53 @@ export default function WorkPlateTable({ page, type, listProvince }: WorkPlateTa
                     Địa chỉ
                   </th>
                   <th scope="col"></th>
-                  {/* <th scope="col">Đơn hàng đã nhận</th>
-                  <th scope="col">Đơn hàng đã chuyển</th> */}
                 </tr>
-                <tr className="filter">
-                  <th scope="col">
-                    <input value={queryId || ''} onChange={(e) => handleID(e.target.value)} placeholder="Lọc theo ID" />
-                  </th>
-                  <th scope="col">
-                    <input
-                      value={queryName || ''}
-                      onChange={(e) => handleName(e.target.value)}
-                      placeholder="Lọc theo tên điểm"
-                    />
-                  </th>
-                  <th scope="col">
-                    <input
-                      value={queryManager || ''}
-                      onChange={(e) => handleManager(e.target.value)}
-                      placeholder="Lọc theo tên trưởng điểm"
-                    />
-                  </th>
-                  <th scope="col" className="col-sm-6">
-                    <select
-                      onChange={(e) => handleAddress(e.target.value)}
-                      value={queryAddress || '0'}
-                      className="w-100"
-                    >
-                      <option value="0" disabled>
-                        Chọn địa chỉ
-                      </option>
-                      {listProvince?.map((province) => (
-                        <option key={province.code} value={province.code}>
-                          {province.name}
+                {showFilter && (
+                  <tr className="filter">
+                    <th scope="col">
+                      <input
+                        value={queryId || ''}
+                        onChange={(e) => handleID(e.target.value)}
+                        placeholder="Lọc theo ID"
+                      />
+                    </th>
+                    <th scope="col">
+                      <input
+                        value={queryName || ''}
+                        onChange={(e) => handleName(e.target.value)}
+                        placeholder="Lọc theo tên điểm"
+                      />
+                    </th>
+                    <th scope="col">
+                      <input
+                        value={queryManager || ''}
+                        onChange={(e) => handleManager(e.target.value)}
+                        placeholder="Lọc theo tên trưởng điểm"
+                      />
+                    </th>
+                    <th scope="col" className="col-sm-6">
+                      <select
+                        onChange={(e) => handleAddress(e.target.value)}
+                        value={queryAddress || '0'}
+                        className="w-100"
+                      >
+                        <option value="0" disabled>
+                          Chọn địa chỉ
                         </option>
-                      ))}
-                    </select>
-                  </th>
-                  <th scope="col">
-                    <button type="button" className="btn btn-secondary" onClick={handleClearFilter}>
-                      Clear all
-                    </button>
-                  </th>
-                </tr>
+                        {listProvince?.map((province) => (
+                          <option key={province.code} value={province.code}>
+                            {province.name}
+                          </option>
+                        ))}
+                      </select>
+                    </th>
+                    <th scope="col">
+                      <button type="button" className="btn btn-secondary" onClick={handleClearFilter}>
+                        Clear all
+                      </button>
+                    </th>
+                  </tr>
+                )}
               </thead>
               <tbody className="table-group-divider">
                 {filerListWP?.map((workPlate) => (

@@ -13,11 +13,15 @@ export default async function TransactionDetailPage({ params }: { params: { id: 
   const workPlate: WorkPlateSchemaType = data.payload.data;
 
   const listProvince = await addressApiRequest.getProvince();
+  const listProvinceOption = listProvince.payload.data.map((item) => ({
+    label: item.full_name,
+    value: item.code,
+  }));
 
   return (
     <TransshipmentDetail
       workPlate={workPlate}
-      listProvince={listProvince.payload.data}
+      listProvince={listProvinceOption}
       type={WorkPlateEnumType.Transshipment}
     />
   );

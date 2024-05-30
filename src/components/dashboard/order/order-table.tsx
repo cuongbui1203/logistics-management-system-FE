@@ -11,7 +11,7 @@ import { FaArrowDown, FaArrowUp } from 'react-icons/fa6';
 import { LuArrowUpDown } from 'react-icons/lu';
 // import style from '@/css/dashboard/table/ordered.module.css';
 import { timestampToDate } from '@/lib/utils';
-import { OrderStatus, OrderStatusEnum, OrderTableType, UserRole } from '@/config/Enum';
+import { OrderStatus, OrderTableType, UserRole } from '@/config/Enum';
 import '@/css/dashboard/customTable.css';
 import { SendOrderButton } from './send-order-button';
 import { OrderDeleteButton } from './delete-order-button';
@@ -33,10 +33,11 @@ export default function OrderTable({ type }: OrderTableProps) {
 
   const { user } = useAppContext();
   const role = user?.role.name;
+  const wp_id = user?.work_plate?.id;
 
   const page = Number(searchParams.get('page') || 1);
 
-  const { data, error, isLoading, mutate } = useOrder(type, page);
+  const { data, error, isLoading, mutate } = useOrder(type, wp_id!);
 
   const total = data?.total || 1;
   const totalPage = Math.floor(total / ORDER_PAGE_SIZE) + (total % ORDER_PAGE_SIZE === 0 ? 0 : 1);

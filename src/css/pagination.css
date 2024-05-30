@@ -3,5 +3,10 @@
   color: black;
 }
 .page-link.active {
-  background-color: #3DB2FF;
+  background-color: #3db2ff;
+}
+
+.disabled {
+  pointer-events: none;
+  cursor: not-allowed;
 }

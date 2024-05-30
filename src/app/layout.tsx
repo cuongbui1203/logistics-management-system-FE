@@ -35,7 +35,7 @@ export default async function RootLayout({
       {/* antialiased is tailwind class for font smoothing */}
       <body className={`${myFont.className} antialiased`}>
         <AppProvider>{children}</AppProvider>
-        <ToastContainer />
+        <ToastContainer pauseOnHover={false} autoClose={2000} />
         <BootstrapClient />
       </body>
     </html>

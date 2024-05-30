@@ -2,10 +2,10 @@
 
 import MainInformation from '@/components/dashboard/information/mainInfo';
 import Security from '@/components/dashboard/information/security';
-import { AddressDetailSchemaType } from '@/schema/common.schema';
+import { SelectOptionsPropsString } from '@/schema/common.schema';
 import React, { useState } from 'react';
 
-export default function InformationClient({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
+export default function InformationClient({ listProvince }: { listProvince: SelectOptionsPropsString[] }) {
   const [isSecurityTab, setSecurityTab] = useState(false);
 
   return (

@@ -5,6 +5,12 @@ import { addressApiRequest } from '@/api/address';
 
 export default async function Information() {
   const listProvince = await addressApiRequest.getProvince();
+  const listProvinceOptions = listProvince.payload.data.map((province) => {
+    return {
+      value: province.code,
+      label: province.full_name,
+    };
+  });
 
   return (
     <Row>
@@ -13,7 +19,7 @@ export default async function Information() {
       </Col>
 
       <Col>
-        <InformationClient listProvince={listProvince.payload.data} />
+        <InformationClient listProvince={listProvinceOptions} />
       </Col>
     </Row>
   );

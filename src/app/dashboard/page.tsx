@@ -10,6 +10,7 @@ import StatisticTransshipment from '@/components/dashboard/statistic/statisticTr
 import StatisticTransaction from '@/components/dashboard/statistic/statisticTransaction';
 import { OrderTableType, UserRole, WorkPlateEnumType } from '@/config/Enum';
 import OrderTable from '@/components/dashboard/order/order-table';
+import { useRouter } from 'next/navigation';
 
 const roleComponents = {
   Admin: [
@@ -42,7 +43,6 @@ const roleComponents = {
     // <Col xs={12} md={4}>
     //   <StatisticPoint />
     // </Col>,
-
     <Col xs={12} key="5">
       <OrderTable type={OrderTableType.Waiting} showFilter={false} />
     </Col>,
@@ -51,10 +51,12 @@ const roleComponents = {
 
 export default function Dashboard() {
   const { user } = useAppContext();
+  const route = useRouter();
   const role = user?.role.name;
 
   if (role === UserRole.User || !role) {
-    return <div>Không có quyền truy cập</div>;
+    route.push('/');
+    return <></>;
   }
 
   const userRole = role as keyof typeof roleComponents;

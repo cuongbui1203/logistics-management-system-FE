@@ -6,7 +6,13 @@ import { AccountUpdateReq, AccountUpdateReqType } from '@/schema/auth.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 import { formatDate2, handleErrorApi } from '@/lib/utils';
-import { AddressDetailSchemaType, UserSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
+import {
+  AddressDetailSchemaType,
+  SelectOptionsProps,
+  SelectOptionsPropsString,
+  UserSchemaType,
+  WorkPlateSchemaType,
+} from '@/schema/common.schema';
 import { workPlateApiRequest } from '@/api/workplate';
 import { RoleId, UserRole } from '@/config/Enum';
 import { useAppContext } from '@/app/app-provider';
@@ -16,10 +22,11 @@ import '@/css/dashboard/customForm.css';
 import authApiRequest from '@/api/auth';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEmployee } from '@/lib/custom-hook';
+import Select from 'react-select';
 
 interface Props {
   employee: UserSchemaType;
-  listProvince: AddressDetailSchemaType[];
+  listProvince: SelectOptionsPropsString[];
 }
 
 export default function EmployeeInformation({ employee, listProvince }: Props) {
@@ -47,7 +54,7 @@ export default function EmployeeInformation({ employee, listProvince }: Props) {
       phone: employee?.phone || '',
       dob: formatDate2(employee?.dob),
       username: employee?.username,
-      address_id: employee?.address.wardCode,
+      address_id: employee?.address?.wardCode,
       role_id: employee?.role.id,
       wp_id: employee?.wp_id || 0,
     },
@@ -87,6 +94,12 @@ export default function EmployeeInformation({ employee, listProvince }: Props) {
     () => fetchSuggestWP(watchAddress)
   );
 
+  // let listWp: SelectOptionsProps[] = data?.map(wp => {
+  //   return {
+  //     value: wp.id,
+  //     label: `${wp.name} - ${wp.address.province}, ${wp.address.district}, ${wp.address.ward}`,
+  //   };
+  // }) || [];
   let listWp: WorkPlateSchemaType[] = data || [];
   if (watchAddress === undefined || watchAddress === '0') {
     listWp = [];
@@ -181,6 +194,7 @@ export default function EmployeeInformation({ employee, listProvince }: Props) {
             <Col>
               <Form.Group className="col-sm-12 col-form-Form.Group">
                 <Form.Label htmlFor="workplate">Địa điểm làm việc</Form.Label>
+                {/* <Select id="workplate" options={listWp} maxMenuHeight={175} {...register('wp_id')}/> */}
                 <select id="workplate" className="form-select" value={employee?.work_plate?.id} {...register('wp_id')}>
                   <option key={0} value={0} disabled>
                     Chọn địa điểm làm việc

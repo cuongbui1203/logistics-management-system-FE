@@ -5,7 +5,7 @@ import { useAppContext } from '@/app/app-provider';
 import AddressForm from '@/components/address-form';
 import { Area, UserRole, WorkPlateEnumType } from '@/config/Enum';
 import { handleErrorApi } from '@/lib/utils';
-import { AddressDetailSchemaType } from '@/schema/common.schema';
+import { SelectOptionsPropsString } from '@/schema/common.schema';
 import { WorkPlateNewReq, WorkPlateNewReqType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -17,7 +17,7 @@ export default function TransactionForm({
   listProvince,
   type,
 }: {
-  listProvince: AddressDetailSchemaType[];
+  listProvince: SelectOptionsPropsString[];
   type: number;
 }) {
   const router = useRouter();

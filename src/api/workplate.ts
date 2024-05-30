@@ -1,5 +1,6 @@
 import { WORK_PLATE_PAGE_SIZE } from '@/config/constant';
 import http from '@/lib/http';
+import { OrderListResType } from '@/schema/order.schema';
 import {
   WorkPlateDetailResType,
   WorkPlateListResType,
@@ -27,4 +28,6 @@ export const workPlateApiRequest = {
     }),
   updateWP: (id: number, body: WorkPlateNewReqType) => http.put<WorkPlateListResType>(`api/work-plates/${id}`, body),
   deleteWP: (id: number) => http.delete<WorkPlateListResType>(`api/work-plates/${id}`),
+  getListOrder: (wp_id: number, sended: number, done: number) =>
+    http.get<OrderListResType>(`/api/work-plates/${wp_id}/orders?sended=${sended}&done=${done}`),
 };

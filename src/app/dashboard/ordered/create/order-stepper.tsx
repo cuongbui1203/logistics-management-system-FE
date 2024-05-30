@@ -2,14 +2,14 @@
 import '@/css/dashboard/customForm.css';
 import '@/css/dashboard/customTable.css';
 import { useState } from 'react';
-import { AddressDetailSchemaType, OrderSchemaType } from '@/schema/common.schema';
+import { AddressDetailSchemaType, OrderSchemaType, SelectOptionsPropsString } from '@/schema/common.schema';
 import { TiTick } from 'react-icons/ti';
 import '@/css/stepper.css';
 import CreateOrderForm from '@/components/dashboard/order/create-order-form';
 import AddDetailOrder from '@/components/dashboard/order/add-detail-order';
 import Invoice from '@/components/dashboard/order/invoice';
 
-export default function OrderStepper({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
+export default function OrderStepper({ listProvince }: { listProvince: SelectOptionsPropsString[] }) {
   const steps = ['Thông tin chung', 'Thông tin các gói hàng', 'Hoá đơn'];
   const [currentStep, setCurrentStep] = useState(1);
   const [orderId, setOrderId] = useState(0);
