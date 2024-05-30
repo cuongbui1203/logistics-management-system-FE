@@ -16,6 +16,7 @@ const roleComponents = {
   Admin: [
     // <Col xs={12} md={4} key="1">
     //   <Profit />
+    //   {/* <Profit /> */}
     // </Col>,
     // <Col xs={12} md={4} key="2">
     //   <StatisticTransshipment />
