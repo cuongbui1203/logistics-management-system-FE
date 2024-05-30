@@ -54,11 +54,6 @@ export default function Dashboard() {
   const route = useRouter();
   const role = user?.role.name;
 
-  if (role === UserRole.User || !role) {
-    route.push('/');
-    return <></>;
-  }
-
   const userRole = role as keyof typeof roleComponents;
 
   return (
@@ -76,9 +71,7 @@ export default function Dashboard() {
       )}
 
       <Row>
-        <Col xs={12}>
-          <Statistic role={role} />
-        </Col>
+        <Col xs={12}>{role && <Statistic role={role} />}</Col>
       </Row>
 
       <Row>
