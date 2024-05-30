@@ -1,18 +1,21 @@
 'use client';
 
 import { addressApiRequest } from '@/api/address';
-import { AddressDetailSchemaType } from '@/schema/common.schema';
+import { AddressSchemaType, SelectOptionsPropsString } from '@/schema/common.schema';
 import { useState } from 'react';
 import { Col } from 'react-bootstrap';
+import { Controller } from 'react-hook-form';
+import Select from 'react-select';
 import useSWRImmutable from 'swr/immutable';
 
+interface SelectOptionsProps {
+  value: string;
+  label: string;
+}
+
 interface AddressFormProps {
-  listProvince: AddressDetailSchemaType[];
-  defaultValues?: {
-    provinceCode: string;
-    districtCode: string;
-    wardCode: string;
-  };
+  listProvince: SelectOptionsPropsString[];
+  defaultValues?: AddressSchemaType;
   register: any;
   fieldName: string;
   disabledProvince?: boolean;
@@ -25,84 +28,110 @@ export default function AddressForm({
   fieldName,
   disabledProvince,
 }: AddressFormProps) {
-  const [province, setProvince] = useState<string>(defaultValues?.provinceCode || '0');
-  const [district, setDistrict] = useState<string>(defaultValues?.districtCode || '0');
-  const [ward, setWard] = useState<string>(defaultValues?.wardCode || '0');
+  const defaultProvince = defaultValues
+    ? { value: defaultValues.provinceCode, label: defaultValues.province }
+    : { value: '0', label: 'Chọn Tỉnh / TP' };
+
+  const defaultDistrict = defaultValues
+    ? { value: defaultValues.districtCode, label: defaultValues.district }
+    : { value: '0', label: 'Chọn Quận/ Huyện' };
+
+  const defaultWard = defaultValues
+    ? { value: defaultValues.wardCode, label: defaultValues.ward }
+    : { value: '0', label: 'Chọn Phường/ Xã' };
+
+  const [province, setProvince] = useState<SelectOptionsPropsString>(defaultProvince);
+  const [district, setDistrict] = useState<SelectOptionsPropsString>(defaultDistrict);
+  const [ward, setWard] = useState<string>(defaultWard.value);
 
   const fetchDistrict = (provinceCode: string) =>
-    addressApiRequest.getDistrict(provinceCode).then((res) => res.payload.data);
+    addressApiRequest
+      .getDistrict(provinceCode)
+      .then((res) => res.payload.data.map((item) => ({ value: item.code, label: item.full_name })));
   const fetchWard = (districtCode: string) => addressApiRequest.getWard(districtCode).then((res) => res.payload.data);
+
   const {
     data: listDistrict,
     error: errorDistrict,
     isLoading: isLoadingDistrict,
-  } = useSWRImmutable(province === '0' ? null : `api/address/districts?code=${province}`, () =>
-    fetchDistrict(province)
+  } = useSWRImmutable(province.value === '0' ? null : `api/address/districts?code=${province.value}`, () =>
+    fetchDistrict(province.value)
   );
   const {
     data: listWard,
     error: errorWard,
     isLoading: isLoadingWard,
-  } = useSWRImmutable(district === '0' ? null : `api/address/wards?code=${district}`, () => fetchWard(district));
+  } = useSWRImmutable(district.value === '0' ? null : `api/address/wards?code=${district.value}`, () =>
+    fetchWard(district.value)
+  );
 
-  const onSelectProvince = (e: any) => {
-    setProvince(e.target.value);
-    setDistrict('0');
+  const onSelectProvince = (e: SelectOptionsProps | null) => {
+    if (!e) return;
+    setProvince(e);
+    setDistrict({ value: '0', label: 'Chọn Quận/ Huyện' });
     setWard('0');
   };
 
-  const onSelectDistrict = (e: any) => {
-    setDistrict(e.target.value);
+  const onSelectDistrict = (e: SelectOptionsPropsString | null) => {
+    if (!e) return;
+    setDistrict(e);
     setWard('0');
   };
-
-  // if (isLoadingDistrict || isLoadingWard) {
-  //   return <></>;
-  // }
 
   return (
     <>
       <Col md={4}>
-        <select
-          className="form-select"
+        <Select
           id="province"
-          onChange={(e) => {
-            onSelectProvince(e);
-          }}
+          options={listProvince}
+          onChange={onSelectProvince}
+          maxMenuHeight={175}
           value={province}
-          disabled={disabledProvince}
-        >
-          <option disabled key="0" value="0">
-            Chọn Tỉnh / TP
-          </option>
-          {listProvince.map((province) => (
-            <option key={province.code} value={province.code}>
-              {province.full_name}
-            </option>
-          ))}
-        </select>
+          placeholder="Chọn Tỉnh / TP"
+          isDisabled={disabledProvince}
+        />
       </Col>
 
       <Col md={4}>
-        <select
-          className="form-select"
-          onChange={(e) => {
-            onSelectDistrict(e);
-          }}
+        <Select
+          id="district"
+          className="selectContainer"
+          options={listDistrict}
+          onChange={onSelectDistrict}
+          maxMenuHeight={175}
           value={district}
-        >
-          <option disabled key="0" value="0">
-            Chọn Quận/ Huyện
-          </option>
-          {listDistrict?.map((district) => (
-            <option key={district.code} value={district.code}>
-              {district.full_name}
-            </option>
-          ))}
-        </select>
+        />
       </Col>
 
       <Col md={4}>
+        {/* <Controller
+  control={control}
+  defaultValue={listWard.map(c => c.value)}
+  name={fieldName}
+  render={({ field: { onChange, value, ref }}) => (
+    <Select
+      inputRef={ref}
+      value={ward}
+      onChange={val => onChange(val.map(c => c.value))}
+      options={options}
+      isMulti
+    />
+  )}
+/> */}
+        {/* <Select
+          id="ward"
+          className="selectContainer"
+          options={listWard}
+          maxMenuHeight={175}
+          value={ward}
+          {...register(fieldName, {
+            onChange: (e: any) => {
+              if (!e) return;
+              console.log(e);
+              setWard(e);
+            },
+          })}
+        /> */}
         <select
           className="form-select"
           value={ward}

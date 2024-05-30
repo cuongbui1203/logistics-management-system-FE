@@ -1,51 +1,62 @@
 'use client';
 
 import { addressApiRequest } from '@/api/address';
-import { AddressDetailSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
-import { useState } from 'react';
+import { SelectOptionsPropsString, WorkPlateSchemaType } from '@/schema/common.schema';
+import { useEffect, useState } from 'react';
 import { Button, Container, Row, Col, Form } from 'react-bootstrap';
 import useSWRImmutable from 'swr/immutable';
 import TransactionList from './transaction-list';
 import { workPlateApiRequest } from '@/api/workplate';
+import Select from 'react-select';
 
-export default function LookUpTransaction({ listProvince }: { listProvince: AddressDetailSchemaType[] }) {
-  const [province, setProvince] = useState<string>('0');
-  const [district, setDistrict] = useState<string>('0');
-  const [ward, setWard] = useState<string>('0');
+export default function LookUpTransaction({ listProvince }: { listProvince: SelectOptionsPropsString[] }) {
+  const [province, setProvince] = useState<SelectOptionsPropsString>({ value: '0', label: 'Chọn Tỉnh / TP' });
+  const [district, setDistrict] = useState<SelectOptionsPropsString>({ value: '0', label: 'Chọn Quận/ Huyện' });
+  const [ward, setWard] = useState<SelectOptionsPropsString>({ value: '0', label: 'Chọn Phường/ Xã' });
   const [listWp, setListWp] = useState<WorkPlateSchemaType[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => setIsMounted(true), []);
 
   const fetchDistrict = (provinceCode: string) =>
-    addressApiRequest.getDistrict(provinceCode).then((res) => res.payload.data);
-  const fetchWard = (districtCode: string) => addressApiRequest.getWard(districtCode).then((res) => res.payload.data);
+    addressApiRequest
+      .getDistrict(provinceCode)
+      .then((res) => res.payload.data.map((item) => ({ value: item.code, label: item.full_name })));
+  const fetchWard = (districtCode: string) =>
+    addressApiRequest
+      .getWard(districtCode)
+      .then((res) => res.payload.data.map((item) => ({ value: item.code, label: item.full_name })));
+
   const {
     data: listDistrict,
     error: errorDistrict,
     isLoading: isLoadingDistrict,
-  } = useSWRImmutable(province === '0' ? null : `api/address/districts?code=${province}`, () =>
-    fetchDistrict(province)
+  } = useSWRImmutable(province.value === '0' ? null : `api/address/districts?code=${province.value}`, () =>
+    fetchDistrict(province.value)
   );
   const {
     data: listWard,
     error: errorWard,
     isLoading: isLoadingWard,
-  } = useSWRImmutable(district === '0' ? null : `api/address/wards?code=${district}`, () => fetchWard(district));
+  } = useSWRImmutable(district.value === '0' ? null : `api/address/wards?code=${district.value}`, () =>
+    fetchWard(district.value)
+  );
 
-  const onSelectProvince = (e: any) => {
-    setProvince(e.target.value);
-    setDistrict('0');
-    setWard('0');
+  const onSelectProvince = (e: SelectOptionsPropsString | null) => {
+    if (!e) return;
+    setProvince(e);
+    setDistrict({ value: '0', label: 'Chọn Quận/ Huyện' });
+    setWard({ value: '0', label: 'Chọn Phường/ Xã' });
   };
 
-  const onSelectDistrict = (e: any) => {
-    setDistrict(e.target.value);
-    setWard('0');
+  const onSelectDistrict = (e: SelectOptionsPropsString | null) => {
+    if (!e) return;
+    setDistrict(e);
+    setWard({ value: '0', label: 'Chọn Phường/ Xã' });
   };
-
-  const fetchSuggestWP = (wardCode: string) =>
-    workPlateApiRequest.getWorkPlateSuggestClient(wardCode).then((res) => res.payload.data);
 
   const handleClick = async () => {
-    await workPlateApiRequest.getWorkPlateSuggestClient(ward).then((res) => {
+    await workPlateApiRequest.getWorkPlateSuggestClient(ward.value).then((res) => {
       setListWp(res.payload.data);
     });
   };
@@ -57,61 +68,39 @@ export default function LookUpTransaction({ listProvince }: { listProvince: Addr
           <Col xs="12" md="6" className="mt-2">
             <Form>
               <Row>
-                <Form.Select
-                  aria-label="Chọn Tỉnh/ TP"
-                  className="selectContainer"
-                  onChange={(e) => {
-                    onSelectProvince(e);
-                  }}
-                  value={province}
-                  required
-                >
-                  <option disabled key="0" value="0">
-                    Chọn Tỉnh / TP
-                  </option>
-                  {listProvince.map((province) => (
-                    <option key={province.code} value={province.code}>
-                      {province.full_name}
-                    </option>
-                  ))}
-                </Form.Select>
+                {isMounted && (
+                  <>
+                    <Select
+                      id="province"
+                      className="selectContainer"
+                      options={listProvince}
+                      onChange={onSelectProvince}
+                      maxMenuHeight={175}
+                      value={province}
+                    />
 
-                <Form.Select
-                  onChange={(e) => {
-                    onSelectDistrict(e);
-                  }}
-                  value={district}
-                  required
-                  className="selectContainer"
-                >
-                  <option disabled key="0" value="0">
-                    Chọn Quận/ Huyện
-                  </option>
-                  {listDistrict?.map((district) => (
-                    <option key={district.code} value={district.code}>
-                      {district.full_name}
-                    </option>
-                  ))}
-                </Form.Select>
+                    <Select
+                      id="district"
+                      className="selectContainer"
+                      options={listDistrict}
+                      onChange={onSelectDistrict}
+                      maxMenuHeight={175}
+                      value={district}
+                    />
 
-                <Form.Select
-                  aria-label="Chọn Xã/ Phường"
-                  className="selectContainer"
-                  onChange={(e) => {
-                    setWard(e.target.value);
-                  }}
-                  value={ward}
-                  required
-                >
-                  <option disabled key="0" value="0">
-                    Chọn phường xã
-                  </option>
-                  {listWard?.map((ward) => (
-                    <option key={ward.code} value={ward.code}>
-                      {ward.full_name}
-                    </option>
-                  ))}
-                </Form.Select>
+                    <Select
+                      id="ward"
+                      className="selectContainer"
+                      options={listWard}
+                      onChange={(e) => {
+                        if (!e) return;
+                        setWard(e);
+                      }}
+                      maxMenuHeight={175}
+                      value={ward}
+                    />
+                  </>
+                )}
 
                 <Button className="submitButton" onClick={handleClick}>
                   TRA CỨU

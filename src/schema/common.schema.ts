@@ -20,6 +20,8 @@ export const AddressSchema = z.object({
   address: z.string().optional(),
 });
 
+export type AddressSchemaType = z.TypeOf<typeof AddressSchema>;
+
 export const AddressDetailSchema = z.object({
   code: z.string(),
   name: z.string(),
@@ -145,3 +147,16 @@ export const StatisticSchema = z.object({
 });
 
 export type StatisticSchemaType = z.TypeOf<typeof StatisticSchema>;
+
+export interface SelectOptionsProps {
+  value: number;
+  label: string;
+}
+
+export interface SelectOptionsPropsString {
+  value: string;
+  label: string;
+  target?: {
+    value: string;
+  };
+}

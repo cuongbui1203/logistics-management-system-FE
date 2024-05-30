@@ -35,35 +35,35 @@ export const useWorkPlate = (page: number, type: number) => {
   });
 };
 
-const fetchOrder = (statuses: number[], page: number) =>
-  orderApiRequest.getListOrder(statuses, page).then((res) => {
+const fetchOrder = (wp_id: number, sened: number, done: number) =>
+  workPlateApiRequest.getListOrder(wp_id, sened, done).then((res) => {
     return res.payload.data;
   });
 
-export const useOrder = (type: OrderTableType, page: number) => {
-  const statuses: number[] = [];
+export const useOrder = (type: OrderTableType, wp_id: number) => {
+  let sended = 0;
+  let done = 0;
   switch (type) {
     case OrderTableType.Waiting:
-      statuses.push(OrderStatusEnum.CREATE);
-      statuses.push(OrderStatusEnum.AT_TRANSACTION_POINT);
-      statuses.push(OrderStatusEnum.AT_TRANSPORT_POINT);
+      sended = 1;
+      done = 0;
       break;
     case OrderTableType.Receiving:
-      statuses.push(OrderStatusEnum.LEAVE_TRANSACTION_POINT);
-      statuses.push(OrderStatusEnum.LEAVE_TRANSPORT_POINT);
+      sended = 0;
+      done = 0;
       break;
     case OrderTableType.Leave:
-      statuses.push(OrderStatusEnum.TO_THE_TRANSACTION_POINT);
-      statuses.push(OrderStatusEnum.TO_THE_TRANSPORT_POINT);
+      sended = 1;
+      done = 1;
       break;
     case OrderTableType.History:
-      // statuses.push(OrderStatusEnum.Done);
-      // statuses.push(OrderStatusEnum.Cancel);
+      sended = 0;
+      done = 1;
       break;
     default:
       break;
   }
-  return useSWR(['api/orders', type, page], () => fetchOrder(statuses, page), {
+  return useSWR(['/api/work-plates/', type, wp_id], () => fetchOrder(wp_id, sended, done), {
     // revalidateIfStale: false,
     // revalidateOnFocus: false,
     // revalidateOnReconnect: false,

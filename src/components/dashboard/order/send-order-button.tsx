@@ -1,6 +1,6 @@
 'use client';
 
-import { OrderSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
+import { OrderSchemaType, SelectOptionsProps, WorkPlateSchemaType } from '@/schema/common.schema';
 import { useState } from 'react';
 import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { RiSendPlaneFill } from 'react-icons/ri';
@@ -9,14 +9,16 @@ import { toast } from 'react-toastify';
 import style from '@/css/dashboard/order/send-order-button.module.css';
 import { orderApiRequest } from '@/api/order';
 import { OrderMultiSendReqType } from '@/schema/order.schema';
+import Select from 'react-select';
 
 export function SendOrderButton({ listOrder, mutate }: { listOrder: OrderSchemaType[]; mutate: () => void }) {
   const [show, setShow] = useState(false);
-  const [listWp, setListWp] = useState<WorkPlateSchemaType[]>([]);
+  const [listWp, setListWp] = useState<SelectOptionsProps[]>([]);
   const [wpId, setWpId] = useState(0);
 
-  const onSelectWp = (e: any) => {
-    setWpId(e.target.value);
+  const onSelectWp = (e: SelectOptionsProps | null) => {
+    if (!e) return;
+    setWpId(e.value);
   };
 
   const handleClose = () => setShow(false);
@@ -36,7 +38,13 @@ export function SendOrderButton({ listOrder, mutate }: { listOrder: OrderSchemaT
               listNoDuplicate.push(wp);
             }
           });
-          setListWp(listNoDuplicate);
+          const options = listNoDuplicate.map((wp) => {
+            return {
+              value: wp.id,
+              label: `${wp.name} - ${wp.address.province}, ${wp.address.district}, ${wp.address.ward}`,
+            };
+          });
+          setListWp(options);
         }
       });
     }
@@ -80,22 +88,13 @@ export function SendOrderButton({ listOrder, mutate }: { listOrder: OrderSchemaT
           <Modal.Title>Gửi hàng</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Row className="mt-2">
+          <Row className="mt-2 mr-3">
             <Col>
               <Form.Group className="col-sm-12 col-form-Form.Group">
                 <Form.Label htmlFor="workplate">
                   <h5>Chọn địa điểm gửi hàng</h5>
                 </Form.Label>
-                <select id="workplate" className="form-select" defaultValue={'0'} onChange={onSelectWp}>
-                  <option key={0} disabled value={'0'}>
-                    Chọn địa điểm gửi hàng
-                  </option>
-                  {listWp?.map((wp) => (
-                    <option key={wp.id} value={wp.id}>
-                      {wp.name} - {wp.address.province}, {wp.address.district}, {wp.address.ward}
-                    </option>
-                  ))}
-                </select>
+                <Select id="workplate" options={listWp} onChange={onSelectWp} maxMenuHeight={175} />
               </Form.Group>
             </Col>
           </Row>

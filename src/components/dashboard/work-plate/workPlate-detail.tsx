@@ -6,7 +6,7 @@ import AddressForm from '@/components/address-form';
 import { Area, UserRole, WorkPlateEnumType } from '@/config/Enum';
 import { useWorkPlate } from '@/lib/custom-hook';
 import { handleErrorApi } from '@/lib/utils';
-import { AddressDetailSchemaType, WorkPlateSchemaType } from '@/schema/common.schema';
+import { SelectOptionsPropsString, WorkPlateSchemaType } from '@/schema/common.schema';
 import { WorkPlateNewReq, WorkPlateNewReqType } from '@/schema/workplate.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
 
 interface WorkPlateDetailProps {
   workPlate: WorkPlateSchemaType;
-  listProvince: AddressDetailSchemaType[];
+  listProvince: SelectOptionsPropsString[];
   type: number;
 }
 

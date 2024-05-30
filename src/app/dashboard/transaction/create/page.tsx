@@ -4,5 +4,9 @@ import { WorkPlateEnumType } from '@/config/Enum';
 
 export default async function CreateTransaction() {
   const listProvince = await addressApiRequest.getProvince();
-  return <TransactionForm listProvince={listProvince.payload.data} type={WorkPlateEnumType.Transaction} />;
+  const listProvinceOption = listProvince.payload.data.map((item) => ({
+    label: item.full_name,
+    value: item.code,
+  }));
+  return <TransactionForm listProvince={listProvinceOption} type={WorkPlateEnumType.Transaction} />;
 }

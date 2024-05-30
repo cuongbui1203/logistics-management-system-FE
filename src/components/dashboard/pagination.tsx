@@ -29,9 +29,10 @@ export default function Pagination({ totalPage }: { totalPage: number }) {
       {allPages.map((page) => {
         return (
           <li className="page-item" key={page}>
-            {/* <button></button> */}
             <Link
-              className={page != currentPage ? 'page-link' : 'page-link active'}
+              className={`${page != currentPage ? 'page-link' : 'page-link active'} ${
+                page === '...' ? 'disabled' : ''
+              }`}
               href={createPageURL(page as number)}
             >
               {page}
